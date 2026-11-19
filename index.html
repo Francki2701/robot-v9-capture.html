@@ -2,172 +2,138 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ROBOT V15 FINAL - QM</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>SCALPING V5 - TRES PUISSANT</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#0a0a0a;color:#fff;font-family:Arial;padding:16px;padding-bottom:120px}
-h1{font-size:26px;margin:10px 0 4px}
-h1 span{color:#00ff88}
-.sub{color:#888;font-size:14px;margin-bottom:16px}
-.card{background:#1a1a1a;padding:16px;border-radius:16px;margin:12px 0;border:1px solid #222}
-label{font-size:16px;font-weight:700;display:block;margin:14px 0 6px}
-input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;background:#000;color:#fff;font-size:16px}
-.btn-analyser{width:100%;background:#00ff88;color:#000;padding:18px;border:0;border-radius:14px;font-weight:900;font-size:18px;cursor:pointer;margin-top:16px}
-.btn-analyser:disabled{opacity:.6}
-.result{display:none;background:#111;border:2px solid #00ff88;padding:16px;border-radius:16px;margin-top:16px}
-.signal{font-size:24px;font-weight:900;padding:16px;border-radius:12px;text-align:center;margin:10px 0}
-.buy{background:#00ff88;color:#000}.sell{background:#ff4444;color:#fff}.wait{background:#333;color:#fff}
-.flex{display:flex;gap:8px}.flex>div{flex:1;background:#000;padding:12px;border-radius:12px;text-align:center}
-.small{font-size:12px;color:#aaa;text-align:center}
-.sl{color:#ff4444;font-weight:900;font-size:18px}.tp{color:#00ff88;font-weight:900;font-size:18px}.tp1{color:#ffcc00;font-weight:900;font-size:18px}
-.barre-bas{position:fixed;bottom:0;left:0;right:0;background:#111;padding:10px;display:flex;gap:10px;z-index:99;border-top:2px solid #333}
-.btn-buy{flex:1;background:#00ff88;color:#000;padding:18px 5px;font-size:20px;border:0;border-radius:14px;font-weight:900}
-.btn-sell{flex:1;background:#ff4444;color:#fff;padding:18px 5px;font-size:20px;border:0;border-radius:14px;font-weight:900}
-.btn-mt5{width:100%;background:#007bff;color:#fff;padding:14px;border:0;border-radius:12px;font-size:16px;font-weight:900;margin-top:8px}
-.btn-copy{width:100%;background:#ffcc00;color:#000;padding:14px;border:0;border-radius:12px;font-size:16px;font-weight:900;margin-top:8px}
-.preview{width:100%;border-radius:12px;margin-top:10px;display:none;border:1px solid #333}
-.badge{font-size:12px;background:#00ff88;color:#000;padding:4px 10px;border-radius:20px;font-weight:900}
-.info{background:#00ff88;color:#000;padding:10px;border-radius:12px;text-align:center;font-size:13px;font-weight:900;margin:10px 0}
-.debug{background:#000;color:#ffcc00;padding:10px;border-radius:10px;font-size:12px;margin-top:10px;white-space:pre-wrap;word-break:break-word;display:none}
-.btn-key{width:100%;background:#007bff;color:#fff;padding:12px;border:0;border-radius:10px;font-weight:900;margin-top:8px}
+*{box-sizing:border-box}body{margin:0;background:#0a0a1a;color:#fff;font-family:Arial;padding:8px;padding-bottom:130px}
+.top{background:linear-gradient(135deg,#ff0000,#ffcc00);padding:14px;border-radius:16px;color:#000;text-align:center}
+.top h1{margin:0;font-size:22px}.card{background:#1a1a2e;padding:12px;border-radius:16px;margin:10px 0}
+select,input{width:100%;padding:14px;border-radius:12px;background:#000;color:#fff;border:1px solid #444;margin:6px 0;font-size:16px}
+.prix{font-size:36px;font-weight:900;text-align:center}
+.signal{font-size:22px;font-weight:900;padding:18px;border-radius:14px;text-align:center}
+.buy{background:#00ff88;color:#000}.sell{background:#ff4444}.wait{background:#333}
+.flex{display:flex;gap:8px}.flex>div{flex:1;background:#000;padding:10px;border-radius:12px;text-align:center}
+.big{font-size:18px;font-weight:900}.green{color:#00ff88}.red{color:#ff4444}.yellow{color:#ffcc00}
+canvas{width:100%;background:#000;border-radius:12px}.small{font-size:12px;color:#aaa;text-align:center}
+.barre{position:fixed;bottom:0;left:0;right:0;background:#111;padding:10px;display:flex;gap:10px;border-top:2px solid #333}
+.btn-buy{flex:1;background:#00ff88;color:#000;padding:20px 5px;font-size:24px;font-weight:900;border-radius:14px;border:0}
+.btn-sell{flex:1;background:#ff4444;color:#fff;padding:20px 5px;font-size:24px;font-weight:900;border-radius:14px;border:0}
+table{width:100%;font-size:12px;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #333;text-align:center}
+.protect{background:#330000;border:2px solid #ff4444}
 </style>
 </head>
 <body>
-<h1>ROBOT V15 <span>FINAL QM 100%</span></h1>
-<p class="sub">Capture = Analyse IA automatique. Format officiel Google.</p>
+<div class="top"><h1>⚡ SCALPING V5 - TRÈS PUISSANT</h1><p>1 MINUTE - 3 FILTRES - DÉMO UNIQUEMENT</p><p>❌ PAS 100% - Objectif 60% de gains - C'est déjà énorme</p></div>
+
+<div class="card protect">
+<h3 style="margin:0;text-align:center">🛡️ PROTECTION ANTI-PERTE</h3>
+<p style="text-align:center" id="protectInfo">Tu peux encore perdre 3 fois aujourd'hui. Après, le robot se bloque.</p>
+<div class="flex"><div><div class="small">PERTES AUJOURD'HUI</div><div class="big red" id="pertes">0 / 3</div></div><div><div class="small">SOLDE DÉMO</div><div class="big yellow" id="solde">100000 Ar</div></div><div><div class="small">RÉUSSITE</div><div class="big" id="winrate">0%</div></div></div>
+</div>
+
 <div class="card">
-<div class="info">✅ V15 - Format officiel : {type:"image", data:..., mime_type:...}</div>
-<label>1. Ta clé Google</label>
-<input id="apiKey" type="password" placeholder="Colle ta clé ici - AIza...">
-<button class="btn-key" onclick="ouvrirAistudio()">🔑 OBTENIR MA CLÉ GRATUITE</button>
-<button class="btn-key" style="background:#333" onclick="sauvegarderCle()">💾 SAUVEGARDER MA CLÉ</button>
-<p class="small" id="etatCle" style="margin-top:8px">Clé : Non enregistrée</p>
-<label>Paire</label>
-<select id="paire">
-<option>Volatility 10 Index</option><option>Volatility 25 Index</option><option value="Volatility 50 (1s)" selected>Volatility 50 (1s)</option><option>Volatility 75 Index</option><option>Volatility 75 (1s) Index</option><option>Volatility 100 Index</option><option>Volatility 100 (1s) Index</option><option>Volatility 150 (1s) Index</option><option>Volatility 250 (1s) Index</option><option>Boom 1000 Index</option><option>Boom 500 Index</option><option>Crash 1000 Index</option><option>Crash 500 Index</option><option>Jump 100 Index</option><option>EURUSD</option><option>GBPUSD</option><option>USDJPY</option><option>US30</option><option>US100 - Nasdaq</option><option>XAUUSD - GOLD</option><option>BTCUSDT</option><option>ETHUSDT</option>
-</select>
-<label>Capture</label>
-<input type="file" id="fileInput" accept="image/*">
-<img id="preview" class="preview">
-<button class="btn-analyser" id="btnAnalyser" onclick="analyserQM()">🤖 ANALYSER AUTO QM 100% - BAM !</button>
-<p class="small" style="margin-top:10px">Clique 1 seule fois, attends 60 sec.</p>
-<div class="debug" id="debug"></div>
+<div class="flex"><select id="paire"><option value="BTCUSDT">BTC - Pour scalping</option><option value="ETHUSDT">ETH</option><option value="EURUSDT">EURUSD - Comme MT5</option></select><select id="tf"><option value="1m" selected>1 MIN - SCALPING</option><option value="5m">5 MIN - Plus sûr</option></select></div>
+<input id="mise" type="number" value="2000" placeholder="Mise 2000 Ar - Petit pour scalping">
+<button style="width:100%;background:#00ff88;padding:15px;font-size:18px;font-weight:900;border:0;border-radius:14px" onclick="demarrer()">▶️ DÉMARRER SCALPING</button>
 </div>
-<div class="result" id="result">
-<span class="badge">RÉSULTAT QM 100%</span>
-<div class="signal wait" id="signal">EN ATTENTE</div>
-<p id="detail" style="text-align:center;font-size:14px;line-height:1.5"></p>
-<div class="flex">
-<div><div class="small">🛑 SL</div><div class="sl" id="slVal">---</div></div>
-<div><div class="small">🎯 TP1</div><div class="tp1" id="tp1Val">---</div></div>
-<div><div class="small">🎯 TP2</div><div class="tp" id="tpVal">---</div></div>
-</div>
-<p id="explication" style="font-size:13px;line-height:1.6;background:#000;padding:12px;border-radius:10px;white-space:pre-wrap"></p>
+
+<div class="card">
+<div class="prix" id="prixLive">--- $</div>
+<canvas id="chart" width="350" height="170"></canvas>
+<div id="signal" class="signal wait">ROBOT ARRÊTÉ</div>
+<p id="detail" style="text-align:center"></p>
+<div class="flex"><div><div class="small">TENDANCE EMA</div><div class="big" id="emaInfo">---</div></div><div><div class="small">FIGURE</div><div class="big" id="figInfo">---</div></div><div><div class="small">RSI</div><div class="big" id="rsiInfo">---</div></div></div>
+<div class="flex" style="margin-top:8px"><div><div class="small">🛑 SL</div><div class="big red" id="slVal">---</div></div><div><div class="small">🎯 TP</div><div class="big green" id="tpVal">---</div></div><div><div class="small">FORCE</div><div class="big" id="force">---</div></div></div>
 <p id="conseil" class="small"></p>
-<button class="btn-copy" onclick="copierTout()">📋 COPIER SL + TP1 + TP2</button>
-<button class="btn-mt5" onclick="ouvrirMT5()">📱 OUVRIR MT5</button>
 </div>
-<div class="barre-bas">
-<button class="btn-buy" onclick="trade('ACHAT')">🟢 BUY</button>
-<button class="btn-sell" onclick="trade('VENTE')">🔴 SELL</button>
-</div>
+
+<div class="card"><h3>📍 Position</h3><p style="text-align:center" id="posInfo">Aucune position</p><button style="width:100%;background:#ff4444;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:900" onclick="fermerPosition('Manuel')">❌ FERMER</button></div>
+
+<div class="card"><h3>📊 Historique</h3><table><tr><th>Heure</th><th>Sens</th><th>Raison</th><th>Résultat</th></tr><tbody id="hist"></tbody></table></div>
+
+<div class="barre"><button class="btn-buy" onclick="ouvrirPosition('ACHAT')">🟢 BUY</button><button class="btn-sell" onclick="ouvrirPosition('VENTE')">🔴 SELL</button></div>
+
 <script>
-let base64Image=null, sl=0, tp1=0, tp=0, sens="", figure="", enCours=false;
-let cleSauv=localStorage.getItem('qm_api_key')||"";
-if(cleSauv){document.getElementById('apiKey').value=cleSauv;document.getElementById('etatCle').innerText="Clé : ✅ Enregistrée";document.getElementById('etatCle').style.color="#00ff88";}
-function ouvrirAistudio(){window.open("https://aistudio.google.com/app/apikey","_blank");}
-function sauvegarderCle(){let k=document.getElementById('apiKey').value.trim();if(!k){alert("Colle d'abord ta clé !");return;}localStorage.setItem('qm_api_key',k);document.getElementById('etatCle').innerText="Clé : ✅ Enregistrée";document.getElementById('etatCle').style.color="#00ff88";alert("Clé sauvegardée !");}
-function showDebug(t){let d=document.getElementById('debug');d.style.display='block';d.innerText=t;}
-document.getElementById('fileInput').addEventListener('change',function(e){
-let f=e.target.files[0];if(!f)return;
-let r=new FileReader();
-r.onload=function(ev){
-let img=new Image();
-img.onload=function(){
-let canvas=document.createElement('canvas');
-let max=600;let ratio=Math.min(max/img.width,max/img.height,1);
-canvas.width=img.width*ratio;canvas.height=img.height*ratio;
-let ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
-base64Image=canvas.toDataURL('image/jpeg',0.6).split(',')[1];
-let p=document.getElementById('preview');p.src=ev.target.result;p.style.display='block';
-showDebug("✅ Capture chargée - Prête.");
-};
-img.src=ev.target.result;
-};
-r.readAsDataURL(f);
-});
-function copierTout(){let t=`SL: ${sl} | TP1: ${tp1} | TP2: ${tp} | Figure: ${figure} | Paire: ${document.getElementById('paire').value}`;navigator.clipboard.writeText(t).then(()=>alert("Copié !"));}
-function ouvrirMT5(){window.location.href="metatrader5://";setTimeout(()=>{window.open("https://play.google.com/store/apps/details?id=net.metaquotes.metatrader5","_blank");},800);}
-function trade(c){if(!sens){alert("⛔ Fais d'abord ANALYSER.");return;}if((c==='ACHAT'&&sens==='VENTE')||(c==='VENTE'&&sens==='ACHAT')){alert("⛔ BLOQUÉ : Robot dit "+sens);return;}alert(`✅ Tu peux ${c} !\nSL: ${sl}\nTP1: ${tp1}\nTP2: ${tp}`);copierTout();setTimeout(ouvrirMT5,500);}
-async function analyserQM(){
-if(enCours){alert("Déjà en cours, attends...");return;}
-let key=document.getElementById('apiKey').value.trim()||cleSauv;
-let paire=document.getElementById('paire').value;
-if(!key){alert("Il manque ta clé !");return;}
-if(!base64Image){alert("Il manque ta capture ! Remets ta capture.");return;}
-localStorage.setItem('qm_api_key',key);
-enCours=true;
-let btn=document.getElementById('btnAnalyser');
-btn.disabled=true;btn.innerText="⏳ ANALYSE EN COURS... 60 sec max...";
-document.getElementById('result').style.display='block';
-document.getElementById('signal').className='signal wait';
-document.getElementById('signal').innerText='⏳ L\'IA REGARDE TA CAPTURE... Attends 30-60 sec...';
-showDebug("⏳ Envoi à Google IA - Format officiel...");
-let prompt=`Tu es un expert trading Quasimodo QM 100%. Analyse cette capture de graphique pour la paire ${paire}. Lis les prix directement sur la capture. Tu dois UNIQUEMENT analyser le pattern Quasimodo QM. Ignore tout le reste. Règles QM STRICTES : QM BAISSIER = Haut 1 -> Bas -> Haut 2 PLUS BAS que Haut 1 -> Cassure du Bas = VENTE. QM HAUSSIER = Bas 1 -> Haut -> Bas 2 PLUS HAUT que Bas 1 -> Cassure du Haut = ACHAT. Si le prix n'a PAS encore cassé, c'est QM EN FORMATION = ATTENDRE. Si pas de structure claire, PAS DE QM = ATTENDRE. Réponds UNIQUEMENT en JSON valide, sans texte autour : {"verdict":"VENTE ou ACHAT ou ATTENDRE","figure":"QM BAISSIER ou QM HAUSSIER ou QM EN FORMATION BAISSIER ou QM EN FORMATION HAUSSIER ou PAS DE QM","confiance":0 à 100,"haut1":nombre,"bas":nombre,"haut2":nombre,"prix_actuel":nombre,"sl":nombre,"tp1":nombre,"tp2":nombre,"explication":"2-3 phrases simples en français avec les prix."} Pour SL : QM Baissier = juste au-dessus de Haut 2. QM Haussier = juste en-dessous de Bas 2. TP2 = ancien Bas pour VENTE, ancien Haut pour ACHAT. TP1 = moitié. Si ATTENDRE, sl=0 tp1=0 tp2=0.`;
-async function callInteractions(){
-let ctrl=new AbortController();
-let timer=setTimeout(()=>ctrl.abort(),60000);
+let timer=null, solde=100000, gainTotal=0, nb=0, wins=0, pertesJour=0, bloque=false;
+let derniere={}, sl=0, tp=0, sens="", bougies=[], pos=null;
+function fmt(n){return Math.round(n).toLocaleString('fr-FR')+" Ar";}
+function maj(){document.getElementById('solde').innerText=fmt(solde);document.getElementById('winrate').innerText=nb?Math.round(wins/nb*100)+"%":"0%";document.getElementById('pertes').innerText=pertesJour+" / 3";}
+function calcEMA(data, per){let k=2/(per+1), ema=data[0].c;for(let i=1;i<data.length;i++) ema=data[i].c*k+ema*(1-k);return ema;}
+function calcRSI(data){let gains=0, pertes=0;for(let i=1;i<data.length;i++){let d=data[i].c-data[i-1].c;if(d>0) gains+=d; else pertes+=-d;}let rs=gains/(pertes||1);return 100-(100/(1+rs));}
+function dessiner(){let cv=document.getElementById('chart'),ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);if(bougies.length<2)return;let hi=Math.max(...bougies.map(b=>b.h)),lo=Math.min(...bougies.map(b=>b.l)),rg=hi-lo||1,w=cv.width/bougies.length;bougies.forEach((b,i)=>{let x=i*w+w/2,yH=cv.height-((b.h-lo)/rg)*(cv.height-20)-10,yL=cv.height-((b.l-lo)/rg)*(cv.height-20)-10,yO=cv.height-((b.o-lo)/rg)*(cv.height-20)-10,yC=cv.height-((b.c-lo)/rg)*(cv.height-20)-10;ctx.strokeStyle=b.c>=b.o?'#00ff88':'#ff4444';ctx.beginPath();ctx.moveTo(x,yH);ctx.lineTo(x,yL);ctx.stroke();ctx.fillStyle=b.c>=b.o?'#00ff88':'#ff4444';ctx.fillRect(x-w*0.3,Math.min(yO,yC),w*0.6,Math.max(2,Math.abs(yC-yO)));});}
+async function analyser(){
+if(bloque) return;
+let paire=document.getElementById('paire').value, tf=document.getElementById('tf').value;
 try{
-let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/interactions?key=${key}`,{
-method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,
-body:JSON.stringify({
-model:"models/gemini-3.8-flash",
-input:[
-{type:"text",text:prompt},
-{type:"image",data:base64Image,mime_type:"image/jpeg"}
-]
-})
-});
-clearTimeout(timer);
-if(!res.ok){let e=await res.json().catch(()=>({}));throw new Error(e.error?.message||"Erreur "+res.status);}
-let data=await res.json();
-if(data.output_text) return data.output_text;
-if(data.outputs && data.outputs[0]) return data.outputs[0].text || data.outputs[0].content?.[0]?.text || JSON.stringify(data);
-if(data.output && data.output[0]) return data.output[0].text || data.output[0].content?.[0]?.text || JSON.stringify(data);
-return JSON.stringify(data);
-}catch(err){clearTimeout(timer);throw err;}
+let r=await fetch(`https://api.binance.com/api/v3/klines?symbol=${paire}&interval=${tf}&limit=30`);
+let d=await r.json(); bougies=d.map(x=>({o:parseFloat(x[1]),h:parseFloat(x[2]),l:parseFloat(x[3]),c:parseFloat(x[4])}));
+let b=bougies[bougies.length-2], prev=bougies[bougies.length-3];
+derniere={...b,paire};
+document.getElementById('prixLive').innerText=b.c.toFixed(2)+" $";
+let ema9=calcEMA(bougies,9), ema21=calcEMA(bougies,21), rsi=calcRSI(bougies.slice(-14));
+let tendance = ema9>ema21?"HAUSSE":"BAISSE";
+document.getElementById('emaInfo').innerText=tendance;document.getElementById('emaInfo').style.color=tendance==="HAUSSE"?"#00ff88":"#ff4444";
+document.getElementById('rsiInfo').innerText=Math.round(rsi);
+let corps=Math.abs(b.c-b.o), mH=b.h-Math.max(b.o,b.c), mB=Math.min(b.o,b.c)-b.l, tot=b.h-b.l;
+let fig="", s="", force=0;
+if(corps<tot*0.2) fig="DOJI";
+else if(mB>corps*2 && mH<corps*0.5) fig="MARTEAU";
+else if(mH>corps*2 && mB<corps*0.5) fig="ETOILE";
+else if(b.c>b.o && prev.c<prev.o && b.c>prev.o && b.o<prev.c) fig="AVALEMENT +";
+else if(b.c<b.o && prev.c>prev.o && b.c<prev.o && b.o>prev.c) fig="AVALEMENT -";
+else fig="AUCUNE";
+document.getElementById('figInfo').innerText=fig;
+let sig=document.getElementById('signal'), det=document.getElementById('detail');
+// LOGIQUE SCALPING TRES PUISSANT - 3 FILTRES
+if(tendance==="HAUSSE" && (fig==="MARTEAU"||fig==="AVALEMENT +") && rsi<40){
+s="ACHAT"; force=95; sig.className='signal buy'; sig.innerText="🔥🔥 SIGNAL TRÈS FORT - BUY"; det.innerText="Tendance HAUSSE + "+fig+" + RSI "+Math.round(rsi)+" (pas cher) = 3 filtres OK !";
+sl=b.l; tp=b.c+(b.c-sl)*1.5;
+}else if(tendance==="BAISSE" && (fig==="ETOILE"||fig==="AVALEMENT -") && rsi>60){
+s="VENTE"; force=95; sig.className='signal sell'; sig.innerText="🔥🔥 SIGNAL TRÈS FORT - SELL"; det.innerText="Tendance BAISSE + "+fig+" + RSI "+Math.round(rsi)+" (trop cher) = 3 filtres OK !";
+sl=b.h; tp=b.c-(sl-b.c)*1.5;
+}else if(fig!=="AUCUNE" && fig!=="DOJI"){
+s=""; force=40; sig.className='signal wait'; sig.innerText="⚠️ FIGURE MAIS PAS ASSEZ FORT"; det.innerText="Figure "+fig+" vue, mais tendance ou RSI pas OK. On attend un meilleur signal.";
+sl=0;tp=0;
+}else{
+s=""; force=0; sig.className='signal wait'; sig.innerText="⏳ ATTENDS - PAS DE SIGNAL"; det.innerText="Le scalping puissant, c'est attendre. Ne trade pas pour rien."; sl=0;tp=0;
 }
-try{
-let txt=await callInteractions();
-showDebug("✅ Interactions API a marché !");
-let jsonStr=txt.replace(/```json|```/g,'').trim();
-let s=jsonStr.indexOf('{');let en=jsonStr.lastIndexOf('}');
-if(s!==-1&&en!==-1) jsonStr=jsonStr.substring(s,en+1);
-let j=JSON.parse(jsonStr);
-sens=j.verdict;figure=j.figure;sl=j.sl||0;tp1=j.tp1||0;tp=j.tp2||0;
-let sig=document.getElementById('signal');
-if(sens==="VENTE"){sig.className='signal sell';sig.innerText=`🔴 BAM ! QM BAISSIER - VENDS (${j.confiance}%)`;}
-else if(sens==="ACHAT"){sig.className='signal buy';sig.innerText=`🟢 BAM ! QM HAUSSIER - ACHETES (${j.confiance}%)`;}
-else{sig.className='signal wait';sig.innerText=`⏳ ${figure} - ATTENDS (${j.confiance}%)`;}
-document.getElementById('detail').innerText=`${figure} | Haut1: ${j.haut1} | Bas: ${j.bas} | Haut2: ${j.haut2} | Prix: ${j.prix_actuel}`;
-document.getElementById('slVal').innerText=sl?sl:"---";
-document.getElementById('tp1Val').innerText=tp1?tp1:"---";
-document.getElementById('tpVal').innerText=tp?tp:"---";
-document.getElementById('explication').innerText=j.explication;
-document.getElementById('conseil').innerText=sens!=="ATTENDRE"?`Si ${sens}: SL=${sl} TP1=${tp1} TP2=${tp}`:"Attends la cassure. Ne trade pas avant.";
-showDebug("✅ Analyse terminée !");
-if(sens!=="ATTENDRE") navigator.vibrate && navigator.vibrate([100,50,100]);
-}catch(e){
-document.getElementById('signal').className='signal wait';
-document.getElementById('signal').innerText='❌ ERREUR - VOIR EN DESSOUS';
-document.getElementById('explication').innerText='Erreur : '+e.message;
-showDebug("❌ Erreur finale : "+e.message);
-alert("Erreur : "+e.message);
+sens=s; derniere.figure=fig;
+document.getElementById('slVal').innerText=sl?sl.toFixed(2):"---";
+document.getElementById('tpVal').innerText=tp?tp.toFixed(2):"---";
+document.getElementById('force').innerText=force+"%";
+document.getElementById('conseil').innerText=s?`Si tu trades ${s}, mets SL ${sl.toFixed(2)} TP ${tp.toFixed(2)}. Tu risques 2000 Ar pour gagner 3000 Ar.`:"Attends le signal TRÈS FORT à 95%.";
+if(pos){
+let p=b.c, diff=pos.sens==='ACHAT'?(p-pos.entree):(pos.entree-p), gl=Math.round(diff/pos.entree*pos.mise*20);
+if(pos.sens==='ACHAT'){if(p<=pos.sl) fermerPosition("SL"); else if(p>=pos.tp) fermerPosition("TP");}
+else {if(p>=pos.sl) fermerPosition("SL"); else if(p<=pos.tp) fermerPosition("TP");}
 }
-enCours=false;
-btn.disabled=false;btn.innerText="🤖 ANALYSER AUTO QM 100% - BAM !";
+if(force===95){try{new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play();}catch(e){} if(navigator.vibrate) navigator.vibrate([300,100,300]);}
+dessiner();
+}catch(e){}
 }
+function ouvrirPosition(choix){
+if(bloque){alert("⛔ ROBOT BLOQUÉ POUR AUJOURD'HUI ! Tu as perdu 3 fois. C'est pour te protéger. Reviens demain.");return;}
+if(pos){alert("Tu as déjà une position !");return;}
+if(!sens){alert("Pas de signal TRÈS FORT ! Attends 95%.");return;}
+if((choix==='ACHAT' && sens==='VENTE')||(choix==='VENTE' && sens==='ACHAT')){alert("Non ! Le robot dit "+sens+", pas "+choix);return;}
+let mise=parseFloat(document.getElementById('mise').value)||2000;
+pos={sens:choix,entree:derniere.c,mise:mise,figure:derniere.figure,sl:sl,tp:tp};
+document.getElementById('posInfo').innerText=`${choix} à ${derniere.c.toFixed(2)} | SL ${sl.toFixed(2)} | TP ${tp.toFixed(2)} | ${derniere.figure}`;
+alert("Position ouverte ! Le robot va fermer tout seul à SL ou TP.");
+}
+function fermerPosition(motif){
+if(!pos) return;
+let gain=0;
+if(motif==="TP") gain=pos.mise*1.5;
+else if(motif==="SL"){gain=-pos.mise; pertesJour++; if(pertesJour>=3){bloque=true; document.getElementById('protectInfo').innerText="⛔ BLOQUÉ ! Tu as perdu 3 fois aujourd'hui. Le robot s'arrête pour te protéger. Reviens demain.";}}
+else {let diff=pos.sens==='ACHAT'?(derniere.c-pos.entree):(pos.entree-derniere.c); gain=Math.round(diff/pos.entree*pos.mise*20);}
+solde+=gain;gainTotal+=gain;nb++;if(gain>0)wins++;
+let hist=document.getElementById('hist');let tr=document.createElement('tr');tr.innerHTML=`<td>${new Date().toLocaleTimeString()}</td><td>${pos.sens}</td><td>${pos.figure}-${motif}</td><td style="color:${gain>=0?'#00ff88':'#ff4444'}">${gain>=0?'+':''}${fmt(gain)}</td>`;hist.prepend(tr);
+alert(`${motif} - ${gain>=0?'✅ GAGNÉ +':'❌ PERDU '}${fmt(gain)} | Solde ${fmt(solde)}`);
+pos=null;document.getElementById('posInfo').innerText="Position fermée.";maj();
+}
+function demarrer(){if(timer) clearInterval(timer); analyser(); timer=setInterval(analyser,10000); alert("Scalping V5 démarré ! 1 minute, 3 filtres.");}
+maj();
 </script>
 </body>
 </html>
