@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ROBOT V13.2 - QM FIX BLOCAGE</title>
+<title>ROBOT V13.3 - QM FINAL</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#0a0a0a;color:#fff;font-family:Arial;padding:16px;padding-bottom:120px}
@@ -34,10 +34,10 @@ input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;ba
 </style>
 </head>
 <body>
-<h1>ROBOT V13.2 <span>AUTO QM 100%</span></h1>
-<p class="sub">Capture = Analyse IA automatique. Fix blocage.</p>
+<h1>ROBOT V13.3 <span>AUTO QM 100%</span></h1>
+<p class="sub">Capture = Analyse IA automatique. Version finale.</p>
 <div class="card">
-<div class="info">✅ Si un modèle bloque, il passe au suivant en 15 sec tout seul.</div>
+<div class="info">✅ On laisse 60 sec à Google, on ne coupe plus à 15 sec.</div>
 <label>1. Ta clé Google</label>
 <input id="apiKey" type="password" placeholder="Colle ta clé ici - AIza...">
 <button class="btn-key" onclick="ouvrirAistudio()">🔑 OBTENIR MA CLÉ GRATUITE</button>
@@ -51,7 +51,7 @@ input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;ba
 <input type="file" id="fileInput" accept="image/*">
 <img id="preview" class="preview">
 <button class="btn-analyser" id="btnAnalyser" onclick="analyserQM()">🤖 ANALYSER AUTO QM 100% - BAM !</button>
-<p class="small" style="margin-top:10px">Clique UNE SEULE fois, attends 30 sec sans retoucher.</p>
+<p class="small" style="margin-top:10px">Clique 1 seule fois, attends 60 sec sans toucher, même si ça semble bloqué.</p>
 <div class="debug" id="debug"></div>
 </div>
 <div class="result" id="result">
@@ -93,12 +93,13 @@ r.onload=function(ev){
 let img=new Image();
 img.onload=function(){
 let canvas=document.createElement('canvas');
-let max=1000; let ratio=Math.min(max/img.width, max/img.height, 1);
+// Image plus petite = envoi plus rapide en 4G
+let max=600; let ratio=Math.min(max/img.width, max/img.height, 1);
 canvas.width=img.width*ratio; canvas.height=img.height*ratio;
 let ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height);
-base64Image=canvas.toDataURL('image/jpeg',0.8).split(',')[1];
+base64Image=canvas.toDataURL('image/jpeg',0.6).split(',')[1];
 let p=document.getElementById('preview'); p.src=ev.target.result; p.style.display='block';
-showDebug("✅ Capture chargée - Prête.");
+showDebug("✅ Capture chargée, compressée à "+Math.round(base64Image.length/1024)+" Ko - Prête, ça va aller vite.");
 };
 img.src=ev.target.result;
 };
@@ -112,24 +113,24 @@ if((c==='ACHAT'&&sens==='VENTE')||(c==='VENTE'&&sens==='ACHAT')){alert("⛔ BLOQ
 alert(`✅ Tu peux ${c} !\nSL: ${sl}\nTP1: ${tp1}\nTP2: ${tp}`); copierTout(); setTimeout(ouvrirMT5,500);
 }
 async function analyserQM(){
-if(enCours){alert("Déjà en cours, attends... Ne clique pas 2 fois !");return;}
+if(enCours){alert("Déjà en cours, attends...");return;}
 let key=document.getElementById('apiKey').value.trim()||cleSauv;
 let paire=document.getElementById('paire').value;
 if(!key){alert("Il manque ta clé !");return;}
-if(!base64Image){alert("Il manque ta capture ! Remets ta capture, elle s'est effacée quand tu as rechargé la page.");return;}
+if(!base64Image){alert("Il manque ta capture ! Remets ta capture.");return;}
 localStorage.setItem('qm_api_key',key);
 enCours=true;
 let btn=document.getElementById('btnAnalyser');
-btn.disabled=true; btn.innerText="⏳ ANALYSE EN COURS... Ne touche plus...";
+btn.disabled=true; btn.innerText="⏳ ANALYSE EN COURS... 60 sec max, ne touche pas...";
 document.getElementById('result').style.display='block';
 document.getElementById('signal').className='signal wait';
-document.getElementById('signal').innerText='⏳ L\'IA REGARDE TA CAPTURE...';
-showDebug("⏳ Envoi à Google IA... Clique 1 seule fois !");
+document.getElementById('signal').innerText='⏳ L\'IA REGARDE TA CAPTURE... Attends 30-60 sec...';
+showDebug("⏳ Envoi à Google IA... Attends 30-60 sec, ne quitte pas la page.");
 let prompt=`Tu es un expert trading Quasimodo QM 100%. Analyse cette capture de graphique pour la paire ${paire}. Lis les prix directement sur la capture. Tu dois UNIQUEMENT analyser le pattern Quasimodo QM. Ignore tout le reste. Règles QM STRICTES : QM BAISSIER = Haut 1 -> Bas -> Haut 2 PLUS BAS que Haut 1 -> Cassure du Bas = VENTE. QM HAUSSIER = Bas 1 -> Haut -> Bas 2 PLUS HAUT que Bas 1 -> Cassure du Haut = ACHAT. Si le prix n'a PAS encore cassé, c'est QM EN FORMATION = ATTENDRE. Si pas de structure claire, PAS DE QM = ATTENDRE. Réponds UNIQUEMENT en JSON valide, sans texte autour : {"verdict":"VENTE ou ACHAT ou ATTENDRE","figure":"QM BAISSIER ou QM HAUSSIER ou QM EN FORMATION BAISSIER ou QM EN FORMATION HAUSSIER ou PAS DE QM","confiance":0 à 100,"haut1":nombre,"bas":nombre,"haut2":nombre,"prix_actuel":nombre,"sl":nombre,"tp1":nombre,"tp2":nombre,"explication":"2-3 phrases simples en français avec les prix."} Pour SL : QM Baissier = juste au-dessus de Haut 2. QM Haussier = juste en-dessous de Bas 2. TP2 = ancien Bas pour VENTE, ancien Haut pour ACHAT. TP1 = moitié. Si ATTENDRE, sl=0 tp1=0 tp2=0.`;
 async function tryModel(model){
-showDebug("⏳ Essai "+model+" ... (15 sec max)");
+showDebug("⏳ Essai "+model+" ... Attends 60 sec max, ne touche pas...");
 let ctrl=new AbortController();
-let timer=setTimeout(()=>ctrl.abort(),15000);
+let timer=setTimeout(()=>ctrl.abort(),60000);
 try{
 let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,{
 method:'POST', headers:{'Content-Type':'application/json'}, signal:ctrl.signal,
@@ -144,9 +145,8 @@ return data.candidates[0].content.parts[0].text;
 }
 try{
 let txt=null; let lastErr="";
-// On commence par le modèle qui marche vraiment, pas par 3.8 qui bloque
-for(let m of ["gemini-2.5-flash","gemini-2.5-flash-lite","gemini-3.8-flash","gemini-2.0-flash"]){
-try{ txt=await tryModel(m); showDebug("✅ Modèle qui a marché : "+m); break; }catch(e){ lastErr=e.message; showDebug("⚠️ "+m+" a échoué : "+e.message.substring(0,80)+" - J'essaie le suivant..."); }
+for(let m of ["gemini-2.5-flash-lite","gemini-2.5-flash","gemini-2.0-flash"]){
+try{ txt=await tryModel(m); showDebug("✅ Modèle qui a marché : "+m); break; }catch(e){ lastErr=e.message; if(e.name==="AbortError") showDebug("⚠️ "+m+" trop lent, j'essaie le suivant..."); else showDebug("⚠️ "+m+" a échoué : "+e.message.substring(0,100)+" - J'essaie le suivant..."); }
 }
 if(!txt) throw new Error(lastErr);
 let jsonStr=txt.replace(/```json|```/g,'').trim();
@@ -169,7 +169,7 @@ if(sens!=="ATTENDRE") navigator.vibrate && navigator.vibrate([100,50,100]);
 }catch(e){
 document.getElementById('signal').className='signal wait';
 document.getElementById('signal').innerText='❌ ERREUR - VOIR EN DESSOUS';
-document.getElementById('explication').innerText='Erreur : '+e.message+'\n\nRecharge la page, remets ta capture, reclique 1 seule fois.';
+document.getElementById('explication').innerText='Erreur : '+e.message;
 showDebug("❌ Erreur finale : "+e.message);
 alert("Erreur : "+e.message);
 }
