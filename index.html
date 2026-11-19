@@ -1,19 +1,178 @@
-async function tryInteractions(model){
-showDebug("⏳ Essai Interactions API avec "+model+" ...");
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>ROBOT V14 FINAL - QM</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0a0a0a;color:#fff;font-family:Arial;padding:16px;padding-bottom:120px}
+h1{font-size:26px;margin:10px 0 4px}
+h1 span{color:#00ff88}
+.sub{color:#888;font-size:14px;margin-bottom:16px}
+.card{background:#1a1a1a;padding:16px;border-radius:16px;margin:12px 0;border:1px solid #222}
+label{font-size:16px;font-weight:700;display:block;margin:14px 0 6px}
+input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;background:#000;color:#fff;font-size:16px}
+.btn-analyser{width:100%;background:#00ff88;color:#000;padding:18px;border:0;border-radius:14px;font-weight:900;font-size:18px;cursor:pointer;margin-top:16px}
+.btn-analyser:disabled{opacity:.6}
+.result{display:none;background:#111;border:2px solid #00ff88;padding:16px;border-radius:16px;margin-top:16px}
+.signal{font-size:24px;font-weight:900;padding:16px;border-radius:12px;text-align:center;margin:10px 0}
+.buy{background:#00ff88;color:#000}.sell{background:#ff4444;color:#fff}.wait{background:#333;color:#fff}
+.flex{display:flex;gap:8px}.flex>div{flex:1;background:#000;padding:12px;border-radius:12px;text-align:center}
+.small{font-size:12px;color:#aaa;text-align:center}
+.sl{color:#ff4444;font-weight:900;font-size:18px}.tp{color:#00ff88;font-weight:900;font-size:18px}.tp1{color:#ffcc00;font-weight:900;font-size:18px}
+.barre-bas{position:fixed;bottom:0;left:0;right:0;background:#111;padding:10px;display:flex;gap:10px;z-index:99;border-top:2px solid #333}
+.btn-buy{flex:1;background:#00ff88;color:#000;padding:18px 5px;font-size:20px;border:0;border-radius:14px;font-weight:900}
+.btn-sell{flex:1;background:#ff4444;color:#fff;padding:18px 5px;font-size:20px;border:0;border-radius:14px;font-weight:900}
+.btn-mt5{width:100%;background:#007bff;color:#fff;padding:14px;border:0;border-radius:12px;font-size:16px;font-weight:900;margin-top:8px}
+.btn-copy{width:100%;background:#ffcc00;color:#000;padding:14px;border:0;border-radius:12px;font-size:16px;font-weight:900;margin-top:8px}
+.preview{width:100%;border-radius:12px;margin-top:10px;display:none;border:1px solid #333}
+.badge{font-size:12px;background:#00ff88;color:#000;padding:4px 10px;border-radius:20px;font-weight:900}
+.info{background:#00ff88;color:#000;padding:10px;border-radius:12px;text-align:center;font-size:13px;font-weight:900;margin:10px 0}
+.debug{background:#000;color:#ffcc00;padding:10px;border-radius:10px;font-size:12px;margin-top:10px;white-space:pre-wrap;word-break:break-word;display:none}
+.btn-key{width:100%;background:#007bff;color:#fff;padding:12px;border:0;border-radius:10px;font-weight:900;margin-top:8px}
+</style>
+</head>
+<body>
+<h1>ROBOT V14 <span>FINAL QM 100%</span></h1>
+<p class="sub">Capture = Analyse IA automatique. Plus de patch, c'est le dernier.</p>
+<div class="card">
+<div class="info">✅ V14 FINAL - 3 façons d'envoyer l'image, il choisit tout seul celle qui marche</div>
+<label>1. Ta clé Google</label>
+<input id="apiKey" type="password" placeholder="Colle ta clé ici - AIza...">
+<button class="btn-key" onclick="ouvrirAistudio()">🔑 OBTENIR MA CLÉ GRATUITE</button>
+<button class="btn-key" style="background:#333" onclick="sauvegarderCle()">💾 SAUVEGARDER MA CLÉ</button>
+<p class="small" id="etatCle" style="margin-top:8px">Clé : Non enregistrée</p>
+<label>Paire</label>
+<select id="paire">
+<option>Volatility 10 Index</option><option>Volatility 25 Index</option><option value="Volatility 50 (1s)" selected>Volatility 50 (1s)</option><option>Volatility 75 Index</option><option>Volatility 75 (1s) Index</option><option>Volatility 100 Index</option><option>Volatility 100 (1s) Index</option><option>Volatility 150 (1s) Index</option><option>Volatility 250 (1s) Index</option><option>Boom 1000 Index</option><option>Boom 500 Index</option><option>Crash 1000 Index</option><option>Crash 500 Index</option><option>Jump 100 Index</option><option>EURUSD</option><option>GBPUSD</option><option>USDJPY</option><option>US30</option><option>US100 - Nasdaq</option><option>XAUUSD - GOLD</option><option>BTCUSDT</option><option>ETHUSDT</option>
+</select>
+<label>Capture</label>
+<input type="file" id="fileInput" accept="image/*">
+<img id="preview" class="preview">
+<button class="btn-analyser" id="btnAnalyser" onclick="analyserQM()">🤖 ANALYSER AUTO QM 100% - BAM !</button>
+<p class="small" style="margin-top:10px">Clique 1 seule fois, attends 60 sec.</p>
+<div class="debug" id="debug"></div>
+</div>
+<div class="result" id="result">
+<span class="badge">RÉSULTAT QM 100%</span>
+<div class="signal wait" id="signal">EN ATTENTE</div>
+<p id="detail" style="text-align:center;font-size:14px;line-height:1.5"></p>
+<div class="flex">
+<div><div class="small">🛑 SL</div><div class="sl" id="slVal">---</div></div>
+<div><div class="small">🎯 TP1</div><div class="tp1" id="tp1Val">---</div></div>
+<div><div class="small">🎯 TP2</div><div class="tp" id="tpVal">---</div></div>
+</div>
+<p id="explication" style="font-size:13px;line-height:1.6;background:#000;padding:12px;border-radius:10px;white-space:pre-wrap"></p>
+<p id="conseil" class="small"></p>
+<button class="btn-copy" onclick="copierTout()">📋 COPIER SL + TP1 + TP2</button>
+<button class="btn-mt5" onclick="ouvrirMT5()">📱 OUVRIR MT5</button>
+</div>
+<div class="barre-bas">
+<button class="btn-buy" onclick="trade('ACHAT')">🟢 BUY</button>
+<button class="btn-sell" onclick="trade('VENTE')">🔴 SELL</button>
+</div>
+<script>
+let base64Image=null, sl=0, tp1=0, tp=0, sens="", figure="", enCours=false;
+let cleSauv=localStorage.getItem('qm_api_key')||"";
+if(cleSauv){document.getElementById('apiKey').value=cleSauv;document.getElementById('etatCle').innerText="Clé : ✅ Enregistrée";document.getElementById('etatCle').style.color="#00ff88";}
+function ouvrirAistudio(){window.open("https://aistudio.google.com/app/apikey","_blank");}
+function sauvegarderCle(){let k=document.getElementById('apiKey').value.trim();if(!k){alert("Colle d'abord ta clé !");return;}localStorage.setItem('qm_api_key',k);document.getElementById('etatCle').innerText="Clé : ✅ Enregistrée";document.getElementById('etatCle').style.color="#00ff88";alert("Clé sauvegardée !");}
+function showDebug(t){let d=document.getElementById('debug');d.style.display='block';d.innerText=t;}
+document.getElementById('fileInput').addEventListener('change',function(e){
+let f=e.target.files[0];if(!f)return;
+let r=new FileReader();
+r.onload=function(ev){
+let img=new Image();
+img.onload=function(){
+let canvas=document.createElement('canvas');
+let max=600;let ratio=Math.min(max/img.width,max/img.height,1);
+canvas.width=img.width*ratio;canvas.height=img.height*ratio;
+let ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
+base64Image=canvas.toDataURL('image/jpeg',0.6).split(',')[1];
+let p=document.getElementById('preview');p.src=ev.target.result;p.style.display='block';
+showDebug("✅ Capture chargée - Prête.");
+};
+img.src=ev.target.result;
+};
+r.readAsDataURL(f);
+});
+function copierTout(){let t=`SL: ${sl} | TP1: ${tp1} | TP2: ${tp} | Figure: ${figure} | Paire: ${document.getElementById('paire').value}`;navigator.clipboard.writeText(t).then(()=>alert("Copié !"));}
+function ouvrirMT5(){window.location.href="metatrader5://";setTimeout(()=>{window.open("https://play.google.com/store/apps/details?id=net.metaquotes.metatrader5","_blank");},800);}
+function trade(c){if(!sens){alert("⛔ Fais d'abord ANALYSER.");return;}if((c==='ACHAT'&&sens==='VENTE')||(c==='VENTE'&&sens==='ACHAT')){alert("⛔ BLOQUÉ : Robot dit "+sens);return;}alert(`✅ Tu peux ${c} !\nSL: ${sl}\nTP1: ${tp1}\nTP2: ${tp}`);copierTout();setTimeout(ouvrirMT5,500);}
+async function analyserQM(){
+if(enCours){alert("Déjà en cours, attends...");return;}
+let key=document.getElementById('apiKey').value.trim()||cleSauv;
+let paire=document.getElementById('paire').value;
+if(!key){alert("Il manque ta clé !");return;}
+if(!base64Image){alert("Il manque ta capture ! Remets ta capture.");return;}
+localStorage.setItem('qm_api_key',key);
+enCours=true;
+let btn=document.getElementById('btnAnalyser');
+btn.disabled=true;btn.innerText="⏳ ANALYSE EN COURS... 60 sec max...";
+document.getElementById('result').style.display='block';
+document.getElementById('signal').className='signal wait';
+document.getElementById('signal').innerText='⏳ L\'IA REGARDE TA CAPTURE... Attends 30-60 sec...';
+showDebug("⏳ Envoi à Google IA...");
+let prompt=`Tu es un expert trading Quasimodo QM 100%. Analyse cette capture de graphique pour la paire ${paire}. Lis les prix directement sur la capture. Tu dois UNIQUEMENT analyser le pattern Quasimodo QM. Ignore tout le reste. Règles QM STRICTES : QM BAISSIER = Haut 1 -> Bas -> Haut 2 PLUS BAS que Haut 1 -> Cassure du Bas = VENTE. QM HAUSSIER = Bas 1 -> Haut -> Bas 2 PLUS HAUT que Bas 1 -> Cassure du Haut = ACHAT. Si le prix n'a PAS encore cassé, c'est QM EN FORMATION = ATTENDRE. Si pas de structure claire, PAS DE QM = ATTENDRE. Réponds UNIQUEMENT en JSON valide, sans texte autour : {"verdict":"VENTE ou ACHAT ou ATTENDRE","figure":"QM BAISSIER ou QM HAUSSIER ou QM EN FORMATION BAISSIER ou QM EN FORMATION HAUSSIER ou PAS DE QM","confiance":0 à 100,"haut1":nombre,"bas":nombre,"haut2":nombre,"prix_actuel":nombre,"sl":nombre,"tp1":nombre,"tp2":nombre,"explication":"2-3 phrases simples en français avec les prix."} Pour SL : QM Baissier = juste au-dessus de Haut 2. QM Haussier = juste en-dessous de Bas 2. TP2 = ancien Bas pour VENTE, ancien Haut pour ACHAT. TP1 = moitié. Si ATTENDRE, sl=0 tp1=0 tp2=0.`;
+async function callAPI(url, body){
 let ctrl=new AbortController();
 let timer=setTimeout(()=>ctrl.abort(),60000);
 try{
-let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/interactions?key=${key}`,{
-method:'POST', headers:{'Content-Type':'application/json'}, signal:ctrl.signal,
-body:JSON.stringify({model:"models/"+model, input:[{role:"user", content:[{type:"text", text:prompt},{type:"image", image_url:{url:"data:image/jpeg;base64,"+base64Image}}]}]})
-});
+let res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,body:JSON.stringify(body)});
 clearTimeout(timer);
-if(!res.ok){let e=await res.json().catch(()=>({})); throw new Error(e.error?.message || "Erreur "+res.status);}
+if(!res.ok){let e=await res.json().catch(()=>({}));throw new Error(e.error?.message||"Erreur "+res.status);}
 let data=await res.json();
-let txt="";
-if(data.outputs && data.outputs[0]) txt=data.outputs[0].content?.[0]?.text || data.outputs[0].text || "";
-if(!txt && data.output) txt=data.output[0]?.content?.[0]?.text || "";
-if(!txt) txt=JSON.stringify(data);
-return txt;
-}catch(err){ clearTimeout(timer); throw err; }
+if(data.candidates && data.candidates[0]) return data.candidates[0].content.parts[0].text;
+if(data.outputs && data.outputs[0]) return data.outputs[0].content?.[0]?.text || data.outputs[0].text || JSON.stringify(data);
+if(data.output) return data.output[0]?.content?.[0]?.text || JSON.stringify(data);
+return JSON.stringify(data);
+}catch(err){clearTimeout(timer);throw err;}
 }
+try{
+let txt=null;let lastErr="";
+// METHODE 1 : Ancien generateContent avec 3.8-flash - la plus simple, on essaie d'abord
+try{showDebug("⏳ Méthode 1 : generateContent 3.8-flash...");txt=await callAPI(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${key}`,{contents:[{parts:[{text:prompt},{inline_data:{mime_type:"image/jpeg",data:base64Image}}]}]});showDebug("✅ Méthode 1 a marché !");}catch(e){lastErr=e.message;showDebug("⚠️ Méthode 1 a échoué : "+e.message.substring(0,120));}
+// METHODE 2 : Interactions API avec inline_data - le bon mot pour l'image
+if(!txt){
+try{showDebug("⏳ Méthode 2 : Interactions avec inline_data...");txt=await callAPI(`https://generativelanguage.googleapis.com/v1beta/interactions?key=${key}`,{model:"models/gemini-3.8-flash",input:[{role:"user",content:[{type:"text",text:prompt},{type:"image",inline_data:{mime_type:"image/jpeg",data:base64Image}}]}]});showDebug("✅ Méthode 2 a marché !");}catch(e){lastErr=e.message;showDebug("⚠️ Méthode 2 a échoué : "+e.message.substring(0,120));}
+}
+// METHODE 3 : Interactions API avec image_url - l'autre façon que Google accepte
+if(!txt){
+try{showDebug("⏳ Méthode 3 : Interactions avec image_url...");txt=await callAPI(`https://generativelanguage.googleapis.com/v1beta/interactions?key=${key}`,{model:"models/gemini-3.8-flash",input:[{role:"user",content:[{type:"text",text:prompt},{type:"image",image_url:{url:"data:image/jpeg;base64,"+base64Image}}]}]});showDebug("✅ Méthode 3 a marché !");}catch(e){lastErr=e.message;showDebug("⚠️ Méthode 3 a échoué : "+e.message.substring(0,120));}
+}
+// METHODE 4 : Interactions API avec file_data
+if(!txt){
+try{showDebug("⏳ Méthode 4 : Interactions avec file_data...");txt=await callAPI(`https://generativelanguage.googleapis.com/v1beta/interactions?key=${key}`,{model:"models/gemini-3.8-flash",input:[{role:"user",content:[{type:"text",text:prompt},{type:"image",file_data:{mime_type:"image/jpeg",data:base64Image}}]}]});showDebug("✅ Méthode 4 a marché !");}catch(e){lastErr=e.message;showDebug("⚠️ Méthode 4 a échoué : "+e.message.substring(0,120));}
+}
+if(!txt) throw new Error(lastErr);
+let jsonStr=txt.replace(/```json|```/g,'').trim();
+let s=jsonStr.indexOf('{');let en=jsonStr.lastIndexOf('}');
+if(s!==-1&&en!==-1) jsonStr=jsonStr.substring(s,en+1);
+let j=JSON.parse(jsonStr);
+sens=j.verdict;figure=j.figure;sl=j.sl||0;tp1=j.tp1||0;tp=j.tp2||0;
+let sig=document.getElementById('signal');
+if(sens==="VENTE"){sig.className='signal sell';sig.innerText=`🔴 BAM ! QM BAISSIER - VENDS (${j.confiance}%)`;}
+else if(sens==="ACHAT"){sig.className='signal buy';sig.innerText=`🟢 BAM ! QM HAUSSIER - ACHETES (${j.confiance}%)`;}
+else{sig.className='signal wait';sig.innerText=`⏳ ${figure} - ATTENDS (${j.confiance}%)`;}
+document.getElementById('detail').innerText=`${figure} | Haut1: ${j.haut1} | Bas: ${j.bas} | Haut2: ${j.haut2} | Prix: ${j.prix_actuel}`;
+document.getElementById('slVal').innerText=sl?sl:"---";
+document.getElementById('tp1Val').innerText=tp1?tp1:"---";
+document.getElementById('tpVal').innerText=tp?tp:"---";
+document.getElementById('explication').innerText=j.explication;
+document.getElementById('conseil').innerText=sens!=="ATTENDRE"?`Si ${sens}: SL=${sl} TP1=${tp1} TP2=${tp}`:"Attends la cassure. Ne trade pas avant.";
+showDebug("✅ Analyse terminée !");
+if(sens!=="ATTENDRE") navigator.vibrate && navigator.vibrate([100,50,100]);
+}catch(e){
+document.getElementById('signal').className='signal wait';
+document.getElementById('signal').innerText='❌ ERREUR - VOIR EN DESSOUS';
+document.getElementById('explication').innerText='Erreur : '+e.message;
+showDebug("❌ Erreur finale : "+e.message);
+alert("Erreur : "+e.message);
+}
+enCours=false;
+btn.disabled=false;btn.innerText="🤖 ANALYSER AUTO QM 100% - BAM !";
+}
+</script>
+</body>
+</html>
