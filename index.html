@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>ROBOT V9 - CAPTURE QM BAM</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0a0a1a;color:#fff;font-family:Arial;padding:8px;padding-bottom:120px}
+.top{background:linear-gradient(135deg,#ff00aa,#ffcc00);padding:14px;border-radius:16px;color:#000;text-align:center;position:sticky;top:0;z-index:10}
+.top h1{margin:0;font-size:22px}.top p{margin:4px 0;font-size:12px}
+.card{background:#1a1a2e;padding:12px;border-radius:16px;margin:10px 0}
+select,input{width:100%;padding:14px;border-radius:12px;border:1px solid #444;background:#000;color:#fff;margin:6px 0;font-size:16px}
+button{border:0;border-radius:14px;font-weight:900;cursor:pointer}
+.signal{font-size:22px;font-weight:900;padding:16px;border-radius:14px;text-align:center;margin:10px 0}
+.buy{background:#00ff88;color:#000}.sell{background:#ff4444;color:#fff}.wait{background:#333;color:#fff}
+.flex{display:flex;gap:8px}.flex>div{flex:1;background:#000;padding:10px;border-radius:12px;text-align:center}
+.big{font-size:18px;font-weight:900}.green{color:#00ff88}.red{color:#ff4444}.yellow{color:#ffcc00}
+.small{font-size:12px;color:#aaa;text-align:center}
+.sl{color:#ff4444;font-weight:900;font-size:18px}.tp{color:#00ff88;font-weight:900;font-size:18px}.tp1{color:#ffcc00;font-weight:900;font-size:18px}
+.barre-bas{position:fixed;bottom:0;left:0;right:0;background:#111;padding:10px;display:flex;gap:10px;z-index:99;border-top:2px solid #333}
+.btn-buy{flex:1;background:#00ff88;color:#000;padding:18px 5px;font-size:22px}
+.btn-sell{flex:1;background:#ff4444;color:#fff;padding:18px 5px;font-size:22px}
+.btn-mt5{width:100%;background:#007bff;color:#fff;padding:14px;font-size:16px;margin-top:8px}
+.btn-copy{width:100%;background:#ffcc00;color:#000;padding:14px;font-size:16px;margin-top:8px}
+.info{background:#00ff88;color:#000;padding:10px;border-radius:12px;text-align:center;font-size:13px;font-weight:900;margin:10px 0}
+.warn{background:#ffcc00;color:#000;padding:10px;border-radius:12px;text-align:center;font-weight:900;font-size:13px;margin:10px 0}
+.step{background:#000;border:2px solid #444;padding:10px;border-radius:12px;margin:8px 0;text-align:center}
+.step.active{border-color:#ffcc00;background:#2a2a00}
+.step.done{border-color:#00ff88;background:#002a00}
+#imgWrap{position:relative;width:100%;background:#000;border-radius:12px;overflow:hidden;min-height:200px;display:none}
+#imgCapture{width:100%;display:block}
+.point{position:absolute;width:22px;height:22px;border-radius:50%;border:2px solid #fff;color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%);z-index:5}
+canvas{display:none}
+</style>
+</head>
+<body>
+<div class="top">
+<h1>🤖 ROBOT V9 - CAPTURE QM</h1>
+<p>Capture -> Analyse -> BAM 💥</p>
+<p>Tu ne tapes plus rien</p>
+</div>
+
+<div class="card">
+<div class="info">✅ MODE CAPTURE : Tu mets ta capture, tu touches 4 points, BAM c'est analysé.</div>
+<label class="small">👇 1. CHOISIS TON ACTIF :</label>
+<select id="paire">
+<option value="Volatility 100">Volatility 100 Index</option>
+<option value="Volatility 75">Volatility 75 Index</option>
+<option value="Volatility 25">Volatility 25 Index</option>
+<option value="Volatility 10">Volatility 10 Index</option>
+<option value="EURUSD">EURUSD</option>
+<option value="GBPUSD">GBPUSD</option>
+<option value="USDJPY">USDJPY</option>
+<option value="XAUUSD">XAUUSD - GOLD</option>
+<option value="US30">US30</option>
+<option value="US100">US100 - Nasdaq</option>
+<option value="BTCUSDT">BTC</option>
+<option value="ETHUSDT">ETH</option>
+</select>
+<input id="mise" type="number" value="5000" placeholder="Mise en Ar">
+</div>
+
+<div class="card">
+<label class="small">👇 2. METS TA CAPTURE :</label>
+<input type="file" id="fileInput" accept="image/*" style="display:none" onchange="chargerImage(event)">
+<button style="width:100%;background:#ff00aa;color:#fff;padding:16px;font-size:18px" onclick="document.getElementById('fileInput').click()">📸 METTRE MA CAPTURE MT5</button>
+<button style="width:100%;background:#333;color:#fff;padding:12px;margin-top:8px" onclick="exemple()">🎲 TESTE AVEC EXEMPLE QM</button>
+<div id="imgWrap">
+<img id="imgCapture">
+</div>
+<p class="small" id="aideImg">Pas encore de capture. Mets une capture de MT5.</p>
+</div>
+
+<div class="card" id="cardEtapes">
+<div class="step active" id="step1">👆 ÉTAPE 1 : Touche le <b>HAUT 1</b> - Le premier haut<br><span class="small">C'est le haut le plus haut à gauche</span></div>
+<div class="step" id="step2">👆 ÉTAPE 2 : Touche le <b>BAS</b> - Le bas entre les 2 hauts</div>
+<div class="step" id="step3">👆 ÉTAPE 3 : Touche le <b>HAUT 2</b> - Le deuxième haut, plus bas</div>
+<div class="step" id="step4">👆 ÉTAPE 4 : Touche le <b>PRIX ACTUEL</b> - Où est le prix maintenant</div>
+<button style="width:100%;background:#ffcc00;color:#000;padding:14px;font-size:16px" onclick="resetPoints()">🔄 RECOMMENCER LES POINTS</button>
+<div style="display:flex;gap:8px;margin-top:8px">
+<div style="flex:1"><div class="small">Haut 1</div><input id="vH1" type="number" step="0.01" placeholder="Ex: 1400"></div>
+<div style="flex:1"><div class="small">Bas</div><input id="vL1" type="number" step="0.01" placeholder="Ex: 1350"></div>
+<div style="flex:1"><div class="small">Haut 2</div><input id="vH2" type="number" step="0.01" placeholder="Ex: 1380"></div>
+<div style="flex:1"><div class="small">Prix</div><input id="vPrix" type="number" step="0.01" placeholder="Ex: 1340"></div>
+</div>
+<p class="small">Tu peux aussi taper les 4 prix que tu vois dans MT5 si tu ne veux pas toucher la photo.</p>
+<button style="width:100%;background:#00ff88;color:#000;padding:18px;font-size:20px;margin-top:8px" onclick="analyserBAM()">💥 ANALYSER - BAM !</button>
+</div>
+
+<div class="card">
+<div class="signal wait" id="signal">EN ATTENTE DE CAPTURE</div>
+<p id="detail" style="text-align:center"></p>
+<div class="flex">
+<div><div class="small">🛑 SL</div><div class="sl" id="slVal">---</div></div>
+<div><div class="small">🎯 TP1</div><div class="tp1" id="tp1Val">---</div></div>
+<div><div class="small">🎯 TP2</div><div class="tp" id="tpVal">---</div></div>
+</div>
+<p id="conseil" class="small"></p>
+<p id="pourquoi" style="text-align:center;font-size:13px"></p>
+</div>
+
+<div class="card">
+<button class="btn-mt5" onclick="ouvrirMT5()">📱 OUVRIR MT5</button>
+<button class="btn-copy" onclick="copierTout()">📋 COPIER SL + TP1 + TP2</button>
+</div>
+
+<div class="card">
+<h3 style="margin:0;text-align:center">📖 Rappel BAM</h3>
+<p><b>QM Baissier :</b> Haut 1 > Haut 2 ET Prix < Bas = <b style="color:#ff4444">VENDS</b></p>
+<p><b>QM Haussier :</b> Bas 1 < Bas 2 ET Prix > Haut = <b style="color:#00ff88">ACHETES</b></p>
+<p>Sinon = <b>ATTENDS</b>, ce n'est pas encore un QM.</p>
+</div>
+
+<div class="barre-bas">
+<button class="btn-buy" onclick="ouvrirPosition('ACHAT')">🟢 BUY</button>
+<button class="btn-sell" onclick="ouvrirPosition('VENTE')">🔴 SELL</button>
+</div>
+
+<script>
+let etape=1, points={}, sl=0, tp1=0, tp=0, sens="", derniere={c:0,figure:""};
+let solde=100000;
+function chargerImage(e){
+let f=e.target.files[0]; if(!f) return;
+let r=new FileReader();
+r.onload=function(ev){
+document.getElementById('imgCapture').src=ev.target.result;
+document.getElementById('imgWrap').style.display='block';
+document.getElementById('aideImg').innerText='Maintenant touche le HAUT 1 sur ta capture 👆';
+resetPoints();
+};
+r.readAsDataURL(f);
+}
+function exemple(){
+document.getElementById('vH1').value=1400;
+document.getElementById('vL1').value=1350;
+document.getElementById('vH2').value=1380;
+document.getElementById('vPrix').value=1340;
+document.getElementById('imgWrap').style.display='block';
+document.getElementById('imgCapture').src='https://via.placeholder.com/350x200/000000/00ff88?text=Exemple+QM+Baissier';
+document.getElementById('aideImg').innerText='Exemple chargé ! Clique ANALYSER - BAM !';
+alert("Exemple QM Baissier chargé ! Clique 💥 ANALYSER - BAM !");
+}
+function resetPoints(){
+etape=1; points={};
+document.querySelectorAll('.point').forEach(p=>p.remove());
+['step1','step2','step3','step4'].forEach((id,i)=>{
+let el=document.getElementById(id);
+el.className='step'+(i===0?' active':'');
+});
+}
+document.getElementById('imgWrap').addEventListener('click',function(e){
+let rect=this.getBoundingClientRect();
+let x=e.clientX-rect.left, y=e.clientY-rect.top;
+let label=['H1','L1','H2','PRIX'][etape-1];
+let colors=['#ffcc00','#00ff88','#ff00aa','#ffffff'];
+let d=document.createElement('div');
+d.className='point'; d.style.left=x+'px'; d.style.top=y+'px'; d.style.background=colors[etape-1];
+d.innerText=etape;
+this.appendChild(d);
+document.getElementById('step'+etape).className='step done';
+if(etape<4){
+etape++;
+document.getElementById('step'+etape).className='step active';
+document.getElementById('aideImg').innerText='Bien ! Maintenant étape '+etape;
+}else{
+document.getElementById('aideImg').innerText='✅ 4 points touchés ! Mets les 4 prix en bas et clique BAM !';
+}
+});
+function analyserBAM(){
+let H1=parseFloat(document.getElementById('vH1').value);
+let L1=parseFloat(document.getElementById('vL1').value);
+let H2=parseFloat(document.getElementById('vH2').value);
+let prix=parseFloat(document.getElementById('vPrix').value);
+let paire=document.getElementById('paire').value;
+if(!H1||!L1||!H2||!prix){alert("Il manque un prix ! Remplis les 4 prix : Haut 1, Bas, Haut 2, Prix actuel.");return;}
+derniere.c=prix; derniere.paire=paire;
+let sig=document.getElementById('signal');
+let det=document.getElementById('detail');
+let pourquoi=document.getElementById('pourquoi');
+// QM BAISSIER
+if(H1>H2 && prix<L1){
+sens="VENTE"; derniere.figure="QM BAISSIER";
+sig.className='signal sell'; sig.innerText="🔴 BAM ! QM BAISSIER - VENDS";
+det.innerText=`Haut 1 ${H1} > Haut 2 ${H2} et Prix ${prix} < Bas ${L1} = CASSURE !`;
+sl=H2 + (H1-H2)*0.2;
+let risque=sl-prix; tp1=prix-risque*1; tp=prix-risque*2;
+if(tp>L1) tp=L1;
+pourquoi.innerHTML=`<b style="color:#ff4444">VENDS MAINTENANT.</b><br>Ton QM est confirmé, le prix a cassé le bas.`;
+}
+// QM HAUSSIER - on inverse la logique : si tu as mis Bas1, Haut, Bas2, on le détecte aussi si Haut1 est en fait un bas ?
+// Pour simplifier, on teste aussi le cas où l'utilisateur a mis Bas1, Haut, Bas2, Prix
+// Si H1 < L1 et H2 > H1, c'est un QM Haussier déguisé
+else if(H1 < L1 && H2 > H1 && prix > L1){
+sens="ACHAT"; derniere.figure="QM HAUSSIER";
+sig.className='signal buy'; sig.innerText="🟢 BAM ! QM HAUSSIER - ACHETES";
+det.innerText=`Bas 1 ${H1} < Bas 2 ${H2} et Prix ${prix} > Haut ${L1} = CASSURE !`;
+sl=H2 - (H2-H1)*0.2;
+let risque=prix-sl; tp1=prix+risque*1; tp=prix+risque*2;
+if(tp<L1) tp=L1;
+pourquoi.innerHTML=`<b style="color:#00ff88">ACHETES MAINTENANT.</b><br>Ton QM est confirmé, le prix a cassé le haut.`;
+}
+// EN FORMATION BAISSIER
+else if(H1>H2 && prix>L1 && prix<H2){
+sens=""; derniere.figure="QM EN FORMATION";
+sig.className='signal wait'; sig.innerText="⏳ QM EN FORMATION - ATTENDS";
+det.innerText=`Haut 1 ${H1} > Haut 2 ${H2} mais Prix ${prix} n'a pas encore cassé Bas ${L1}.`;
+sl=0; tp1=0; tp=0;
+pourquoi.innerHTML=`Attends que le prix casse <b>${L1}</b> pour VENDRE. Ne vends pas avant.`;
+}
+// EN FORMATION HAUSSIER
+else if(H1 < L1 && H2 > H1 && prix < L1 && prix > H2){
+sens=""; derniere.figure="QM EN FORMATION";
+sig.className='signal wait'; sig.innerText="⏳ QM EN FORMATION - ATTENDS";
+det.innerText=`Bas 1 ${H1} < Bas 2 ${H2} mais Prix ${prix} n'a pas encore cassé Haut ${L1}.`;
+sl=0; tp1=0; tp=0;
+pourquoi.innerHTML=`Attends que le prix casse <b>${L1}</b> pour ACHETER.`;
+}
+else{
+sens=""; derniere.figure="PAS DE QM";
+sig.className='signal wait'; sig.innerText="⏳ PAS DE QM - ATTENDS";
+det.innerText=`Pas de QM clair. H1=${H1} H2=${H2} Bas=${L1} Prix=${prix}`;
+sl=0; tp1=0; tp=0;
+pourquoi.innerHTML=`Ce n'est pas un QM. Attends une vraie structure. Ne trade pas ça.`;
+}
+document.getElementById('slVal').innerText=sl?sl.toFixed(2):"---";
+document.getElementById('tp1Val').innerText=tp1?tp1.toFixed(2):"---";
+document.getElementById('tpVal').innerText=tp?tp.toFixed(2):"---";
+document.getElementById('conseil').innerText=sens?`Si ${sens}: SL=${sl.toFixed(2)} TP1=${tp1.toFixed(2)} TP2=${tp.toFixed(2)}`:"Attends un QM confirmé.";
+if(sens) navigator.vibrate && navigator.vibrate([100,50,100]);
+}
+function ouvrirPosition(choix){
+if(!sens){alert("⛔ BLOQUÉ : Pas de QM confirmé. Clique d'abord ANALYSER - BAM !");return;}
+if((choix==='ACHAT' && sens==='VENTE') || (choix==='VENTE' && sens==='ACHAT')){alert("⛔ BLOQUÉ : Robot dit "+sens);return;}
+alert(`✅ Tu peux ${choix} !\nSL: ${sl.toFixed(2)}\nTP1: ${tp1.toFixed(2)}\nTP2: ${tp.toFixed(2)}\n\nCopié ! Colle dans MT5.`);
+copierTout(); setTimeout(ouvrirMT5,500);
+}
+function copierTout(){let txt=`SL: ${sl.toFixed(2)} | TP1: ${tp1.toFixed(2)} | TP2: ${tp.toFixed(2)} | Figure: ${derniere.figure} | Paire: ${document.getElementById('paire').value}`;navigator.clipboard.writeText(txt).then(()=>{});}
+function ouvrirMT5(){window.location.href="metatrader5://";setTimeout(()=>{window.open("https://play.google.com/store/apps/details?id=net.metaquotes.metatrader5","_blank");},800);}
+</script>
+</body>
+</html>
