@@ -3,240 +3,223 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ROBOT V9 - CAPTURE QM BAM</title>
+<title>ROBOT V10 - AUTO QM 100%</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#0a0a1a;color:#fff;font-family:Arial;padding:8px;padding-bottom:120px}
-.top{background:linear-gradient(135deg,#ff00aa,#ffcc00);padding:14px;border-radius:16px;color:#000;text-align:center;position:sticky;top:0;z-index:10}
-.top h1{margin:0;font-size:22px}.top p{margin:4px 0;font-size:12px}
-.card{background:#1a1a2e;padding:12px;border-radius:16px;margin:10px 0}
-select,input{width:100%;padding:14px;border-radius:12px;border:1px solid #444;background:#000;color:#fff;margin:6px 0;font-size:16px}
-button{border:0;border-radius:14px;font-weight:900;cursor:pointer}
-.signal{font-size:22px;font-weight:900;padding:16px;border-radius:14px;text-align:center;margin:10px 0}
+body{margin:0;background:#0a0a0a;color:#fff;font-family:Arial;padding:16px;padding-bottom:120px}
+h1{font-size:26px;margin:10px 0 4px}
+h1 span{color:#00ff88}
+.sub{color:#888;font-size:14px;margin-bottom:16px;line-height:1.4}
+.card{background:#1a1a1a;padding:16px;border-radius:16px;margin:12px 0;border:1px solid #222}
+label{font-size:16px;font-weight:700;display:block;margin:14px 0 6px}
+input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;background:#000;color:#fff;font-size:16px}
+input::placeholder{color:#888}
+.aide{font-size:12px;color:#888;margin-top:6px;line-height:1.4}
+.btn-analyser{width:100%;background:#00ff88;color:#000;padding:18px;border:0;border-radius:14px;font-weight:900;font-size:18px;cursor:pointer;margin-top:16px}
+.btn-analyser:disabled{opacity:.6}
+.result{display:none;background:#111;border:2px solid #00ff88;padding:16px;border-radius:16px;margin-top:16px}
+.signal{font-size:24px;font-weight:900;padding:16px;border-radius:12px;text-align:center;margin:10px 0}
 .buy{background:#00ff88;color:#000}.sell{background:#ff4444;color:#fff}.wait{background:#333;color:#fff}
-.flex{display:flex;gap:8px}.flex>div{flex:1;background:#000;padding:10px;border-radius:12px;text-align:center}
+.flex{display:flex;gap:8px}.flex>div{flex:1;background:#000;padding:12px;border-radius:12px;text-align:center}
 .big{font-size:18px;font-weight:900}.green{color:#00ff88}.red{color:#ff4444}.yellow{color:#ffcc00}
 .small{font-size:12px;color:#aaa;text-align:center}
 .sl{color:#ff4444;font-weight:900;font-size:18px}.tp{color:#00ff88;font-weight:900;font-size:18px}.tp1{color:#ffcc00;font-weight:900;font-size:18px}
 .barre-bas{position:fixed;bottom:0;left:0;right:0;background:#111;padding:10px;display:flex;gap:10px;z-index:99;border-top:2px solid #333}
-.btn-buy{flex:1;background:#00ff88;color:#000;padding:18px 5px;font-size:22px}
-.btn-sell{flex:1;background:#ff4444;color:#fff;padding:18px 5px;font-size:22px}
-.btn-mt5{width:100%;background:#007bff;color:#fff;padding:14px;font-size:16px;margin-top:8px}
-.btn-copy{width:100%;background:#ffcc00;color:#000;padding:14px;font-size:16px;margin-top:8px}
-.info{background:#00ff88;color:#000;padding:10px;border-radius:12px;text-align:center;font-size:13px;font-weight:900;margin:10px 0}
-.warn{background:#ffcc00;color:#000;padding:10px;border-radius:12px;text-align:center;font-weight:900;font-size:13px;margin:10px 0}
-.step{background:#000;border:2px solid #444;padding:10px;border-radius:12px;margin:8px 0;text-align:center}
-.step.active{border-color:#ffcc00;background:#2a2a00}
-.step.done{border-color:#00ff88;background:#002a00}
-#imgWrap{position:relative;width:100%;background:#000;border-radius:12px;overflow:hidden;min-height:200px;display:none}
-#imgCapture{width:100%;display:block}
-.point{position:absolute;width:22px;height:22px;border-radius:50%;border:2px solid #fff;color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%);z-index:5}
-canvas{display:none}
+.btn-buy{flex:1;background:#00ff88;color:#000;padding:18px 5px;font-size:20px;border:0;border-radius:14px;font-weight:900}
+.btn-sell{flex:1;background:#ff4444;color:#fff;padding:18px 5px;font-size:20px;border:0;border-radius:14px;font-weight:900}
+.btn-mt5{width:100%;background:#007bff;color:#fff;padding:14px;border:0;border-radius:12px;font-size:16px;font-weight:900;margin-top:8px}
+.btn-copy{width:100%;background:#ffcc00;color:#000;padding:14px;border:0;border-radius:12px;font-size:16px;font-weight:900;margin-top:8px}
+.preview{width:100%;border-radius:12px;margin-top:10px;display:none;border:1px solid #333}
+.badge{font-size:12px;background:#00ff88;color:#000;padding:4px 10px;border-radius:20px;font-weight:900}
 </style>
 </head>
 <body>
-<div class="top">
-<h1>🤖 ROBOT V9 - CAPTURE QM</h1>
-<p>Capture -> Analyse -> BAM 💥</p>
-<p>Tu ne tapes plus rien</p>
-</div>
+<h1>ROBOT V10 <span>AUTO QM 100%</span></h1>
+<p class="sub">Upload = Analyse IA automatique. Plus de cases à cocher à la main.<br>100% Quasimodo. Pas de SMC, pas de BOS, pas de FVG. Juste QM.</p>
 
 <div class="card">
-<div class="info">✅ MODE CAPTURE : Tu mets ta capture, tu touches 4 points, BAM c'est analysé.</div>
-<label class="small">👇 1. CHOISIS TON ACTIF :</label>
+<label>1. Ta clé IA gratuite (1 seule fois)</label>
+<input id="apiKey" type="password" placeholder="Colle ta clé ici - commence par AIza ou AQ.">
+<p class="aide">Va sur aistudio.google.com > Get API Key > Gratuit. Sans ça, le robot ne peut pas VOIR.<br>Ta clé reste dans ton téléphone, elle n'est envoyée à personne.</p>
+<button onclick="sauvegarderCle()" style="background:#333;color:#fff;border:0;padding:10px 16px;border-radius:10px;font-weight:900;margin-top:6px">💾 SAUVEGARDER MA CLÉ</button>
+<p class="aide" id="etatCle">Clé : Non enregistrée</p>
+
+<label>Paire</label>
 <select id="paire">
-<option value="Volatility 100">Volatility 100 Index</option>
-<option value="Volatility 75">Volatility 75 Index</option>
-<option value="Volatility 25">Volatility 25 Index</option>
-<option value="Volatility 10">Volatility 10 Index</option>
-<option value="EURUSD">EURUSD</option>
-<option value="GBPUSD">GBPUSD</option>
-<option value="USDJPY">USDJPY</option>
-<option value="XAUUSD">XAUUSD - GOLD</option>
-<option value="US30">US30</option>
-<option value="US100">US100 - Nasdaq</option>
-<option value="BTCUSDT">BTC</option>
-<option value="ETHUSDT">ETH</option>
+<optgroup label="🔥 SYNTHETIC">
+<option>Volatility 10 Index</option>
+<option>Volatility 25 Index</option>
+<option value="Volatility 50 (1s)" selected>Volatility 50 (1s)</option>
+<option>Volatility 75 Index</option>
+<option>Volatility 75 (1s) Index</option>
+<option>Volatility 100 Index</option>
+<option>Volatility 100 (1s) Index</option>
+<option>Volatility 150 (1s) Index</option>
+<option>Volatility 250 (1s) Index</option>
+<option>Boom 1000 Index</option>
+<option>Boom 500 Index</option>
+<option>Crash 1000 Index</option>
+<option>Crash 500 Index</option>
+<option>Jump 100 Index</option>
+</optgroup>
+<optgroup label="💶 FOREX">
+<option>EURUSD</option>
+<option>GBPUSD</option>
+<option>USDJPY</option>
+<option>AUDUSD</option>
+<option>USDCAD</option>
+<option>EURJPY</option>
+<option>GBPJPY</option>
+</optgroup>
+<optgroup label="📈 INDEX">
+<option>US30</option>
+<option>US100 - Nasdaq</option>
+<option>US500 - S&P 500</option>
+<option>UK100</option>
+<option>GER40</option>
+</optgroup>
+<optgroup label="🥇 GOLD / CRYPTO">
+<option>XAUUSD - GOLD</option>
+<option>XAGUSD - SILVER</option>
+<option>BTCUSDT</option>
+<option>ETHUSDT</option>
+<option>SOLUSDT</option>
+</optgroup>
 </select>
-<input id="mise" type="number" value="5000" placeholder="Mise en Ar">
+
+<label>Prix actuel sur la capture</label>
+<input id="prixActuel" type="text" inputmode="decimal" placeholder="Ex: 199568,28 ou 1354.98 ou 1.0850">
+
+<label>Capture TradingView / 1xBet / MT5 / Deriv</label>
+<input type="file" id="fileInput" accept="image/*">
+<img id="preview" class="preview">
+
+<button class="btn-analyser" id="btnAnalyser" onclick="analyserQM()">🤖 ANALYSER AUTO QM 100%</button>
+<p class="small" style="margin-top:10px">🧠 L'IA analyse Quasimodo, cassure, SL, TP... 10 sec...</p>
 </div>
 
-<div class="card">
-<label class="small">👇 2. METS TA CAPTURE :</label>
-<input type="file" id="fileInput" accept="image/*" style="display:none" onchange="chargerImage(event)">
-<button style="width:100%;background:#ff00aa;color:#fff;padding:16px;font-size:18px" onclick="document.getElementById('fileInput').click()">📸 METTRE MA CAPTURE MT5</button>
-<button style="width:100%;background:#333;color:#fff;padding:12px;margin-top:8px" onclick="exemple()">🎲 TESTE AVEC EXEMPLE QM</button>
-<div id="imgWrap">
-<img id="imgCapture">
-</div>
-<p class="small" id="aideImg">Pas encore de capture. Mets une capture de MT5.</p>
-</div>
-
-<div class="card" id="cardEtapes">
-<div class="step active" id="step1">👆 ÉTAPE 1 : Touche le <b>HAUT 1</b> - Le premier haut<br><span class="small">C'est le haut le plus haut à gauche</span></div>
-<div class="step" id="step2">👆 ÉTAPE 2 : Touche le <b>BAS</b> - Le bas entre les 2 hauts</div>
-<div class="step" id="step3">👆 ÉTAPE 3 : Touche le <b>HAUT 2</b> - Le deuxième haut, plus bas</div>
-<div class="step" id="step4">👆 ÉTAPE 4 : Touche le <b>PRIX ACTUEL</b> - Où est le prix maintenant</div>
-<button style="width:100%;background:#ffcc00;color:#000;padding:14px;font-size:16px" onclick="resetPoints()">🔄 RECOMMENCER LES POINTS</button>
-<div style="display:flex;gap:8px;margin-top:8px">
-<div style="flex:1"><div class="small">Haut 1</div><input id="vH1" type="number" step="0.01" placeholder="Ex: 1400"></div>
-<div style="flex:1"><div class="small">Bas</div><input id="vL1" type="number" step="0.01" placeholder="Ex: 1350"></div>
-<div style="flex:1"><div class="small">Haut 2</div><input id="vH2" type="number" step="0.01" placeholder="Ex: 1380"></div>
-<div style="flex:1"><div class="small">Prix</div><input id="vPrix" type="number" step="0.01" placeholder="Ex: 1340"></div>
-</div>
-<p class="small">Tu peux aussi taper les 4 prix que tu vois dans MT5 si tu ne veux pas toucher la photo.</p>
-<button style="width:100%;background:#00ff88;color:#000;padding:18px;font-size:20px;margin-top:8px" onclick="analyserBAM()">💥 ANALYSER - BAM !</button>
-</div>
-
-<div class="card">
-<div class="signal wait" id="signal">EN ATTENTE DE CAPTURE</div>
-<p id="detail" style="text-align:center"></p>
+<div class="result" id="result">
+<span class="badge">RÉSULTAT QM 100%</span>
+<div class="signal wait" id="signal">ANALYSE...</div>
+<p id="detail" style="text-align:center;font-size:14px;line-height:1.5"></p>
 <div class="flex">
 <div><div class="small">🛑 SL</div><div class="sl" id="slVal">---</div></div>
 <div><div class="small">🎯 TP1</div><div class="tp1" id="tp1Val">---</div></div>
 <div><div class="small">🎯 TP2</div><div class="tp" id="tpVal">---</div></div>
 </div>
+<p id="explication" style="font-size:13px;line-height:1.6;background:#000;padding:12px;border-radius:10px;white-space:pre-wrap"></p>
 <p id="conseil" class="small"></p>
-<p id="pourquoi" style="text-align:center;font-size:13px"></p>
-</div>
-
-<div class="card">
-<button class="btn-mt5" onclick="ouvrirMT5()">📱 OUVRIR MT5</button>
 <button class="btn-copy" onclick="copierTout()">📋 COPIER SL + TP1 + TP2</button>
-</div>
-
-<div class="card">
-<h3 style="margin:0;text-align:center">📖 Rappel BAM</h3>
-<p><b>QM Baissier :</b> Haut 1 > Haut 2 ET Prix < Bas = <b style="color:#ff4444">VENDS</b></p>
-<p><b>QM Haussier :</b> Bas 1 < Bas 2 ET Prix > Haut = <b style="color:#00ff88">ACHETES</b></p>
-<p>Sinon = <b>ATTENDS</b>, ce n'est pas encore un QM.</p>
+<button class="btn-mt5" onclick="ouvrirMT5()">📱 OUVRIR MT5</button>
 </div>
 
 <div class="barre-bas">
-<button class="btn-buy" onclick="ouvrirPosition('ACHAT')">🟢 BUY</button>
-<button class="btn-sell" onclick="ouvrirPosition('VENTE')">🔴 SELL</button>
+<button class="btn-buy" onclick="trade('ACHAT')">🟢 BUY</button>
+<button class="btn-sell" onclick="trade('VENTE')">🔴 SELL</button>
 </div>
 
 <script>
-let etape=1, points={}, sl=0, tp1=0, tp=0, sens="", derniere={c:0,figure:""};
-let solde=100000;
-function chargerImage(e){
+let base64Image=null, sl=0, tp1=0, tp=0, sens="", figure="";
+let cleSauvegardee=localStorage.getItem('qm_api_key')||"";
+if(cleSauvegardee){document.getElementById('apiKey').value=cleSauvegardee;document.getElementById('etatCle').innerText="Clé : ✅ Enregistrée";document.getElementById('etatCle').style.color="#00ff88";}
+function sauvegarderCle(){
+let k=document.getElementById('apiKey').value.trim();
+if(!k){alert("Colle d'abord ta clé !");return;}
+localStorage.setItem('qm_api_key',k);
+document.getElementById('etatCle').innerText="Clé : ✅ Enregistrée";
+document.getElementById('etatCle').style.color="#00ff88";
+alert("Clé sauvegardée ! Tu n'auras plus à la remettre.");
+}
+document.getElementById('fileInput').addEventListener('change',function(e){
 let f=e.target.files[0]; if(!f) return;
 let r=new FileReader();
 r.onload=function(ev){
-document.getElementById('imgCapture').src=ev.target.result;
-document.getElementById('imgWrap').style.display='block';
-document.getElementById('aideImg').innerText='Maintenant touche le HAUT 1 sur ta capture 👆';
-resetPoints();
+base64Image=ev.target.result.split(',')[1];
+let p=document.getElementById('preview'); p.src=ev.target.result; p.style.display='block';
 };
 r.readAsDataURL(f);
-}
-function exemple(){
-document.getElementById('vH1').value=1400;
-document.getElementById('vL1').value=1350;
-document.getElementById('vH2').value=1380;
-document.getElementById('vPrix').value=1340;
-document.getElementById('imgWrap').style.display='block';
-document.getElementById('imgCapture').src='https://via.placeholder.com/350x200/000000/00ff88?text=Exemple+QM+Baissier';
-document.getElementById('aideImg').innerText='Exemple chargé ! Clique ANALYSER - BAM !';
-alert("Exemple QM Baissier chargé ! Clique 💥 ANALYSER - BAM !");
-}
-function resetPoints(){
-etape=1; points={};
-document.querySelectorAll('.point').forEach(p=>p.remove());
-['step1','step2','step3','step4'].forEach((id,i)=>{
-let el=document.getElementById(id);
-el.className='step'+(i===0?' active':'');
 });
-}
-document.getElementById('imgWrap').addEventListener('click',function(e){
-let rect=this.getBoundingClientRect();
-let x=e.clientX-rect.left, y=e.clientY-rect.top;
-let label=['H1','L1','H2','PRIX'][etape-1];
-let colors=['#ffcc00','#00ff88','#ff00aa','#ffffff'];
-let d=document.createElement('div');
-d.className='point'; d.style.left=x+'px'; d.style.top=y+'px'; d.style.background=colors[etape-1];
-d.innerText=etape;
-this.appendChild(d);
-document.getElementById('step'+etape).className='step done';
-if(etape<4){
-etape++;
-document.getElementById('step'+etape).className='step active';
-document.getElementById('aideImg').innerText='Bien ! Maintenant étape '+etape;
-}else{
-document.getElementById('aideImg').innerText='✅ 4 points touchés ! Mets les 4 prix en bas et clique BAM !';
-}
-});
-function analyserBAM(){
-let H1=parseFloat(document.getElementById('vH1').value);
-let L1=parseFloat(document.getElementById('vL1').value);
-let H2=parseFloat(document.getElementById('vH2').value);
-let prix=parseFloat(document.getElementById('vPrix').value);
-let paire=document.getElementById('paire').value;
-if(!H1||!L1||!H2||!prix){alert("Il manque un prix ! Remplis les 4 prix : Haut 1, Bas, Haut 2, Prix actuel.");return;}
-derniere.c=prix; derniere.paire=paire;
-let sig=document.getElementById('signal');
-let det=document.getElementById('detail');
-let pourquoi=document.getElementById('pourquoi');
-// QM BAISSIER
-if(H1>H2 && prix<L1){
-sens="VENTE"; derniere.figure="QM BAISSIER";
-sig.className='signal sell'; sig.innerText="🔴 BAM ! QM BAISSIER - VENDS";
-det.innerText=`Haut 1 ${H1} > Haut 2 ${H2} et Prix ${prix} < Bas ${L1} = CASSURE !`;
-sl=H2 + (H1-H2)*0.2;
-let risque=sl-prix; tp1=prix-risque*1; tp=prix-risque*2;
-if(tp>L1) tp=L1;
-pourquoi.innerHTML=`<b style="color:#ff4444">VENDS MAINTENANT.</b><br>Ton QM est confirmé, le prix a cassé le bas.`;
-}
-// QM HAUSSIER - on inverse la logique : si tu as mis Bas1, Haut, Bas2, on le détecte aussi si Haut1 est en fait un bas ?
-// Pour simplifier, on teste aussi le cas où l'utilisateur a mis Bas1, Haut, Bas2, Prix
-// Si H1 < L1 et H2 > H1, c'est un QM Haussier déguisé
-else if(H1 < L1 && H2 > H1 && prix > L1){
-sens="ACHAT"; derniere.figure="QM HAUSSIER";
-sig.className='signal buy'; sig.innerText="🟢 BAM ! QM HAUSSIER - ACHETES";
-det.innerText=`Bas 1 ${H1} < Bas 2 ${H2} et Prix ${prix} > Haut ${L1} = CASSURE !`;
-sl=H2 - (H2-H1)*0.2;
-let risque=prix-sl; tp1=prix+risque*1; tp=prix+risque*2;
-if(tp<L1) tp=L1;
-pourquoi.innerHTML=`<b style="color:#00ff88">ACHETES MAINTENANT.</b><br>Ton QM est confirmé, le prix a cassé le haut.`;
-}
-// EN FORMATION BAISSIER
-else if(H1>H2 && prix>L1 && prix<H2){
-sens=""; derniere.figure="QM EN FORMATION";
-sig.className='signal wait'; sig.innerText="⏳ QM EN FORMATION - ATTENDS";
-det.innerText=`Haut 1 ${H1} > Haut 2 ${H2} mais Prix ${prix} n'a pas encore cassé Bas ${L1}.`;
-sl=0; tp1=0; tp=0;
-pourquoi.innerHTML=`Attends que le prix casse <b>${L1}</b> pour VENDRE. Ne vends pas avant.`;
-}
-// EN FORMATION HAUSSIER
-else if(H1 < L1 && H2 > H1 && prix < L1 && prix > H2){
-sens=""; derniere.figure="QM EN FORMATION";
-sig.className='signal wait'; sig.innerText="⏳ QM EN FORMATION - ATTENDS";
-det.innerText=`Bas 1 ${H1} < Bas 2 ${H2} mais Prix ${prix} n'a pas encore cassé Haut ${L1}.`;
-sl=0; tp1=0; tp=0;
-pourquoi.innerHTML=`Attends que le prix casse <b>${L1}</b> pour ACHETER.`;
-}
-else{
-sens=""; derniere.figure="PAS DE QM";
-sig.className='signal wait'; sig.innerText="⏳ PAS DE QM - ATTENDS";
-det.innerText=`Pas de QM clair. H1=${H1} H2=${H2} Bas=${L1} Prix=${prix}`;
-sl=0; tp1=0; tp=0;
-pourquoi.innerHTML=`Ce n'est pas un QM. Attends une vraie structure. Ne trade pas ça.`;
-}
-document.getElementById('slVal').innerText=sl?sl.toFixed(2):"---";
-document.getElementById('tp1Val').innerText=tp1?tp1.toFixed(2):"---";
-document.getElementById('tpVal').innerText=tp?tp.toFixed(2):"---";
-document.getElementById('conseil').innerText=sens?`Si ${sens}: SL=${sl.toFixed(2)} TP1=${tp1.toFixed(2)} TP2=${tp.toFixed(2)}`:"Attends un QM confirmé.";
-if(sens) navigator.vibrate && navigator.vibrate([100,50,100]);
-}
-function ouvrirPosition(choix){
-if(!sens){alert("⛔ BLOQUÉ : Pas de QM confirmé. Clique d'abord ANALYSER - BAM !");return;}
-if((choix==='ACHAT' && sens==='VENTE') || (choix==='VENTE' && sens==='ACHAT')){alert("⛔ BLOQUÉ : Robot dit "+sens);return;}
-alert(`✅ Tu peux ${choix} !\nSL: ${sl.toFixed(2)}\nTP1: ${tp1.toFixed(2)}\nTP2: ${tp.toFixed(2)}\n\nCopié ! Colle dans MT5.`);
-copierTout(); setTimeout(ouvrirMT5,500);
-}
-function copierTout(){let txt=`SL: ${sl.toFixed(2)} | TP1: ${tp1.toFixed(2)} | TP2: ${tp.toFixed(2)} | Figure: ${derniere.figure} | Paire: ${document.getElementById('paire').value}`;navigator.clipboard.writeText(txt).then(()=>{});}
+function copierTout(){let t=`SL: ${sl} | TP1: ${tp1} | TP2: ${tp} | Figure: ${figure} | Paire: ${document.getElementById('paire').value}`;navigator.clipboard.writeText(t).then(()=>alert("Copié !")); }
 function ouvrirMT5(){window.location.href="metatrader5://";setTimeout(()=>{window.open("https://play.google.com/store/apps/details?id=net.metaquotes.metatrader5","_blank");},800);}
+function trade(c){
+if(!sens){alert("⛔ Fais d'abord ANALYSER.");return;}
+if((c==='ACHAT'&&sens==='VENTE')||(c==='VENTE'&&sens==='ACHAT')){alert("⛔ BLOQUÉ : Robot dit "+sens);return;}
+alert(`✅ Tu peux ${c} !\nSL: ${sl}\nTP1: ${tp1}\nTP2: ${tp}`); copierTout(); setTimeout(ouvrirMT5,500);
+}
+async function analyserQM(){
+let key=document.getElementById('apiKey').value.trim()||cleSauvegardee;
+let paire=document.getElementById('paire').value;
+let prix=document.getElementById('prixActuel').value.trim();
+if(!key){alert("Il manque ta clé IA ! Va sur aistudio.google.com > Get API Key > Gratuit, colle-la en haut.");return;}
+if(!base64Image){alert("Il manque ta capture ! Choisis une capture.");return;}
+if(!prix){alert("Mets le prix actuel que tu vois sur la capture.");return;}
+localStorage.setItem('qm_api_key',key);
+let btn=document.getElementById('btnAnalyser');
+btn.disabled=true; btn.innerText="⏳ ANALYSE QM EN COURS... 10 sec...";
+document.getElementById('result').style.display='block';
+document.getElementById('signal').className='signal wait';
+document.getElementById('signal').innerText='⏳ L\'IA REGARDE TA CAPTURE...';
+document.getElementById('detail').innerText='';
+document.getElementById('explication').innerText='';
+
+let prompt=`Tu es un expert trading Quasimodo QM 100%. Analyse cette capture de graphique pour la paire ${paire}. Prix actuel indiqué par l'utilisateur : ${prix}.
+
+Tu dois UNIQUEMENT analyser le pattern Quasimodo QM. Ignore tout le reste : pas de SMC, pas de BOS, pas de CHOCH, pas de OB, pas de FVG, pas de OTE, pas de Sweep.
+
+Règles QM STRICTES :
+- QM BAISSIER = Haut 1 (le plus haut) -> Bas -> Haut 2 PLUS BAS que Haut 1 -> Cassure du Bas = VENTE
+- QM HAUSSIER = Bas 1 (le plus bas) -> Haut -> Bas 2 PLUS HAUT que Bas 1 -> Cassure du Haut = ACHAT
+- Si le prix n'a PAS encore cassé le Bas/Haut, c'est QM EN FORMATION = ATTENDRE, ne jamais anticiper
+- Si il n'y a pas de Haut1/Bas/Haut2 clair, c'est PAS DE QM = ATTENDRE
+
+Réponds UNIQUEMENT en JSON valide, sans texte autour, avec ce format exact :
+{
+  "verdict": "VENTE" ou "ACHAT" ou "ATTENDRE",
+  "figure": "QM BAISSIER" ou "QM HAUSSIER" ou "QM EN FORMATION BAISSIER" ou "QM EN FORMATION HAUSSIER" ou "PAS DE QM",
+  "confiance": 0 à 100,
+  "haut1": nombre,
+  "bas": nombre,
+  "haut2": nombre,
+  "prix_actuel": nombre,
+  "sl": nombre,
+  "tp1": nombre,
+  "tp2": nombre,
+  "explication": "2-3 phrases simples en français, explique pourquoi c'est un QM ou pourquoi ce n'est pas un QM. Mentionne les prix."
+}
+Pour SL : QM Baissier = juste au-dessus de Haut 2. QM Haussier = juste en-dessous de Bas 2. Pour TP2 = l'ancien Bas pour VENTE, l'ancien Haut pour ACHAT. TP1 = moitié du chemin vers TP2. Si verdict ATTENDRE, mets sl=0 tp1=0 tp2=0.
+Utilise les prix exacts visibles sur la capture.`;
+
+try{
+let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({contents:[{parts:[{text:prompt},{inline_data:{mime_type:"image/jpeg",data:base64Image}}]}]})
+});
+let data=await res.json();
+if(data.error){throw new Error(data.error.message);}
+let txt=data.candidates[0].content.parts[0].text;
+let jsonStr=txt.replace(/```json|```/g,'').trim();
+let j=JSON.parse(jsonStr);
+sens=j.verdict; figure=j.figure; sl=j.sl||0; tp1=j.tp1||0; tp=j.tp2||0;
+let sig=document.getElementById('signal');
+if(sens==="VENTE"){sig.className='signal sell'; sig.innerText=`🔴 BAM ! QM BAISSIER - VENDS (${j.confiance}%)`;}
+else if(sens==="ACHAT"){sig.className='signal buy'; sig.innerText=`🟢 BAM ! QM HAUSSIER - ACHETES (${j.confiance}%)`;}
+else{sig.className='signal wait'; sig.innerText=`⏳ ${figure} - ATTENDS (${j.confiance}%)`;}
+document.getElementById('detail').innerText=`${figure} | Haut1: ${j.haut1} | Bas: ${j.bas} | Haut2: ${j.haut2} | Prix: ${j.prix_actuel}`;
+document.getElementById('slVal').innerText=sl?sl:"---";
+document.getElementById('tp1Val').innerText=tp1?tp1:"---";
+document.getElementById('tpVal').innerText=tp?tp:"---";
+document.getElementById('explication').innerText=j.explication;
+document.getElementById('conseil').innerText=sens!=="ATTENDRE"?`Si ${sens}: SL=${sl} TP1=${tp1} TP2=${tp}`:"Attends la cassure. Ne trade pas avant.";
+if(sens!=="ATTENDRE") navigator.vibrate && navigator.vibrate([100,50,100]);
+}catch(e){
+document.getElementById('signal').className='signal wait';
+document.getElementById('signal').innerText='❌ ERREUR';
+document.getElementById('explication').innerText='Erreur : '+e.message+'\n\nVérifie : 1) Ta clé est bonne ? 2) Tu as mis une capture ? 3) Tu es connecté à internet ?\nSi ça dit API key not valid, refais une clé sur aistudio.google.com';
+alert("Erreur : "+e.message);
+}
+btn.disabled=false; btn.innerText="🤖 ANALYSER AUTO QM 100%";
+}
 </script>
 </body>
 </html>
