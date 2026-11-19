@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ROBOT V12 - QM CAPTURE SEULE</title>
+<title>ROBOT V12.1 - QM CAPTURE SEULE FIX</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#0a0a0a;color:#fff;font-family:Arial;padding:16px;padding-bottom:120px}
@@ -29,18 +29,18 @@ input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;ba
 .preview{width:100%;border-radius:12px;margin-top:10px;display:none;border:1px solid #333}
 .badge{font-size:12px;background:#00ff88;color:#000;padding:4px 10px;border-radius:20px;font-weight:900}
 .info{background:#00ff88;color:#000;padding:10px;border-radius:12px;text-align:center;font-size:13px;font-weight:900;margin:10px 0}
+.debug{background:#000;color:#ffcc00;padding:10px;border-radius:10px;font-size:12px;margin-top:10px;white-space:pre-wrap;word-break:break-word;display:none}
 </style>
 </head>
 <body>
-<h1>ROBOT V12 <span>AUTO QM 100%</span></h1>
-<p class="sub">Capture = Analyse IA automatique. Tu ne touches plus rien, tu ne tapes plus rien.</p>
+<h1>ROBOT V12.1 <span>AUTO QM 100%</span></h1>
+<p class="sub">Capture = Analyse IA automatique. Version corrigée.</p>
 
 <div class="card">
 <div class="info">✅ SANS CLÉ - SANS POINTS - SANS PRIX À TAPER<br>Juste ta capture, et BAM.</div>
 
 <label>Paire</label>
 <select id="paire">
-<optgroup label="🔥 SYNTHETIC">
 <option>Volatility 10 Index</option>
 <option>Volatility 25 Index</option>
 <option value="Volatility 50 (1s)" selected>Volatility 50 (1s)</option>
@@ -55,30 +55,15 @@ input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;ba
 <option>Crash 1000 Index</option>
 <option>Crash 500 Index</option>
 <option>Jump 100 Index</option>
-</optgroup>
-<optgroup label="💶 FOREX">
 <option>EURUSD</option>
 <option>GBPUSD</option>
 <option>USDJPY</option>
 <option>AUDUSD</option>
-<option>USDCAD</option>
-<option>EURJPY</option>
-<option>GBPJPY</option>
-</optgroup>
-<optgroup label="📈 INDEX">
 <option>US30</option>
 <option>US100 - Nasdaq</option>
-<option>US500 - S&P 500</option>
-<option>UK100</option>
-<option>GER40</option>
-</optgroup>
-<optgroup label="🥇 GOLD / CRYPTO">
 <option>XAUUSD - GOLD</option>
-<option>XAGUSD - SILVER</option>
 <option>BTCUSDT</option>
 <option>ETHUSDT</option>
-<option>SOLUSDT</option>
-</optgroup>
 </select>
 
 <label>Capture TradingView / 1xBet / MT5 / Deriv</label>
@@ -86,7 +71,8 @@ input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;ba
 <img id="preview" class="preview">
 
 <button class="btn-analyser" id="btnAnalyser" onclick="analyserQM()">🤖 ANALYSER AUTO QM 100% - BAM !</button>
-<p class="small" style="margin-top:10px">L'IA regarde ta capture, trouve le QM, te donne SL / TP... 10 sec...</p>
+<p class="small" style="margin-top:10px">L'IA regarde ta capture, trouve le QM, te donne SL / TP... 10-20 sec...</p>
+<div class="debug" id="debug"></div>
 </div>
 
 <div class="result" id="result">
@@ -111,12 +97,24 @@ input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;ba
 
 <script>
 let base64Image=null, sl=0, tp1=0, tp=0, sens="", figure="";
+function showDebug(t){let d=document.getElementById('debug'); d.style.display='block'; d.innerText=t;}
 document.getElementById('fileInput').addEventListener('change',function(e){
 let f=e.target.files[0]; if(!f) return;
 let r=new FileReader();
 r.onload=function(ev){
-base64Image=ev.target.result;
-let p=document.getElementById('preview'); p.src=ev.target.result; p.style.display='block';
+let img=new Image();
+img.onload=function(){
+// Compresse l'image pour qu'elle passe dans l'IA
+let canvas=document.createElement('canvas');
+let max=800;
+let ratio=Math.min(max/img.width, max/img.height, 1);
+canvas.width=img.width*ratio; canvas.height=img.height*ratio;
+let ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height);
+base64Image=canvas.toDataURL('image/jpeg',0.7);
+let p=document.getElementById('preview'); p.src=base64Image; p.style.display='block';
+showDebug("✅ Capture chargée : "+Math.round(base64Image.length/1024)+" Ko - Prête à analyser.");
+};
+img.src=ev.target.result;
 };
 r.readAsDataURL(f);
 });
@@ -131,54 +129,34 @@ async function analyserQM(){
 let paire=document.getElementById('paire').value;
 if(!base64Image){alert("Il manque ta capture ! Mets une capture.");return;}
 let btn=document.getElementById('btnAnalyser');
-btn.disabled=true; btn.innerText="⏳ ANALYSE QM EN COURS... 10 sec...";
+btn.disabled=true; btn.innerText="⏳ ANALYSE EN COURS... Ne quitte pas...";
 document.getElementById('result').style.display='block';
 document.getElementById('signal').className='signal wait';
-document.getElementById('signal').innerText='⏳ L\'IA REGARDE TA CAPTURE...';
-document.getElementById('detail').innerText='';
-document.getElementById('explication').innerText='';
-
-let prompt=`Tu es un expert trading Quasimodo QM 100%. Analyse cette capture de graphique pour la paire ${paire}. Lis les prix directement sur la capture.
-
-Tu dois UNIQUEMENT analyser le pattern Quasimodo QM. Ignore tout le reste : pas de SMC, pas de BOS, pas de CHOCH, pas de OB, pas de FVG, pas de OTE, pas de Sweep.
-
-Règles QM STRICTES :
-- QM BAISSIER = Haut 1 (le plus haut) -> Bas -> Haut 2 PLUS BAS que Haut 1 -> Cassure du Bas = VENTE
-- QM HAUSSIER = Bas 1 (le plus bas) -> Haut -> Bas 2 PLUS HAUT que Bas 1 -> Cassure du Haut = ACHAT
-- Si le prix n'a PAS encore cassé le Bas/Haut, c'est QM EN FORMATION = ATTENDRE, ne jamais anticiper
-- Si il n'y a pas de Haut1/Bas/Haut2 clair, c'est PAS DE QM = ATTENDRE
-
-Réponds UNIQUEMENT en JSON valide, sans texte autour, avec ce format exact :
-{
-  "verdict": "VENTE" ou "ACHAT" ou "ATTENDRE",
-  "figure": "QM BAISSIER" ou "QM HAUSSIER" ou "QM EN FORMATION BAISSIER" ou "QM EN FORMATION HAUSSIER" ou "PAS DE QM",
-  "confiance": 0 à 100,
-  "haut1": nombre,
-  "bas": nombre,
-  "haut2": nombre,
-  "prix_actuel": nombre,
-  "sl": nombre,
-  "tp1": nombre,
-  "tp2": nombre,
-  "explication": "2-3 phrases simples en français, explique pourquoi c'est un QM ou pourquoi ce n'est pas un QM. Mentionne les prix."
-}
-Pour SL : QM Baissier = juste au-dessus de Haut 2. QM Haussier = juste en-dessous de Bas 2. Pour TP2 = l'ancien Bas pour VENTE, l'ancien Haut pour ACHAT. TP1 = moitié du chemin vers TP2. Si verdict ATTENDRE, mets sl=0 tp1=0 tp2=0.
-Utilise les prix exacts visibles sur la capture.`;
-
+document.getElementById('signal').innerText='⏳ L\'IA REGARDE TA CAPTURE... 10-20 sec...';
+showDebug("⏳ Envoi à l'IA... Attends 10-20 sec, ne clique pas 2 fois.");
+let prompt=`Tu es un expert trading Quasimodo QM 100%. Analyse cette capture de graphique pour la paire ${paire}. Lis les prix directement sur la capture. Tu dois UNIQUEMENT analyser le pattern Quasimodo QM. Ignore tout le reste. Règles QM STRICTES : QM BAISSIER = Haut 1 -> Bas -> Haut 2 PLUS BAS que Haut 1 -> Cassure du Bas = VENTE. QM HAUSSIER = Bas 1 -> Haut -> Bas 2 PLUS HAUT que Bas 1 -> Cassure du Haut = ACHAT. Si le prix n'a PAS encore cassé, c'est QM EN FORMATION = ATTENDRE. Si pas de structure claire, PAS DE QM = ATTENDRE. Réponds UNIQUEMENT en JSON valide, sans texte autour : {"verdict":"VENTE ou ACHAT ou ATTENDRE","figure":"QM BAISSIER ou QM HAUSSIER ou QM EN FORMATION BAISSIER ou QM EN FORMATION HAUSSIER ou PAS DE QM","confiance":0 à 100,"haut1":nombre,"bas":nombre,"haut2":nombre,"prix_actuel":nombre,"sl":nombre,"tp1":nombre,"tp2":nombre,"explication":"2-3 phrases simples en français avec les prix."} Pour SL : QM Baissier = juste au-dessus de Haut 2. QM Haussier = juste en-dessous de Bas 2. TP2 = ancien Bas pour VENTE, ancien Haut pour ACHAT. TP1 = moitié. Si ATTENDRE, sl=0 tp1=0 tp2=0.`;
 try{
-// IA gratuite sans clé - Pollinations
 let res=await fetch("https://text.pollinations.ai/openai",{
 method:'POST',
 headers:{'Content-Type':'application/json'},
 body:JSON.stringify({
 model:"openai",
 messages:[{role:"user",content:[{type:"text",text:prompt},{type:"image_url",image_url:{url:base64Image}}]}],
-max_tokens:1000
+max_tokens:800
 })
 });
+showDebug("Réponse serveur : "+res.status+" - Lecture...");
+if(!res.ok) throw new Error("Serveur IA a répondu "+res.status+" - Réessaie dans 30 sec, il est saturé.");
 let data=await res.json();
+console.log(data);
+if(!data.choices || !data.choices[0]) throw new Error("L'IA n'a pas renvoyé de réponse. Réessaie.");
 let txt=data.choices[0].message.content;
+console.log(txt);
+showDebug("✅ IA a répondu, lecture du résultat...");
 let jsonStr=txt.replace(/```json|```/g,'').trim();
+// Trouve le JSON même si l'IA a mis du texte autour
+let start=jsonStr.indexOf('{'); let end=jsonStr.lastIndexOf('}');
+if(start!==-1 && end!==-1) jsonStr=jsonStr.substring(start,end+1);
 let j=JSON.parse(jsonStr);
 sens=j.verdict; figure=j.figure; sl=j.sl||0; tp1=j.tp1||0; tp=j.tp2||0;
 let sig=document.getElementById('signal');
@@ -191,7 +169,17 @@ document.getElementById('tp1Val').innerText=tp1?tp1:"---";
 document.getElementById('tpVal').innerText=tp?tp:"---";
 document.getElementById('explication').innerText=j.explication;
 document.getElementById('conseil').innerText=sens!=="ATTENDRE"?`Si ${sens}: SL=${sl} TP1=${tp1} TP2=${tp}`:"Attends la cassure. Ne trade pas avant.";
+showDebug("✅ Analyse terminée ! Descends pour voir le résultat.");
 if(sens!=="ATTENDRE") navigator.vibrate && navigator.vibrate([100,50,100]);
 }catch(e){
 document.getElementById('signal').className='signal wait';
-document.getElementById('signal').innerText='❌ ER
+document.getElementById('signal').innerText='❌ ERREUR - VOIR EN DESSOUS';
+document.getElementById('explication').innerText='Erreur : '+e.message+'\n\nCe que tu dois faire :\n1. Attends 30 secondes et reclique ANALYSER\n2. Vérifie que tu es en 4G / Wifi\n3. Si ça ne marche toujours pas, envoie-moi ta capture ici dans WhatsApp, je te fais le BAM moi-même en 10 sec, en attendant que le serveur gratuit revienne.';
+showDebug("❌ Erreur : "+e.message+"\n\nAstuce : Attends 30 sec et reclique. Le serveur gratuit est souvent saturé le soir.");
+alert("Erreur : "+e.message+"\n\nAttends 30 sec et reclique.");
+}
+btn.disabled=false; btn.innerText="🤖 ANALYSER AUTO QM 100% - BAM !";
+}
+</script>
+</body>
+</html>
