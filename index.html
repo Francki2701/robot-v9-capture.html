@@ -2,90 +2,72 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>SCALPING V6 - TOUTES DEVISES</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCALPING V6.1 - CORRIGE</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#0a0a1a;color:#fff;font-family:Arial;padding:8px;padding-bottom:130px}
-.top{background:linear-gradient(135deg,#ffcc00,#00ff88,#00ccff);padding:14px;border-radius:16px;color:#000;text-align:center}
-.top h1{margin:0;font-size:22px}.card{background:#1a1a2e;padding:12px;border-radius:16px;margin:10px 0}
+.top{background:linear-gradient(135deg,#ffcc00,#00ff88);padding:14px;border-radius:16px;color:#000;text-align:center}
+.card{background:#1a1a2e;padding:12px;border-radius:16px;margin:10px 0}
 select,input{width:100%;padding:14px;border-radius:12px;background:#000;color:#fff;border:1px solid #444;margin:6px 0;font-size:16px}
 .prix{font-size:32px;font-weight:900;text-align:center}
 .signal{font-size:20px;font-weight:900;padding:16px;border-radius:14px;text-align:center}
 .buy{background:#00ff88;color:#000}.sell{background:#ff4444}.wait{background:#333}
 .flex{display:flex;gap:8px}.flex>div{flex:1;background:#000;padding:10px;border-radius:12px;text-align:center}
 .big{font-size:16px;font-weight:900}.green{color:#00ff88}.red{color:#ff4444}.yellow{color:#ffcc00}
-canvas{width:100%;background:#000;border-radius:12px}.small{font-size:12px;color:#aaa;text-align:center}
-.barre{position:fixed;bottom:0;left:0;right:0;background:#111;padding:10px;display:flex;gap:10px;border-top:2px solid #333}
+canvas{width:100%;background:#000;border-radius:12px;border:1px solid #333}.small{font-size:12px;color:#aaa;text-align:center}
+.barre{position:fixed;bottom:0;left:0;right:0;background:#111;padding:10px;display:flex;gap:10px;border-top:2px solid #333;z-index:99}
 .btn-buy{flex:1;background:#00ff88;color:#000;padding:20px 5px;font-size:24px;font-weight:900;border-radius:14px;border:0}
 .btn-sell{flex:1;background:#ff4444;color:#fff;padding:20px 5px;font-size:24px;font-weight:900;border-radius:14px;border:0}
-.devise-btn{padding:10px 12px;border-radius:20px;border:1px solid #444;background:#222;color:#fff;font-size:13px;font-weight:700}
-.devise-btn.active{background:#ffcc00;color:#000}
-.grid{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+/* BOUTONS DEVISES - EN DUR, TOUJOURS VISIBLES */
+.grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.btn-devise{padding:12px 14px;border-radius:20px;border:2px solid #444;background:#222;color:#fff;font-size:14px;font-weight:900}
+.btn-devise.active{background:#ffcc00;color:#000;border-color:#ffcc00}
 </style>
 </head>
 <body>
-<div class="top"><h1>⚡ SCALPING V6 - TOUTES DEVISES</h1><p>Forex + Or + Crypto - 1 Minute - DÉMO</p><p>Choisis ta devise, le robot s'adapte tout seul</p></div>
+<div class="top"><h1>⚡ SCALPING V6.1 - CORRIGÉ</h1><p>Toutes devises - Les boutons sont là !</p></div>
 
+<!-- ICI C'EST OU TU CHOISIS TA DEVISE - REGARDE BIEN -->
 <div class="card">
-<h3 style="text-align:center;margin:0">💱 CHOISIS TA DEVISE :</h3>
-<p class="small">Clique sur une devise. Le robot va changer tout seul.</p>
-<div class="grid" id="listeDevises"></div>
+<h3 style="text-align:center;margin:0">💱 CHOISIS TA DEVISE ICI 👇</h3>
+<p class="small">Clique sur un bouton. Il devient JAUNE. C'est celle-là que le robot va analyser.</p>
+<div class="grid">
+<button class="btn-devise active" id="btn-EURUSD" onclick="choisirDevise('EURUSD','EUR / USD','EURUSDT')">EUR / USD</button>
+<button class="btn-devise" id="btn-GBPUSD" onclick="choisirDevise('GBPUSD','GBP / USD','GBPUSDT')">GBP / USD</button>
+<button class="btn-devise" id="btn-USDJPY" onclick="choisirDevise('USDJPY','USD / JPY','USDJPY')">USD / JPY</button>
+<button class="btn-devise" id="btn-AUDUSD" onclick="choisirDevise('AUDUSD','AUD / USD','AUDUSDT')">AUD / USD</button>
+<button class="btn-devise" id="btn-XAUUSD" onclick="choisirDevise('XAUUSD','OR - XAU / USD','PAXGUSDT')">🥇 OR</button>
+<button class="btn-devise" id="btn-BTCUSD" onclick="choisirDevise('BTCUSD','BTC / USD','BTCUSDT')">₿ BTC</button>
+<button class="btn-devise" id="btn-ETHUSD" onclick="choisirDevise('ETHUSD','ETH / USD','ETHUSDT')">ETH</button>
+<button class="btn-devise" id="btn-SOLUSD" onclick="choisirDevise('SOLUSD','SOL / USD','SOLUSDT')">SOL</button>
+</div>
+<p style="text-align:center">Devise choisie : <b id="deviseChoisie" style="color:#ffcc00">EUR / USD</b></p>
 </div>
 
 <div class="card">
 <div class="flex"><div><div class="small">SOLDE DÉMO</div><div class="big yellow" id="solde">100000 Ar</div></div><div><div class="small">RÉUSSITE</div><div class="big" id="winrate">0%</div></div><div><div class="small">PERTES</div><div class="big red" id="pertes">0 / 3</div></div></div>
-<div class="flex"><select id="tf"><option value="1m" selected>1 MIN - SCALPING</option><option value="5m">5 MIN - Plus sûr</option><option value="15m">15 MIN</option></select><input id="mise" type="number" value="2000"></div>
-<button style="width:100%;background:#00ff88;padding:15px;font-size:18px;font-weight:900;border:0;border-radius:14px" onclick="demarrer()">▶️ DÉMARRER</button>
+<div class="flex"><select id="tf"><option value="1m" selected>1 MIN - SCALPING</option><option value="5m">5 MIN</option></select><input id="mise" type="number" value="2000"></div>
+<button style="width:100%;background:#00ff88;padding:15px;font-size:18px;font-weight:900;border:0;border-radius:14px" onclick="demarrer()">▶️ DÉMARRER LE ROBOT</button>
+<p class="small">Si le graphique est noir, c'est que tu n'as pas encore cliqué DÉMARRER. Clique dessus.</p>
 </div>
 
 <div class="card">
 <div style="text-align:center"><span class="big yellow" id="nomDevise">EUR / USD</span></div>
-<div class="prix" id="prixLive">---</div>
-<div class="small" id="infoDevise">Forex - Spread petit - Bon pour débutant</div>
+<div class="prix" id="prixLive">--- Clique DÉMARRER ---</div>
 <canvas id="chart" width="350" height="170"></canvas>
-<div id="signal" class="signal wait">ROBOT ARRÊTÉ</div>
-<p id="detail" style="text-align:center"></p>
+<div id="signal" class="signal wait">ROBOT ARRÊTÉ - Clique DÉMARRER</div>
+<p id="detail" style="text-align:center">Choisis ta devise en haut, puis clique DÉMARRER.</p>
 <div class="flex"><div><div class="small">TENDANCE</div><div class="big" id="emaInfo">---</div></div><div><div class="small">FIGURE</div><div class="big" id="figInfo">---</div></div><div><div class="small">RSI</div><div class="big" id="rsiInfo">---</div></div></div>
 <div class="flex" style="margin-top:8px"><div><div class="small">🛑 SL</div><div class="big red" id="slVal">---</div></div><div><div class="small">🎯 TP</div><div class="big green" id="tpVal">---</div></div><div><div class="small">FORCE</div><div class="big" id="force">---</div></div></div>
-<p id="conseil" class="small"></p>
 </div>
 
-<div class="card"><p style="text-align:center" id="posInfo">Aucune position</p><button style="width:100%;background:#ff4444;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:900" onclick="fermerPosition('Manuel')">❌ FERMER</button></div>
-
-<div class="card"><h3>📊 Historique</h3><table style="width:100%;font-size:12px"><tr><th>Devise</th><th>Sens</th><th>Figure</th><th>Résultat</th></tr><tbody id="hist"></tbody></table></div>
-
-<div class="card">
-<h3>📚 Quelle devise choisir ?</h3>
-<p><b>🥇 EUR/USD :</b> La plus calme. Pour débutant. Bouge doucement, tu ne perds pas vite.</p>
-<p><b>🥈 GBP/USD :</b> La plus volatile. Pour scalping très puissant. Ça bouge vite, tu gagnes vite, tu perds vite. Attention !</p>
-<p><b>🥇 XAU/USD (OR) :</b> La préférée des traders à Mada. Elle fait de belles figures Marteau et Avalement.</p>
-<p><b>🥉 BTC/USD :</b> Crypto. Bouge même la nuit, même le dimanche. Forex est fermé le week-end, crypto non.</p>
-<p><b>⚠️ USD/JPY :</b> Attention, son prix est comme 150.00, pas 1.00. Le SL/TP est différent, mais le robot calcule tout seul.</p>
-</div>
+<div class="card"><p style="text-align:center" id="posInfo">Aucune position</p><button style="width:100%;background:#ff4444;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:900" onclick="fermerPosition('Manuel')">❌ FERMER POSITION</button></div>
 
 <div class="barre"><button class="btn-buy" onclick="ouvrirPosition('ACHAT')">🟢 BUY</button><button class="btn-sell" onclick="ouvrirPosition('VENTE')">🔴 SELL</button></div>
 
 <script>
-let deviseActuelle = {id:"EURUSD", nom:"EUR / USD", type:"forex", desc:"Forex - Spread petit - Bon pour débutant", yahoo:"EURUSD=X", binance:"EURUSDT"};
-let toutesDevises = [
-{id:"EURUSD", nom:"EUR / USD", type:"forex", desc:"Forex - Calme - Pour débutant", yahoo:"EURUSD=X", binance:"EURUSDT"},
-{id:"GBPUSD", nom:"GBP / USD", type:"forex", desc:"Forex - Très volatile - Pour scalping puissant", yahoo:"GBPUSD=X", binance:"GBPUSDT"},
-{id:"USDJPY", nom:"USD / JPY", type:"forex", desc:"Forex - Yen - Bouge beaucoup le matin", yahoo:"USDJPY=X", binance:"USDJPY"},
-{id:"AUDUSD", nom:"AUD / USD", type:"forex", desc:"Forex - Dollar Australien", yahoo:"AUDUSD=X", binance:"AUDUSDT"},
-{id:"USDCHF", nom:"USD / CHF", type:"forex", desc:"Forex - Franc Suisse - Très calme", yahoo:"USDCHF=X", binance:"USDCHF"},
-{id:"XAUUSD", nom:"XAU / USD - OR", type:"or", desc:"OR - La préférée à Mada - Belles figures", yahoo:"GC=F", binance:"PAXGUSDT"},
-{id:"BTCUSD", nom:"BTC / USD", type:"crypto", desc:"Crypto - Bouge 24h/24, même dimanche", yahoo:"BTC-USD", binance:"BTCUSDT"},
-{id:"ETHUSD", nom:"ETH / USD", type:"crypto", desc:"Crypto - Ethereum", yahoo:"ETH-USD", binance:"ETHUSDT"},
-{id:"SOLUSD", nom:"SOL / USD", type:"crypto", desc:"Crypto - Solana - Très rapide", yahoo:"SOL-USD", binance:"SOLUSDT"},
-];
+let deviseId="EURUSD", deviseNom="EUR / USD", deviseBinance="EURUSDT";
 let timer=null, solde=100000, nb=0, wins=0, pertesJour=0, bloque=false;
 let derniere={}, sl=0, tp=0, sens="", bougies=[], pos=null;
 function fmt(n){return Math.round(n).toLocaleString('fr-FR')+" Ar";}
-function maj(){document.getElementById('solde').innerText=fmt(solde);document.getElementById('winrate').innerText=nb?Math.round(wins/nb*100)+"%":"0%";document.getElementById('pertes').innerText=pertesJour+" / 3";}
-function afficherDevises(){
-let c=document.getElementById('listeDevises');c.innerHTML="";
-toutesDevises.forEach(d=>{
-let b=document.createElement('button');b.className='devise-btn'+(d.id===deviseActuelle.id?' active':'');b.innerText=d.nom;b.onclick=()=>{deviseActuelle=d;document.getElementById('nomDevise').innerText=d.nom;document.getElementById('infoDevise').innerText=d.desc;afficherDevises();analyser();};c.appendChild(b);
-});
-}
-function calcEMA(data,per){let k=2/(per+1),ema=data[0].c;for(let i=1;i<data.length;i++) ema=data[i].c*k+ema
+function maj(){document.getElementById('solde').innerText=fmt(solde);document.getElementById('winrate').innerText=nb?Math.round(wins/nb*100)+"%":"
