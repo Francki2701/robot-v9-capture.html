@@ -129,4 +129,26 @@ if(start!==-1 && end!==-1) jsonStr=jsonStr.substring(start,end+1);
 let j=JSON.parse(jsonStr);
 sens=j.verdict; figure=j.figure; sl=j.sl||0; tp1=j.tp1||0; tp=j.tp2||0;
 let sig=document.getElementById('signal');
-if(sens==="VENTE"){sig
+if(sens==="VENTE"){sig.className='signal sell'; sig.innerText=`🔴 BAM ! QM BAISSIER - VENDS (${j.confiance}%)`;}
+else if(sens==="ACHAT"){sig.className='signal buy'; sig.innerText=`🟢 BAM ! QM HAUSSIER - ACHETES (${j.confiance}%)`;}
+else{sig.className='signal wait'; sig.innerText=`⏳ ${figure} - ATTENDS (${j.confiance}%)`;}
+document.getElementById('detail').innerText=`${figure} | Haut1: ${j.haut1} | Bas: ${j.bas} | Haut2: ${j.haut2} | Prix: ${j.prix_actuel}`;
+document.getElementById('slVal').innerText=sl?sl:"---";
+document.getElementById('tp1Val').innerText=tp1?tp1:"---";
+document.getElementById('tpVal').innerText=tp?tp:"---";
+document.getElementById('explication').innerText=j.explication;
+document.getElementById('conseil').innerText=sens!=="ATTENDRE"?`Si ${sens}: SL=${sl} TP1=${tp1} TP2=${tp}`:"Attends la cassure. Ne trade pas avant.";
+showDebug("✅ Analyse terminée ! Descends pour voir le résultat.");
+if(sens!=="ATTENDRE") navigator.vibrate && navigator.vibrate([100,50,100]);
+}catch(e){
+document.getElementById('signal').className='signal wait';
+document.getElementById('signal').innerText='❌ ERREUR - VOIR EN DESSOUS';
+document.getElementById('explication').innerText='Erreur : '+e.message+'\n\nSi ça persiste, envoie-moi ta capture ici dans WhatsApp, je te fais le BAM moi-même.';
+showDebug("❌ Erreur finale : "+e.message);
+alert("Erreur : "+e.message);
+}
+btn.disabled=false; btn.innerText="🤖 ANALYSER AUTO QM 100% - BAM !";
+}
+</script>
+</body>
+</html>
