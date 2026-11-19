@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ROBOT V13.1 - QM CAPTURE GOOGLE FIX</title>
+<title>ROBOT V13.2 - QM FIX BLOCAGE</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#0a0a0a;color:#fff;font-family:Arial;padding:16px;padding-bottom:120px}
@@ -34,11 +34,11 @@ input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;ba
 </style>
 </head>
 <body>
-<h1>ROBOT V13.1 <span>AUTO QM 100%</span></h1>
-<p class="sub">Capture = Analyse IA automatique. Fix modèle Google.</p>
+<h1>ROBOT V13.2 <span>AUTO QM 100%</span></h1>
+<p class="sub">Capture = Analyse IA automatique. Fix blocage.</p>
 <div class="card">
-<div class="info">✅ Ta clé est bonne - On a juste changé le modèle Google</div>
-<label>1. Ta clé Google gratuite - Déjà sauvegardée</label>
+<div class="info">✅ Si un modèle bloque, il passe au suivant en 15 sec tout seul.</div>
+<label>1. Ta clé Google</label>
 <input id="apiKey" type="password" placeholder="Colle ta clé ici - AIza...">
 <button class="btn-key" onclick="ouvrirAistudio()">🔑 OBTENIR MA CLÉ GRATUITE</button>
 <button class="btn-key" style="background:#333" onclick="sauvegarderCle()">💾 SAUVEGARDER MA CLÉ</button>
@@ -47,11 +47,11 @@ input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;ba
 <select id="paire">
 <option>Volatility 10 Index</option><option>Volatility 25 Index</option><option value="Volatility 50 (1s)" selected>Volatility 50 (1s)</option><option>Volatility 75 Index</option><option>Volatility 75 (1s) Index</option><option>Volatility 100 Index</option><option>Volatility 100 (1s) Index</option><option>Volatility 150 (1s) Index</option><option>Volatility 250 (1s) Index</option><option>Boom 1000 Index</option><option>Boom 500 Index</option><option>Crash 1000 Index</option><option>Crash 500 Index</option><option>Jump 100 Index</option><option>EURUSD</option><option>GBPUSD</option><option>USDJPY</option><option>US30</option><option>US100 - Nasdaq</option><option>XAUUSD - GOLD</option><option>BTCUSDT</option><option>ETHUSDT</option>
 </select>
-<label>Capture TradingView / 1xBet / MT5 / Deriv</label>
+<label>Capture</label>
 <input type="file" id="fileInput" accept="image/*">
 <img id="preview" class="preview">
 <button class="btn-analyser" id="btnAnalyser" onclick="analyserQM()">🤖 ANALYSER AUTO QM 100% - BAM !</button>
-<p class="small" style="margin-top:10px">L'IA regarde ta capture, trouve le QM, te donne SL / TP... 10 sec...</p>
+<p class="small" style="margin-top:10px">Clique UNE SEULE fois, attends 30 sec sans retoucher.</p>
 <div class="debug" id="debug"></div>
 </div>
 <div class="result" id="result">
@@ -73,7 +73,7 @@ input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;ba
 <button class="btn-sell" onclick="trade('VENTE')">🔴 SELL</button>
 </div>
 <script>
-let base64Image=null, sl=0, tp1=0, tp=0, sens="", figure="";
+let base64Image=null, sl=0, tp1=0, tp=0, sens="", figure="", enCours=false;
 let cleSauv=localStorage.getItem('qm_api_key')||"";
 if(cleSauv){document.getElementById('apiKey').value=cleSauv;document.getElementById('etatCle').innerText="Clé : ✅ Enregistrée";document.getElementById('etatCle').style.color="#00ff88";}
 function ouvrirAistudio(){window.open("https://aistudio.google.com/app/apikey","_blank");}
@@ -112,32 +112,41 @@ if((c==='ACHAT'&&sens==='VENTE')||(c==='VENTE'&&sens==='ACHAT')){alert("⛔ BLOQ
 alert(`✅ Tu peux ${c} !\nSL: ${sl}\nTP1: ${tp1}\nTP2: ${tp}`); copierTout(); setTimeout(ouvrirMT5,500);
 }
 async function analyserQM(){
+if(enCours){alert("Déjà en cours, attends... Ne clique pas 2 fois !");return;}
 let key=document.getElementById('apiKey').value.trim()||cleSauv;
 let paire=document.getElementById('paire').value;
-if(!key){alert("Il manque ta clé ! Colle-la en haut et clique SAUVEGARDER.");return;}
-if(!base64Image){alert("Il manque ta capture !");return;}
+if(!key){alert("Il manque ta clé !");return;}
+if(!base64Image){alert("Il manque ta capture ! Remets ta capture, elle s'est effacée quand tu as rechargé la page.");return;}
 localStorage.setItem('qm_api_key',key);
+enCours=true;
 let btn=document.getElementById('btnAnalyser');
-btn.disabled=true; btn.innerText="⏳ ANALYSE EN COURS... 10 sec...";
+btn.disabled=true; btn.innerText="⏳ ANALYSE EN COURS... Ne touche plus...";
 document.getElementById('result').style.display='block';
 document.getElementById('signal').className='signal wait';
 document.getElementById('signal').innerText='⏳ L\'IA REGARDE TA CAPTURE...';
-showDebug("⏳ Envoi à Google IA...");
+showDebug("⏳ Envoi à Google IA... Clique 1 seule fois !");
 let prompt=`Tu es un expert trading Quasimodo QM 100%. Analyse cette capture de graphique pour la paire ${paire}. Lis les prix directement sur la capture. Tu dois UNIQUEMENT analyser le pattern Quasimodo QM. Ignore tout le reste. Règles QM STRICTES : QM BAISSIER = Haut 1 -> Bas -> Haut 2 PLUS BAS que Haut 1 -> Cassure du Bas = VENTE. QM HAUSSIER = Bas 1 -> Haut -> Bas 2 PLUS HAUT que Bas 1 -> Cassure du Haut = ACHAT. Si le prix n'a PAS encore cassé, c'est QM EN FORMATION = ATTENDRE. Si pas de structure claire, PAS DE QM = ATTENDRE. Réponds UNIQUEMENT en JSON valide, sans texte autour : {"verdict":"VENTE ou ACHAT ou ATTENDRE","figure":"QM BAISSIER ou QM HAUSSIER ou QM EN FORMATION BAISSIER ou QM EN FORMATION HAUSSIER ou PAS DE QM","confiance":0 à 100,"haut1":nombre,"bas":nombre,"haut2":nombre,"prix_actuel":nombre,"sl":nombre,"tp1":nombre,"tp2":nombre,"explication":"2-3 phrases simples en français avec les prix."} Pour SL : QM Baissier = juste au-dessus de Haut 2. QM Haussier = juste en-dessous de Bas 2. TP2 = ancien Bas pour VENTE, ancien Haut pour ACHAT. TP1 = moitié. Si ATTENDRE, sl=0 tp1=0 tp2=0.`;
 async function tryModel(model){
-showDebug("⏳ Essai modèle "+model+" ...");
+showDebug("⏳ Essai "+model+" ... (15 sec max)");
+let ctrl=new AbortController();
+let timer=setTimeout(()=>ctrl.abort(),15000);
+try{
 let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,{
-method:'POST', headers:{'Content-Type':'application/json'},
+method:'POST', headers:{'Content-Type':'application/json'}, signal:ctrl.signal,
 body:JSON.stringify({contents:[{parts:[{text:prompt},{inline_data:{mime_type:"image/jpeg",data:base64Image}}]}]})
 });
-if(!res.ok){let e=await res.json(); throw new Error(e.error?.message || "Erreur "+res.status);}
+clearTimeout(timer);
+if(!res.ok){let e=await res.json().catch(()=>({})); throw new Error(e.error?.message || "Erreur "+res.status);}
 let data=await res.json();
+if(!data.candidates || !data.candidates[0]) throw new Error("Pas de réponse");
 return data.candidates[0].content.parts[0].text;
+}catch(err){ clearTimeout(timer); throw err; }
 }
 try{
 let txt=null; let lastErr="";
-for(let m of ["gemini-3.8-flash","gemini-2.5-flash","gemini-3-flash-preview","gemini-2.0-flash"]){
-try{ txt=await tryModel(m); break; }catch(e){ lastErr=e.message; showDebug("⚠️ "+m+" a échoué, j'essaie le suivant..."); }
+// On commence par le modèle qui marche vraiment, pas par 3.8 qui bloque
+for(let m of ["gemini-2.5-flash","gemini-2.5-flash-lite","gemini-3.8-flash","gemini-2.0-flash"]){
+try{ txt=await tryModel(m); showDebug("✅ Modèle qui a marché : "+m); break; }catch(e){ lastErr=e.message; showDebug("⚠️ "+m+" a échoué : "+e.message.substring(0,80)+" - J'essaie le suivant..."); }
 }
 if(!txt) throw new Error(lastErr);
 let jsonStr=txt.replace(/```json|```/g,'').trim();
@@ -155,15 +164,16 @@ document.getElementById('tp1Val').innerText=tp1?tp1:"---";
 document.getElementById('tpVal').innerText=tp?tp:"---";
 document.getElementById('explication').innerText=j.explication;
 document.getElementById('conseil').innerText=sens!=="ATTENDRE"?`Si ${sens}: SL=${sl} TP1=${tp1} TP2=${tp}`:"Attends la cassure. Ne trade pas avant.";
-showDebug("✅ Analyse terminée !");
+showDebug("✅ Analyse terminée ! Descends pour voir.");
 if(sens!=="ATTENDRE") navigator.vibrate && navigator.vibrate([100,50,100]);
 }catch(e){
 document.getElementById('signal').className='signal wait';
-document.getElementById('signal').innerText='❌ ERREUR';
-document.getElementById('explication').innerText='Erreur : '+e.message;
-showDebug("❌ "+e.message);
+document.getElementById('signal').innerText='❌ ERREUR - VOIR EN DESSOUS';
+document.getElementById('explication').innerText='Erreur : '+e.message+'\n\nRecharge la page, remets ta capture, reclique 1 seule fois.';
+showDebug("❌ Erreur finale : "+e.message);
 alert("Erreur : "+e.message);
 }
+enCours=false;
 btn.disabled=false; btn.innerText="🤖 ANALYSER AUTO QM 100% - BAM !";
 }
 </script>
