@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ROBOT V13.3 - QM FINAL</title>
+<title>ROBOT V13.4 - QM 3.8 FLASH</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#0a0a0a;color:#fff;font-family:Arial;padding:16px;padding-bottom:120px}
@@ -34,10 +34,10 @@ input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;ba
 </style>
 </head>
 <body>
-<h1>ROBOT V13.3 <span>AUTO QM 100%</span></h1>
-<p class="sub">Capture = Analyse IA automatique. Version finale.</p>
+<h1>ROBOT V13.4 <span>AUTO QM 100%</span></h1>
+<p class="sub">Capture = Analyse IA automatique. Modèle 3.8-flash.</p>
 <div class="card">
-<div class="info">✅ On laisse 60 sec à Google, on ne coupe plus à 15 sec.</div>
+<div class="info">✅ Modèle 3.8-flash en PREMIER - 60 sec - Celui que Google demande</div>
 <label>1. Ta clé Google</label>
 <input id="apiKey" type="password" placeholder="Colle ta clé ici - AIza...">
 <button class="btn-key" onclick="ouvrirAistudio()">🔑 OBTENIR MA CLÉ GRATUITE</button>
@@ -51,7 +51,7 @@ input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;ba
 <input type="file" id="fileInput" accept="image/*">
 <img id="preview" class="preview">
 <button class="btn-analyser" id="btnAnalyser" onclick="analyserQM()">🤖 ANALYSER AUTO QM 100% - BAM !</button>
-<p class="small" style="margin-top:10px">Clique 1 seule fois, attends 60 sec sans toucher, même si ça semble bloqué.</p>
+<p class="small" style="margin-top:10px">Clique 1 seule fois, attends 60 sec sans toucher.</p>
 <div class="debug" id="debug"></div>
 </div>
 <div class="result" id="result">
@@ -93,13 +93,12 @@ r.onload=function(ev){
 let img=new Image();
 img.onload=function(){
 let canvas=document.createElement('canvas');
-// Image plus petite = envoi plus rapide en 4G
 let max=600; let ratio=Math.min(max/img.width, max/img.height, 1);
 canvas.width=img.width*ratio; canvas.height=img.height*ratio;
 let ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height);
 base64Image=canvas.toDataURL('image/jpeg',0.6).split(',')[1];
 let p=document.getElementById('preview'); p.src=ev.target.result; p.style.display='block';
-showDebug("✅ Capture chargée, compressée à "+Math.round(base64Image.length/1024)+" Ko - Prête, ça va aller vite.");
+showDebug("✅ Capture chargée - Prête.");
 };
 img.src=ev.target.result;
 };
@@ -121,14 +120,14 @@ if(!base64Image){alert("Il manque ta capture ! Remets ta capture.");return;}
 localStorage.setItem('qm_api_key',key);
 enCours=true;
 let btn=document.getElementById('btnAnalyser');
-btn.disabled=true; btn.innerText="⏳ ANALYSE EN COURS... 60 sec max, ne touche pas...";
+btn.disabled=true; btn.innerText="⏳ ANALYSE EN COURS... 60 sec max...";
 document.getElementById('result').style.display='block';
 document.getElementById('signal').className='signal wait';
 document.getElementById('signal').innerText='⏳ L\'IA REGARDE TA CAPTURE... Attends 30-60 sec...';
-showDebug("⏳ Envoi à Google IA... Attends 30-60 sec, ne quitte pas la page.");
+showDebug("⏳ Envoi à Google IA...");
 let prompt=`Tu es un expert trading Quasimodo QM 100%. Analyse cette capture de graphique pour la paire ${paire}. Lis les prix directement sur la capture. Tu dois UNIQUEMENT analyser le pattern Quasimodo QM. Ignore tout le reste. Règles QM STRICTES : QM BAISSIER = Haut 1 -> Bas -> Haut 2 PLUS BAS que Haut 1 -> Cassure du Bas = VENTE. QM HAUSSIER = Bas 1 -> Haut -> Bas 2 PLUS HAUT que Bas 1 -> Cassure du Haut = ACHAT. Si le prix n'a PAS encore cassé, c'est QM EN FORMATION = ATTENDRE. Si pas de structure claire, PAS DE QM = ATTENDRE. Réponds UNIQUEMENT en JSON valide, sans texte autour : {"verdict":"VENTE ou ACHAT ou ATTENDRE","figure":"QM BAISSIER ou QM HAUSSIER ou QM EN FORMATION BAISSIER ou QM EN FORMATION HAUSSIER ou PAS DE QM","confiance":0 à 100,"haut1":nombre,"bas":nombre,"haut2":nombre,"prix_actuel":nombre,"sl":nombre,"tp1":nombre,"tp2":nombre,"explication":"2-3 phrases simples en français avec les prix."} Pour SL : QM Baissier = juste au-dessus de Haut 2. QM Haussier = juste en-dessous de Bas 2. TP2 = ancien Bas pour VENTE, ancien Haut pour ACHAT. TP1 = moitié. Si ATTENDRE, sl=0 tp1=0 tp2=0.`;
-async function tryModel(model){
-showDebug("⏳ Essai "+model+" ... Attends 60 sec max, ne touche pas...");
+async function tryGenerateContent(model){
+showDebug("⏳ Essai "+model+" ... 60 sec max...");
 let ctrl=new AbortController();
 let timer=setTimeout(()=>ctrl.abort(),60000);
 try{
@@ -143,10 +142,31 @@ if(!data.candidates || !data.candidates[0]) throw new Error("Pas de réponse");
 return data.candidates[0].content.parts[0].text;
 }catch(err){ clearTimeout(timer); throw err; }
 }
+async function tryInteractions(model){
+showDebug("⏳ Essai Interactions API avec "+model+" ...");
+let ctrl=new AbortController();
+let timer=setTimeout(()=>ctrl.abort(),60000);
+try{
+let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/interactions?key=${key}`,{
+method:'POST', headers:{'Content-Type':'application/json'}, signal:ctrl.signal,
+body:JSON.stringify({model:"models/"+model, input:[{role:"user", content:[{type:"text", text:prompt},{type:"image", image:{mime_type:"image/jpeg", data:base64Image}}]}]})
+});
+clearTimeout(timer);
+if(!res.ok){let e=await res.json().catch(()=>({})); throw new Error(e.error?.message || "Erreur "+res.status);}
+let data=await res.json();
+let txt=data.output?.[0]?.content?.[0]?.text || data.outputs?.[0]?.text || JSON.stringify(data);
+return txt;
+}catch(err){ clearTimeout(timer); throw err; }
+}
 try{
 let txt=null; let lastErr="";
-for(let m of ["gemini-2.5-flash-lite","gemini-2.5-flash","gemini-2.0-flash"]){
-try{ txt=await tryModel(m); showDebug("✅ Modèle qui a marché : "+m); break; }catch(e){ lastErr=e.message; if(e.name==="AbortError") showDebug("⚠️ "+m+" trop lent, j'essaie le suivant..."); else showDebug("⚠️ "+m+" a échoué : "+e.message.substring(0,100)+" - J'essaie le suivant..."); }
+// 1. On essaie 3.8-flash en PREMIER, c'est celui que Google demande dans ton erreur
+for(let m of ["gemini-3.8-flash","gemini-2.5-flash","gemini-2.5-flash-lite"]){
+try{ txt=await tryGenerateContent(m); showDebug("✅ Modèle qui a marché : "+m); break; }catch(e){ lastErr=e.message; showDebug("⚠️ "+m+" generateContent a échoué, j'essaie le suivant..."); }
+}
+// 2. Si aucun generateContent ne marche, on essaie la nouvelle Interactions API que Google demande
+if(!txt){
+try{ txt=await tryInteractions("gemini-3.8-flash"); showDebug("✅ Interactions API a marché !"); }catch(e){ lastErr=e.message; showDebug("⚠️ Interactions API a échoué : "+e.message); }
 }
 if(!txt) throw new Error(lastErr);
 let jsonStr=txt.replace(/```json|```/g,'').trim();
@@ -164,7 +184,7 @@ document.getElementById('tp1Val').innerText=tp1?tp1:"---";
 document.getElementById('tpVal').innerText=tp?tp:"---";
 document.getElementById('explication').innerText=j.explication;
 document.getElementById('conseil').innerText=sens!=="ATTENDRE"?`Si ${sens}: SL=${sl} TP1=${tp1} TP2=${tp}`:"Attends la cassure. Ne trade pas avant.";
-showDebug("✅ Analyse terminée ! Descends pour voir.");
+showDebug("✅ Analyse terminée !");
 if(sens!=="ATTENDRE") navigator.vibrate && navigator.vibrate([100,50,100]);
 }catch(e){
 document.getElementById('signal').className='signal wait';
