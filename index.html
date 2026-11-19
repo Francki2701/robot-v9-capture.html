@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ROBOT V14 FINAL - QM</title>
+<title>ROBOT V15 FINAL - QM</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#0a0a0a;color:#fff;font-family:Arial;padding:16px;padding-bottom:120px}
@@ -34,10 +34,10 @@ input,select{width:100%;padding:16px;border-radius:12px;border:1px solid #333;ba
 </style>
 </head>
 <body>
-<h1>ROBOT V14 <span>FINAL QM 100%</span></h1>
-<p class="sub">Capture = Analyse IA automatique. Plus de patch, c'est le dernier.</p>
+<h1>ROBOT V15 <span>FINAL QM 100%</span></h1>
+<p class="sub">Capture = Analyse IA automatique. Format officiel Google.</p>
 <div class="card">
-<div class="info">✅ V14 FINAL - 3 façons d'envoyer l'image, il choisit tout seul celle qui marche</div>
+<div class="info">✅ V15 - Format officiel : {type:"image", data:..., mime_type:...}</div>
 <label>1. Ta clé Google</label>
 <input id="apiKey" type="password" placeholder="Colle ta clé ici - AIza...">
 <button class="btn-key" onclick="ouvrirAistudio()">🔑 OBTENIR MA CLÉ GRATUITE</button>
@@ -113,39 +113,34 @@ btn.disabled=true;btn.innerText="⏳ ANALYSE EN COURS... 60 sec max...";
 document.getElementById('result').style.display='block';
 document.getElementById('signal').className='signal wait';
 document.getElementById('signal').innerText='⏳ L\'IA REGARDE TA CAPTURE... Attends 30-60 sec...';
-showDebug("⏳ Envoi à Google IA...");
+showDebug("⏳ Envoi à Google IA - Format officiel...");
 let prompt=`Tu es un expert trading Quasimodo QM 100%. Analyse cette capture de graphique pour la paire ${paire}. Lis les prix directement sur la capture. Tu dois UNIQUEMENT analyser le pattern Quasimodo QM. Ignore tout le reste. Règles QM STRICTES : QM BAISSIER = Haut 1 -> Bas -> Haut 2 PLUS BAS que Haut 1 -> Cassure du Bas = VENTE. QM HAUSSIER = Bas 1 -> Haut -> Bas 2 PLUS HAUT que Bas 1 -> Cassure du Haut = ACHAT. Si le prix n'a PAS encore cassé, c'est QM EN FORMATION = ATTENDRE. Si pas de structure claire, PAS DE QM = ATTENDRE. Réponds UNIQUEMENT en JSON valide, sans texte autour : {"verdict":"VENTE ou ACHAT ou ATTENDRE","figure":"QM BAISSIER ou QM HAUSSIER ou QM EN FORMATION BAISSIER ou QM EN FORMATION HAUSSIER ou PAS DE QM","confiance":0 à 100,"haut1":nombre,"bas":nombre,"haut2":nombre,"prix_actuel":nombre,"sl":nombre,"tp1":nombre,"tp2":nombre,"explication":"2-3 phrases simples en français avec les prix."} Pour SL : QM Baissier = juste au-dessus de Haut 2. QM Haussier = juste en-dessous de Bas 2. TP2 = ancien Bas pour VENTE, ancien Haut pour ACHAT. TP1 = moitié. Si ATTENDRE, sl=0 tp1=0 tp2=0.`;
-async function callAPI(url, body){
+async function callInteractions(){
 let ctrl=new AbortController();
 let timer=setTimeout(()=>ctrl.abort(),60000);
 try{
-let res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,body:JSON.stringify(body)});
+let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/interactions?key=${key}`,{
+method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,
+body:JSON.stringify({
+model:"models/gemini-3.8-flash",
+input:[
+{type:"text",text:prompt},
+{type:"image",data:base64Image,mime_type:"image/jpeg"}
+]
+})
+});
 clearTimeout(timer);
 if(!res.ok){let e=await res.json().catch(()=>({}));throw new Error(e.error?.message||"Erreur "+res.status);}
 let data=await res.json();
-if(data.candidates && data.candidates[0]) return data.candidates[0].content.parts[0].text;
-if(data.outputs && data.outputs[0]) return data.outputs[0].content?.[0]?.text || data.outputs[0].text || JSON.stringify(data);
-if(data.output) return data.output[0]?.content?.[0]?.text || JSON.stringify(data);
+if(data.output_text) return data.output_text;
+if(data.outputs && data.outputs[0]) return data.outputs[0].text || data.outputs[0].content?.[0]?.text || JSON.stringify(data);
+if(data.output && data.output[0]) return data.output[0].text || data.output[0].content?.[0]?.text || JSON.stringify(data);
 return JSON.stringify(data);
 }catch(err){clearTimeout(timer);throw err;}
 }
 try{
-let txt=null;let lastErr="";
-// METHODE 1 : Ancien generateContent avec 3.8-flash - la plus simple, on essaie d'abord
-try{showDebug("⏳ Méthode 1 : generateContent 3.8-flash...");txt=await callAPI(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${key}`,{contents:[{parts:[{text:prompt},{inline_data:{mime_type:"image/jpeg",data:base64Image}}]}]});showDebug("✅ Méthode 1 a marché !");}catch(e){lastErr=e.message;showDebug("⚠️ Méthode 1 a échoué : "+e.message.substring(0,120));}
-// METHODE 2 : Interactions API avec inline_data - le bon mot pour l'image
-if(!txt){
-try{showDebug("⏳ Méthode 2 : Interactions avec inline_data...");txt=await callAPI(`https://generativelanguage.googleapis.com/v1beta/interactions?key=${key}`,{model:"models/gemini-3.8-flash",input:[{role:"user",content:[{type:"text",text:prompt},{type:"image",inline_data:{mime_type:"image/jpeg",data:base64Image}}]}]});showDebug("✅ Méthode 2 a marché !");}catch(e){lastErr=e.message;showDebug("⚠️ Méthode 2 a échoué : "+e.message.substring(0,120));}
-}
-// METHODE 3 : Interactions API avec image_url - l'autre façon que Google accepte
-if(!txt){
-try{showDebug("⏳ Méthode 3 : Interactions avec image_url...");txt=await callAPI(`https://generativelanguage.googleapis.com/v1beta/interactions?key=${key}`,{model:"models/gemini-3.8-flash",input:[{role:"user",content:[{type:"text",text:prompt},{type:"image",image_url:{url:"data:image/jpeg;base64,"+base64Image}}]}]});showDebug("✅ Méthode 3 a marché !");}catch(e){lastErr=e.message;showDebug("⚠️ Méthode 3 a échoué : "+e.message.substring(0,120));}
-}
-// METHODE 4 : Interactions API avec file_data
-if(!txt){
-try{showDebug("⏳ Méthode 4 : Interactions avec file_data...");txt=await callAPI(`https://generativelanguage.googleapis.com/v1beta/interactions?key=${key}`,{model:"models/gemini-3.8-flash",input:[{role:"user",content:[{type:"text",text:prompt},{type:"image",file_data:{mime_type:"image/jpeg",data:base64Image}}]}]});showDebug("✅ Méthode 4 a marché !");}catch(e){lastErr=e.message;showDebug("⚠️ Méthode 4 a échoué : "+e.message.substring(0,120));}
-}
-if(!txt) throw new Error(lastErr);
+let txt=await callInteractions();
+showDebug("✅ Interactions API a marché !");
 let jsonStr=txt.replace(/```json|```/g,'').trim();
 let s=jsonStr.indexOf('{');let en=jsonStr.lastIndexOf('}');
 if(s!==-1&&en!==-1) jsonStr=jsonStr.substring(s,en+1);
