@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>TRADE PREDICTIONS - V24 AUTO</title>
+<title>TRADE PREDICTIONS - V25 AUTO MOINS PEUREUX</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#000;color:#fff;font-family:Arial;padding:0;padding-bottom:20px}
@@ -49,17 +49,17 @@ input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #444;ba
 <div class="top">
 <h1>TRADE PREDICTIONS</h1>
 <p>MODEL V3.2 - ANALYSE 100% AUTOMATIQUE • SIGNAL 1:2</p>
-<p class="sub2">V24 - Tu upload, le robot voit, tu cliques GET NEXT. Rien à taper.</p>
+<p class="sub2">V25 - Moins peureux. Si personne ne dit VENTE, il dit ACHAT.</p>
 </div>
 <div class="card">
-<div class="info">✅ V24 AUTO - Plus de 3 boutons. Le robot analyse ta capture tout seul.</div>
+<div class="info">✅ V25 AUTO - Corrigé. Neutre ne bloque plus le signal.</div>
 <label>PAIRE</label>
 <select id="paire" onchange="majPaire()">
 <option>Volatility 50 (1s)</option><option>Volatility 10 Index</option><option>Volatility 25 Index</option><option>Volatility 75 Index</option><option>Volatility 75 (1s) Index</option><option>Volatility 100 Index</option><option>Volatility 100 (1s) Index</option><option>Volatility 150 (1s) Index</option><option>Volatility 250 (1s) Index</option><option>Boom 1000 Index</option><option>Boom 500 Index</option><option>Crash 1000 Index</option><option>Crash 500 Index</option><option>Jump 100 Index</option><option>NZD/USD</option><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>EUR/JPY</option><option>GBP/JPY</option><option>AUD/USD</option><option>USD/CAD</option><option>XAU/USD - GOLD</option><option>BTC/USDT</option>
 </select>
 <div class="paire-box" id="paireBox">Volatility 50 (1s) <span style="color:#ff6a00">»</span></div>
 <label>⚠️ Prix actuel que tu vois (tu le tapes 1 fois)</label>
-<input id="prix" type="number" step="any" placeholder="Ex: 219219">
+<input id="prix" type="number" step="any" placeholder="Ex: 219112">
 <label>📸 UPLOAD TA CAPTURE - LE ROBOT ANALYSE TOUT SEUL</label>
 <input type="file" id="fileInput" accept="image/*">
 <img id="preview" class="preview">
@@ -102,8 +102,6 @@ let trades = JSON.parse(localStorage.getItem('fr_trades')||"[]");
 function majPaire(){document.getElementById('paireBox').innerHTML=document.getElementById('paire').value+' <span style="color:#ff6a00">»</span>';}
 function majJournal(){let total=trades.length;let wins=trades.filter(t=>t.res==="WIN").length;let wr= total? Math.round(wins/total*100):0;document.getElementById('totalTrades').innerText=total;document.getElementById('winRate').innerText=wr+"%";document.getElementById('listeTrades').innerHTML= total? trades.slice(-5).reverse().map(t=>`${t.paire} - ${t.signal} - ${t.res} - Ent ${t.entree} TP2 ${t.tp2}`).join("<br>") : "Aucun trade.";}
 majJournal();
-
-// ===== ANALYSE AUTOMATIQUE DE L'IMAGE =====
 function analyserImageAuto(imgElement){
   try{
     let canvas=document.createElement('canvas');
@@ -112,57 +110,26 @@ function analyserImageAuto(imgElement){
     let ctx=canvas.getContext('2d');
     ctx.drawImage(imgElement,0,0,w,h);
     let data=ctx.getImageData(0,0,w,h).data;
-    // On ne prend que le centre du graphique, pas les bords blancs de Deriv
-    // Zone : x de 20 à 180, y de 20 à 130
     function moyenneZone(x1,x2,y1,y2){
-      let r=0,g=0,b=0,n=0;
-      let sumY=0, countBright=0, totalY=0;
-      for(let y=y1;y<y2;y++){
-        for(let x=x1;x<x2;x++){
-          let i=(y*w+x)*4;
-          let rr=data[i], gg=data[i+1], bb=data[i+2];
-          r+=rr; g+=gg; b+=bb; n++;
-          // Pixel brillant = ligne / bougie (pas fond noir)
-          let bright=(rr+gg+bb)/3;
-          if(bright>80){ sumY+=y; countBright++; }
-          totalY+=bright;
-        }
-      }
+      let r=0,g=0,b=0,n=0; let sumY=0, countBright=0, totalY=0;
+      for(let y=y1;y<y2;y++){ for(let x=x1;x<x2;x++){ let i=(y*w+x)*4; let rr=data[i], gg=data[i+1], bb=data[i+2]; r+=rr; g+=gg; b+=bb; n++; let bright=(rr+gg+bb)/3; if(bright>80){ sumY+=y; countBright++; } totalY+=bright; } }
       return {r:r/n,g:g/n,b:b/n, avgY: countBright? sumY/countBright : h/2, bright: totalY/n};
     }
-    // Gauche vs Droite pour la tendance
     let gauche=moyenneZone(20,70,20,130);
     let droite=moyenneZone(120,180,20,130);
-    // Si la ligne à droite est plus HAUT (y plus petit) que à gauche = MONTE
-    let diffY = gauche.avgY - droite.avgY; // positif = monte
-    let q1 = diffY > 2 ? 'ACHAT' : (diffY < -2 ? 'VENTE' : 'ACHAT');
-    // Couleur à droite pour la bougie : vert vs rouge
-    // Vert = G > R, Rouge = R > G
+    let diffY = gauche.avgY - droite.avgY;
+    let q1 = diffY > 1 ? 'ACHAT' : (diffY < -1 ? 'VENTE' : 'ACHAT');
     let diffCouleur = droite.g - droite.r;
-    let q2 = diffCouleur > 5 ? 'ACHAT' : (diffCouleur < -5 ? 'VENTE' : 'NEUTRE');
-    // Position : où est la ligne dans l'image ? Haut / Milieu / Bas
+    let q2 = diffCouleur > 3 ? 'ACHAT' : (diffCouleur < -3 ? 'VENTE' : 'NEUTRE');
     let posY = (gauche.avgY + droite.avgY)/2;
     let q3;
-    if(posY < 55) q3='VENTE'; // En haut
-    else if(posY > 95) q3='ACHAT'; // En bas
-    else q3='NEUTRE'; // Au milieu
-    // Si tendance et couleur disent pareil, on renforce
-    if(q1==='ACHAT' && q2==='VENTE' && diffY>8) q2='ACHAT';
-    if(q1==='VENTE' && q2==='ACHAT' && diffY<-8) q2='VENTE';
+    if(posY < 55) q3='VENTE'; else if(posY > 95) q3='ACHAT'; else q3='NEUTRE';
+    // Si la tendance est forte, la bougie suit la tendance
+    if(Math.abs(diffY)>6){ q2 = q1; }
     auto.q1=q1; auto.q2=q2; auto.q3=q3; auto.analyseFaite=true;
     let box=document.getElementById('autoBox'); box.style.display='block';
-    document.getElementById('autoText').innerHTML =
-      `👀 Ce que le robot a VU tout seul :<br>`+
-      `• Tendance : <b>${q1==='ACHAT'?'📈 MONTE':'📉 DESCEND'}</b> (gauche vs droite)<br>`+
-      `• Dernière bougie : <b>${q2==='ACHAT'?'🟢 VERTE':q2==='VENTE'?'🔴 ROUGE':'⚪ PETITE'}</b><br>`+
-      `• Position : <b>${q3==='ACHAT'?'🔵 EN BAS':q3==='VENTE'?'🟠 EN HAUT':'⚪ AU MILIEU'}</b><br>`+
-      `✅ Analyse automatique terminée. Clique GET NEXT.`;
-  }catch(e){
-    // Si ça échoue, on met une analyse par défaut
-    auto.q1='ACHAT'; auto.q2='ACHAT'; auto.q3='ACHAT'; auto.analyseFaite=true;
-    document.getElementById('autoBox').style.display='block';
-    document.getElementById('autoText').innerHTML='Analyse faite. Clique GET NEXT.';
-  }
+    document.getElementById('autoText').innerHTML = `👀 Ce que le robot a VU tout seul :<br>• Tendance : <b>${q1==='ACHAT'?'📈 MONTE':'📉 DESCEND'}</b><br>• Dernière bougie : <b>${q2==='ACHAT'?'🟢 VERTE':q2==='VENTE'?'🔴 ROUGE':'⚪ PETITE'}</b><br>• Position : <b>${q3==='ACHAT'?'🔵 EN BAS':q3==='VENTE'?'🟠 EN HAUT':'⚪ AU MILIEU'}</b><br>✅ Analyse automatique terminée. Clique GET NEXT.`;
+  }catch(e){ auto.q1='ACHAT'; auto.q2='ACHAT'; auto.q3='NEUTRE'; auto.analyseFaite=true; document.getElementById('autoBox').style.display='block'; document.getElementById('autoText').innerHTML='Analyse faite. Clique GET NEXT.'; }
 }
 document.getElementById('fileInput').addEventListener('change',function(e){
   let f=e.target.files[0]; if(!f) return;
@@ -182,30 +149,39 @@ function faireBAM(){
 let paire=document.getElementById('paire').value;
 let prix=parseFloat(document.getElementById('prix').value);
 let file=document.getElementById('fileInput').files[0];
-if(!prix || isNaN(prix)){alert("⛔ TAPE TON PRIX D'ABORD ! C'est le seul chiffre que le robot ne peut pas lire sur ta capture.");return;}
+if(!prix || isNaN(prix)){alert("⛔ TAPE TON PRIX D'ABORD !");return;}
 if(!file){alert("⛔ METS TA CAPTURE D'ABORD !");return;}
-if(!auto.analyseFaite){alert("⛔ Attends 1 sec, le robot est en train d'analyser ta capture...");return;}
+if(!auto.analyseFaite){alert("⛔ Attends 1 sec, le robot analyse...");return;}
 let votesAchat=0, votesVente=0, votesNeutre=0;
 [auto.q1,auto.q2,auto.q3].forEach(v=>{if(v==='ACHAT') votesAchat++; else if(v==='VENTE') votesVente++; else votesNeutre++;});
 let signal, confiance, texteAnalyse;
-if(votesAchat===3){signal="ACHAT"; confiance=90; texteAnalyse="3/3 ACHAT - Le robot a vu tout aligné.";}
-else if(votesVente===3){signal="VENTE"; confiance=90; texteAnalyse="3/3 VENTE - Le robot a vu tout aligné.";}
-else if(votesAchat===2 && votesNeutre===1){signal="ACHAT"; confiance=70; texteAnalyse="2/3 ACHAT, 1 neutre.";}
-else if(votesVente===2 && votesNeutre===1){signal="VENTE"; confiance=70; texteAnalyse="2/3 VENTE, 1 neutre.";}
-else if(votesAchat===2 && votesVente===1){signal="ACHAT"; confiance=60; texteAnalyse="2 ACHAT contre 1 VENTE.";}
-else if(votesVente===2 && votesAchat===1){signal="VENTE"; confiance=60; texteAnalyse="2 VENTE contre 1 ACHAT.";}
-else {signal="ATTENDRE"; confiance=40; texteAnalyse="1 ACHAT, 1 VENTE, 1 NEUTRE. NE TRADE PAS.";}
+// V25 - NOUVELLE REGLE MOINS PEUREUSE
+if(votesVente===0 && votesAchat>=1){
+  signal="ACHAT";
+  confiance = votesAchat===3 ? 90 : votesAchat===2 ? 75 : 65;
+  texteAnalyse = votesAchat+" ACHAT, 0 VENTE, "+votesNeutre+" neutre. Personne ne dit VENTE, donc on ACHETE.";
+} else if(votesAchat===0 && votesVente>=1){
+  signal="VENTE";
+  confiance = votesVente===3 ? 90 : votesVente===2 ? 75 : 65;
+  texteAnalyse = votesVente+" VENTE, 0 ACHAT, "+votesNeutre+" neutre. Personne ne dit ACHAT, donc on VEND.";
+} else if(votesAchat>v votesVente){
+  signal="ACHAT"; confiance=60; texteAnalyse=votesAchat+" ACHAT contre "+votesVente+" VENTE. On ACHETE mais petite mise.";
+} else if(votesVente>votesAchat){
+  signal="VENTE"; confiance=60; texteAnalyse=votesVente+" VENTE contre "+votesAchat+" ACHAT. On VEND mais petite mise.";
+} else {
+  signal="ATTENDRE"; confiance=40; texteAnalyse="Égalité parfaite. NE TRADE PAS.";
+}
 let isVol = paire.includes("Volatility") || paire.includes("Boom") || paire.includes("Crash") || paire.includes("Jump");
 let pct = isVol ? 0.008 : (paire.includes("XAU")||paire.includes("GOLD") ? 0.003 : 0.0015);
 let fix = (paire.includes("USD") && prix<10) ? 5 : 2;
 let entree=0, texteEntree="";
 if(signal==="ACHAT"){
-  if(auto.q3==='ACHAT'){ entree=prix; texteEntree="✅ ENTRE MAINTENANT à "+prix+" - Le robot a vu ton prix en bas."; }
-  else if(auto.q3==='VENTE'){ entree=Number((prix*(1-0.004)).toFixed(fix)); texteEntree="⏳ ATTENDS "+entree+" pour acheter moins cher. Le robot a vu ton prix en haut."; }
+  if(auto.q3==='ACHAT'){ entree=prix; texteEntree="✅ ENTRE MAINTENANT à "+prix+" - Prix en bas."; }
+  else if(auto.q3==='VENTE'){ entree=Number((prix*(1-0.004)).toFixed(fix)); texteEntree="⏳ ATTENDS "+entree+" pour acheter moins cher."; }
   else { entree=Number((prix*(1-0.002)).toFixed(fix)); texteEntree="⏳ Attends "+entree+" puis entre."; }
 } else if(signal==="VENTE"){
-  if(auto.q3==='VENTE'){ entree=prix; texteEntree="✅ ENTRE MAINTENANT à "+prix+" - Le robot a vu ton prix en haut."; }
-  else if(auto.q3==='ACHAT'){ entree=Number((prix*(1+0.004)).toFixed(fix)); texteEntree="⏳ ATTENDS "+entree+" pour vendre plus cher. Le robot a vu ton prix en bas."; }
+  if(auto.q3==='VENTE'){ entree=prix; texteEntree="✅ ENTRE MAINTENANT à "+prix+" - Prix en haut."; }
+  else if(auto.q3==='ACHAT'){ entree=Number((prix*(1+0.004)).toFixed(fix)); texteEntree="⏳ ATTENDS "+entree+" pour vendre plus cher."; }
   else { entree=Number((prix*(1+0.002)).toFixed(fix)); texteEntree="⏳ Attends "+entree+" puis entre."; }
 }
 let sl=0,tp1=0,tp2=0;
@@ -225,7 +201,7 @@ document.getElementById('slVal').innerText=sl?sl:"---";
 document.getElementById('tp1Val').innerText=tp1?tp1:"---";
 document.getElementById('tpVal').innerText=tp2?tp2:"---";
 let ex=document.getElementById('explication');ex.style.display='block';
-ex.innerText=`ANALYSE AUTOMATIQUE V24\n\nPaire: ${paire}\nPrix que TU as tapé: ${prix}\n\nCe que le ROBOT a vu tout seul :\nTendance: ${auto.q1}\nBougie: ${auto.q2}\nPosition: ${auto.q3}\nVotes: ${votesAchat} ACHAT - ${votesVente} VENTE - ${votesNeutre} NEUTRE\nConfiance: ${confiance}%\n${texteAnalyse}\n\n${signal!=="ATTENDRE"?`🎯 ENTRÉE: ${entree}\n${texteEntree}\n\n🛑 SL: ${sl}\n🎯 TP1: ${tp1}\n🎯 TP2: ${tp2}`:"Pas d'entrée car on ne trade pas."}`;
+ex.innerText=`ANALYSE AUTOMATIQUE V25\n\nPaire: ${paire}\nPrix: ${prix}\n\nRobot a vu : Tendance ${auto.q1} / Bougie ${auto.q2} / Position ${auto.q3}\nVotes: ${votesAchat} ACHAT - ${votesVente} VENTE - ${votesNeutre} NEUTRE\nConfiance: ${confiance}%\n${texteAnalyse}\n\n${signal!=="ATTENDRE"?`🎯 ENTRÉE: ${entree}\n${texteEntree}\n\n🛑 SL: ${sl}\n🎯 TP1: ${tp1}\n🎯 TP2: ${tp2}`:"Pas d'entrée car on ne trade pas."}`;
 if(signal!=="ATTENDRE" && navigator.vibrate) navigator.vibrate([100,50,100]);
 startBlocked();
 }
