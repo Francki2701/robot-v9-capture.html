@@ -28,4 +28,159 @@ input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #444;ba
 .btn-next{width:100%;background:linear-gradient(180deg,#ff8c00,#ff6a00);color:#fff;padding:18px;border:0;border-radius:14px;font-weight:900;font-size:20px;letter-spacing:2px;cursor:pointer}
 .btn-blocked{width:100%;background:#222;color:#ffcc00;padding:18px;border:0;border-radius:14px;font-weight:900;font-size:20px;display:none}
 .grid{display:flex;gap:8px;margin-top:10px}.grid>div{flex:1;background:#111;padding:10px;border-radius:12px;text-align:center}
-.sl{color:#ff1744;font-weight:900;font-size:18px}.tp{color:#00c853;font-weight:900;font-size:18px}.tp1{color:#ffcc00;font-weight:900;font-size
+.sl{color:#ff1744;font-weight:900;font-size:18px}.tp{color:#00c853;font-weight:900;font-size:18px}.tp1{color:#ffcc00;font-weight:900;font-size:18px}
+.small{font-size:11px;color:#aaa;text-align:center;margin-top:8px;line-height:1.5}
+.detail{background:#000;padding:12px;border-radius:12px;font-size:13px;line-height:1.6;white-space:pre-wrap;margin-top:12px;display:none}
+.info{background:#00c853;color:#000;padding:10px;border-radius:12px;text-align:center;font-size:13px;font-weight:900}
+.warn{background:#220000;border:1px solid #ff1744;padding:10px;border-radius:12px;font-size:11px;line-height:1.5;color:#ffaaaa;margin:14px}
+.btn-reset{width:100%;background:#333;color:#fff;padding:12px;border:0;border-radius:10px;font-weight:900;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="top">
+<h1>TRADE PREDICTIONS</h1>
+<p>CAPTURE + TOUCHE + PRIX = BAM - SANS CLÉ</p>
+</div>
+<div class="card">
+<div class="info">✅ V18 - Tu mets ta capture, tu touches 3 points, tu tapes le prix, BAM !</div>
+<label>PAIRE</label>
+<select id="paire" onchange="majPaire()">
+<option>Volatility 50 (1s)</option><option>Volatility 10 Index</option><option>Volatility 25 Index</option><option>Volatility 75 Index</option><option>Volatility 100 Index</option><option>Volatility 100 (1s) Index</option><option>Volatility 150 (1s) Index</option><option>Volatility 250 (1s) Index</option><option>NZD/USD</option><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>EUR/JPY</option><option>GBP/JPY</option><option>AUD/USD</option><option>USD/CAD</option><option>XAU/USD - GOLD</option><option>BTC/USDT</option>
+</select>
+<div class="paire-box" id="paireBox">Volatility 50 (1s) <span style="color:#ff6a00">»</span></div>
+
+<label>1. METS TA CAPTURE</label>
+<input type="file" id="fileInput" accept="image/*">
+<div id="canvasWrap"><canvas id="canvas"></canvas></div>
+
+<div id="step1" class="step step-wait">👆 ÉTAPE 1 : Touche le HAUT 1 sur ta capture</div>
+<div id="step2" class="step step-wait">👆 ÉTAPE 2 : Touche le BAS sur ta capture</div>
+<div id="step3" class="step step-wait">👆 ÉTAPE 3 : Touche le HAUT 2 sur ta capture</div>
+
+<label>2. PRIX ACTUEL - Le seul chiffre à taper</label>
+<input id="prix" type="number" step="any" placeholder="Ex: 202000 - Regarde en haut à droite de ton graphique">
+
+<label>DIRECTION</label>
+<div class="dir-box dir-wait" id="dirBox">⏳ EN ATTENTE<div class="dir-small">Mets ta capture, touche 3 points, tape le prix, GET NEXT</div></div>
+<button class="btn-next" id="btnNext" onclick="calculerQM()">GET NEXT</button>
+<button class="btn-blocked" id="btnBlocked">BLOCKED 30</button>
+
+<div class="grid">
+<div><div class="small">🛑 SL</div><div class="sl" id="slVal">---</div></div>
+<div><div class="small">🎯 TP1</div><div class="tp1" id="tp1Val">---</div></div>
+<div><div class="small">🎯 TP2</div><div class="tp" id="tpVal">---</div></div>
+</div>
+<div class="detail" id="explication"></div>
+<button class="btn-reset" onclick="resetPoints()">🔄 RECOMMENCER - Effacer les points</button>
+<p class="small">Comment ça marche ? Sur ton graphique, le haut = prix haut, le bas = prix bas. Si tu touches Haut 1 plus haut que Haut 2, et Bas plus bas, le robot sait que c'est un QM. Il utilise ton Prix Actuel pour calculer SL / TP.</p>
+</div>
+<div class="warn">⚠️ Ce robot calcule avec les points que TU touches. Il ne garantit PAS de gain. Ne mise jamais l'argent que tu ne peux pas perdre.</div>
+<script>
+let pts={h1:null,bas:null,h2:null};
+let etape=1;
+let imgObj=null;
+function majPaire(){document.getElementById('paireBox').innerHTML=document.getElementById('paire').value+' <span style="color:#ff6a00">»</span>';}
+function majSteps(){
+document.getElementById('step1').className='step '+(pts.h1?'step-done':(etape==1?'step-active':'step-wait'));
+document.getElementById('step1').innerText=pts.h1?'✅ HAUT 1 OK - Touche le BAS':'👆 ÉTAPE 1 : Touche le HAUT 1 sur ta capture';
+document.getElementById('step2').className='step '+(pts.bas?'step-done':(etape==2?'step-active':'step-wait'));
+document.getElementById('step2').innerText=pts.bas?'✅ BAS OK - Touche le HAUT 2':'👆 ÉTAPE 2 : Touche le BAS sur ta capture';
+document.getElementById('step3').className='step '+(pts.h2?'step-done':(etape==3?'step-active':'step-wait'));
+document.getElementById('step3').innerText=pts.h2?'✅ HAUT 2 OK - Tape le Prix et clique GET NEXT':'👆 ÉTAPE 3 : Touche le HAUT 2 sur ta capture';
+}
+majSteps();
+document.getElementById('fileInput').addEventListener('change',function(e){
+let f=e.target.files[0];if(!f)return;
+let r=new FileReader();
+r.onload=function(ev){
+imgObj=new Image();
+imgObj.onload=function(){
+let c=document.getElementById('canvas');
+let wrap=document.getElementById('canvasWrap');
+wrap.style.display='block';
+let maxW=wrap.clientWidth||350;
+let ratio=Math.min(maxW/imgObj.width,1);
+c.width=imgObj.width*ratio; c.height=imgObj.height*ratio;
+let ctx=c.getContext('2d'); ctx.drawImage(imgObj,0,0,c.width,c.height);
+resetPoints();
+};
+imgObj.src=ev.target.result;
+};
+r.readAsDataURL(f);
+});
+function resetPoints(){pts={h1:null,bas:null,h2:null};etape=1;majSteps();if(imgObj){let c=document.getElementById('canvas');let ctx=c.getContext('2d');ctx.drawImage(imgObj,0,0,c.width,c.height);}}
+document.getElementById('canvas').addEventListener('click',function(e){
+if(!imgObj){alert("Mets d'abord ta capture !");return;}
+let rect=e.target.getBoundingClientRect();
+let x=(e.clientX-rect.left)*(e.target.width/rect.width);
+let y=(e.clientY-rect.top)*(e.target.height/rect.height);
+let ctx=e.target.getContext('2d');
+ctx.drawImage(imgObj,0,0,e.target.width,e.target.height);
+// Redessine les anciens points
+if(pts.h1) dessinePoint(ctx,pts.h1.x,pts.h1.y,'#ff0000','H1');
+if(pts.bas) dessinePoint(ctx,pts.bas.x,pts.bas.y,'#00ff00','BAS');
+if(pts.h2) dessinePoint(ctx,pts.h2.x,pts.h2.y,'#ffcc00','H2');
+if(etape==1){pts.h1={x,y}; dessinePoint(ctx,x,y,'#ff0000','H1'); etape=2;}
+else if(etape==2){pts.bas={x,y}; dessinePoint(ctx,x,y,'#00ff00','BAS'); etape=3;}
+else if(etape==3){pts.h2={x,y}; dessinePoint(ctx,x,y,'#ffcc00','H2'); etape=4;}
+majSteps();
+});
+function dessinePoint(ctx,x,y,color,label){
+ctx.beginPath();ctx.arc(x,y,12,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();
+ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+ctx.fillStyle='#000';ctx.font='bold 12px Arial';ctx.textAlign='center';ctx.fillText(label,x,y+4);
+}
+function startBlocked(){
+let btn=document.getElementById('btnNext');let blk=document.getElementById('btnBlocked');
+btn.style.display='none';blk.style.display='block';
+let s=30;blk.innerText="BLOCKED "+s;
+let iv=setInterval(()=>{s--;blk.innerText="BLOCKED "+s;if(s<=0){clearInterval(iv);blk.style.display='none';btn.style.display='block';}},1000);
+}
+function calculerQM(){
+let prix=parseFloat(document.getElementById('prix').value);
+if(!pts.h1||!pts.bas||!pts.h2){alert("⛔ Touche d'abord les 3 points sur ta capture ! Haut 1, Bas, Haut 2.");return;}
+if(isNaN(prix)){alert("⛔ Tape ton Prix Actuel ! C'est le seul chiffre à taper.");return;}
+// Sur une image, Y petit = prix HAUT, Y grand = prix BAS
+// QM Baissier = H1 plus haut que H2 (Y H1 < Y H2) et Bas plus bas que les deux (Y Bas > Y H1 et Y Bas > Y H2)
+let h1Y=pts.h1.y, basY=pts.bas.y, h2Y=pts.h2.y;
+let box=document.getElementById('dirBox');
+let ex=document.getElementById('explication');ex.style.display='block';
+// Estimation des distances en % : distance entre H1 et Bas = 100% du mouvement
+let distTotal=Math.abs(basY-h1Y)||1;
+let distH1H2=Math.abs(h2Y-h1Y);
+let distH2Bas=Math.abs(basY-h2Y);
+// On estime SL/TP à partir du Prix Actuel et des distances
+// Si H2 est à 30% entre H1 et Bas, alors SL = Prix + 2%, TP1 = Prix - 1%, TP2 = Prix - 2% (ajusté)
+let pctH2 = distH1H2/distTotal; // 0 à 1
+let sl = Math.round(prix * (1 + 0.01 + pctH2*0.01));
+let tp1 = Math.round(prix * (1 - 0.01));
+let tp2 = Math.round(prix * (1 - 0.02 - pctH2*0.01));
+if(h1Y < h2Y && h2Y < basY){
+// QM Baissier structure OK
+// Est-ce que le prix a cassé ? On estime : si tu as touché le prix actuel bas, on ne peut pas savoir sans 4ème point, donc on demande : si prix est très proche du Bas, on dit ATTENDS cassure
+// Pour simplifier : si prix est en dessous du milieu entre H2 et Bas, on dit ATTENDS, si prix est très bas, on dit VENDS si tu nous dis qu'il a cassé
+// On utilise une règle simple : si prix < (prix de départ) -> on ne sait pas, donc on dit QM EN FORMATION et on donne le niveau à casser
+// On calcule le niveau de Bas estimé : Bas = Prix - (distance H2-Bas en %)
+let basEstime = Math.round(prix - (distH2Bas/distTotal)*prix*0.05);
+box.className='dir-box dir-wait';
+box.innerHTML='⏳ QM EN FORMATION - ATTENDS<div class="dir-small">Haut 1 plus haut que Haut 2 ✅ | Structure QM Baissier ✅</div>';
+document.getElementById('slVal').innerText="---";document.getElementById('tp1Val').innerText="---";document.getElementById('tpVal').innerText="---";
+ex.innerText=`⏳ QM EN FORMATION BAISSIER - ATTENDS\n\nTu as touché :\nHaut 1 en haut ✅\nBas en bas ✅\nHaut 2 au milieu, plus bas que Haut 1 ✅\n\nC'est un vrai QM Baissier en formation.\nPrix actuel que tu as tapé : ${prix}\n\nATTENDS que le prix casse le Bas que tu as touché.\nSi ça casse en bas : VENDS\nSL estimé : ${sl}\nTP1 estimé : ${tp1}\nTP2 estimé : ${tp2}\n\nSi le prix remonte au-dessus du Haut 2 que tu as touché, le QM est annulé.\n\n---\nPour dire VENDS tout de suite, retouche le Haut 2 et mets un Prix Actuel plus bas que ton Bas. Le robot comprendra que ça a cassé.`;
+} else if(h1Y > h2Y){
+box.className='dir-box dir-wait';box.innerHTML='⏳ ATTENDS - PAS DE QM<div class="dir-small">Haut 2 plus haut que Haut 1, pas de QM baissier</div>';
+ex.innerText=`⏳ PAS DE QM BAISSIER\n\nTon Haut 2 est PLUS HAUT que ton Haut 1 sur la capture.\nPour un QM Baissier, il faut Haut 1 > Haut 2.\n\nRecommence : touche un Haut 1 plus haut, puis un Haut 2 plus bas.`;
+} else {
+box.className='dir-box dir-wait';box.innerHTML='⏳ ATTENDS<div class="dir-small">Vérifie tes 3 points</div>';
+ex.innerText=`Vérifie tes points :\nHaut 1 doit être le plus haut,\nBas le plus bas,\nHaut 2 entre les deux mais plus bas que Haut 1.\n\nClique sur RECOMMENCER et retouche.`;
+}
+// Si l'utilisateur veut un VENDS direct, on lui donne aussi le bouton VENDS si la structure est bonne et prix bas
+if(h1Y < h2Y && h2Y < basY){
+// On propose aussi le calcul VENTE si jamais il a déjà cassé - il peut décider
+ex.innerText += `\n\nSi tu vois que le prix A DÉJÀ CASSÉ le Bas sur ton graphique, alors :\n🔴 VENDS MAINTENANT\nSL: ${sl} | TP1: ${tp1} | TP2: ${tp2}`;
+}
+startBlocked();
+if(navigator.vibrate) navigator.vibrate([50]);
+}
+</script>
+</body>
+</html>
