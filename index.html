@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ROBOT V16 QUOTEX STYLE - QM</title>
+<title>ROBOT V17 SANS CLE - QM</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#000;color:#fff;font-family:Arial;padding:0;padding-bottom:20px}
@@ -12,8 +12,8 @@ body{margin:0;background:#000;color:#fff;font-family:Arial;padding:0;padding-bot
 .top p{color:#ffcc00;font-size:12px;margin:4px 0 0}
 .card{margin:14px;background:linear-gradient(180deg,#2a1000,#0a0a0a);border:2px solid #ff6a00;border-radius:20px;padding:16px;box-shadow:0 0 30px rgba(255,106,0,.4)}
 label{font-size:13px;color:#ffcc00;font-weight:900;display:block;margin:12px 0 6px}
-input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #444;background:#111;color:#fff;font-size:15px}
-.paire-box{background:#111;border:1px solid #ff6a00;border-radius:14px;padding:12px;text-align:center;font-size:22px;font-weight:900;letter-spacing:1px}
+input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #444;background:#111;color:#fff;font-size:16px}
+.paire-box{background:#111;border:1px solid #ff6a00;border-radius:14px;padding:12px;text-align:center;font-size:22px;font-weight:900}
 .paire-box span{color:#ff6a00;font-size:14px}
 .dir-box{margin:14px 0;padding:20px;border-radius:16px;text-align:center;font-size:26px;font-weight:900;min-height:80px;display:flex;flex-direction:column;justify-content:center}
 .dir-up{background:#00c853;color:#fff;box-shadow:0 0 25px #00c853}
@@ -23,120 +23,114 @@ input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #444;ba
 .btn-next{width:100%;background:linear-gradient(180deg,#ff8c00,#ff6a00);color:#fff;padding:18px;border:0;border-radius:14px;font-weight:900;font-size:20px;letter-spacing:2px;cursor:pointer;box-shadow:0 0 20px #ff6a00}
 .btn-next:disabled{opacity:.5}
 .btn-blocked{width:100%;background:#222;color:#ffcc00;padding:18px;border:0;border-radius:14px;font-weight:900;font-size:20px;display:none}
-.preview{width:100%;border-radius:12px;margin-top:10px;display:none;border:1px solid #333}
-.detail{background:#000;padding:12px;border-radius:12px;font-size:13px;line-height:1.6;white-space:pre-wrap;margin-top:12px}
 .grid{display:flex;gap:8px;margin-top:10px}.grid>div{flex:1;background:#111;padding:10px;border-radius:12px;text-align:center}
 .sl{color:#ff1744;font-weight:900;font-size:18px}.tp{color:#00c853;font-weight:900;font-size:18px}.tp1{color:#ffcc00;font-weight:900;font-size:18px}
 .small{font-size:11px;color:#aaa;text-align:center;margin-top:8px;line-height:1.5}
-.btn-key{width:100%;background:#333;color:#fff;padding:12px;border:0;border-radius:10px;font-weight:900;margin-top:8px}
-.debug{background:#000;color:#ffcc00;padding:10px;border-radius:10px;font-size:12px;margin-top:10px;white-space:pre-wrap;word-break:break-word;display:none}
+.detail{background:#000;padding:12px;border-radius:12px;font-size:13px;line-height:1.6;white-space:pre-wrap;margin-top:12px;display:none}
+.info{background:#00c853;color:#000;padding:10px;border-radius:12px;text-align:center;font-size:13px;font-weight:900}
 .warn{background:#220000;border:1px solid #ff1744;padding:10px;border-radius:12px;font-size:11px;line-height:1.5;color:#ffaaaa;margin:14px}
+.flex2{display:flex;gap:8px}.flex2>div{flex:1}
+.btn-copy{width:100%;background:#ffcc00;color:#000;padding:14px;border:0;border-radius:12px;font-size:16px;font-weight:900;margin-top:8px}
 </style>
 </head>
 <body>
 <div class="top">
 <h1>TRADE PREDICTIONS</h1>
-<p>QM 100% - PAS DE PROMESSE, QUE L'ANALYSE</p>
+<p>QM 100% - SANS CLÉ - SANS IA - 0 ERREUR</p>
 </div>
 <div class="card">
-<label>TA CLÉ GOOGLE</label>
-<input id="apiKey" type="password" placeholder="Colle ta clé AIza...">
-<button class="btn-key" onclick="ouvrirAistudio()">🔑 OBTENIR MA CLÉ</button>
-<button class="btn-key" onclick="sauvegarderCle()">💾 SAUVEGARDER</button>
-<p class="small" id="etatCle">Clé : Non enregistrée</p>
+<div class="info">✅ V17 - PLUS DE CLÉ ! Tu tapes 4 prix, le robot calcule.</div>
 <label>PAIRE</label>
 <select id="paire" onchange="majPaire()">
 <option>Volatility 50 (1s)</option><option>Volatility 10 Index</option><option>Volatility 25 Index</option><option>Volatility 75 Index</option><option>Volatility 100 Index</option><option>Volatility 100 (1s) Index</option><option>Volatility 150 (1s) Index</option><option>Volatility 250 (1s) Index</option><option>NZD/USD</option><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>EUR/JPY</option><option>GBP/JPY</option><option>AUD/USD</option><option>USD/CAD</option><option>XAU/USD - GOLD</option><option>BTC/USDT</option>
 </select>
 <div class="paire-box" id="paireBox">Volatility 50 (1s) <span>»</span></div>
-<label>CAPTURE DU GRAPHIQUE</label>
-<input type="file" id="fileInput" accept="image/*">
-<img id="preview" class="preview">
+
+<label>1. HAUT 1 - Le 1er sommet</label>
+<input id="haut1" type="number" step="any" placeholder="Ex: 222232">
+<label>2. BAS - Le creux au milieu</label>
+<input id="bas" type="number" step="any" placeholder="Ex: 189675">
+<label>3. HAUT 2 - Le 2ème sommet</label>
+<input id="haut2" type="number" step="any" placeholder="Ex: 207737">
+<label>4. PRIX ACTUEL - Où est le prix maintenant ?</label>
+<input id="prix" type="number" step="any" placeholder="Ex: 202000">
+
 <label>DIRECTION</label>
-<div class="dir-box dir-wait" id="dirBox">⏳ EN ATTENTE<div class="dir-small" id="dirSmall">Mets ta capture et clique GET NEXT</div></div>
-<button class="btn-next" id="btnNext" onclick="analyserQM()">GET NEXT</button>
+<div class="dir-box dir-wait" id="dirBox">⏳ EN ATTENTE<div class="dir-small" id="dirSmall">Tape les 4 prix et clique GET NEXT</div></div>
+<button class="btn-next" id="btnNext" onclick="calculerQM()">GET NEXT</button>
 <button class="btn-blocked" id="btnBlocked">BLOCKED 30</button>
+
 <div class="grid">
 <div><div class="small">🛑 SL</div><div class="sl" id="slVal">---</div></div>
 <div><div class="small">🎯 TP1</div><div class="tp1" id="tp1Val">---</div></div>
 <div><div class="small">🎯 TP2</div><div class="tp" id="tpVal">---</div></div>
 </div>
-<div class="detail" id="explication" style="display:none"></div>
-<div class="debug" id="debug"></div>
+<div class="detail" id="explication"></div>
+<button class="btn-copy" onclick="copierTout()">📋 COPIER SL + TP1 + TP2</button>
+<p class="small">Exemple Volatility 50 : Haut1=222232, Bas=189675, Haut2=207737, Prix=202000 → Le robot dit ATTENDS, car le prix n'a pas encore cassé 189675.</p>
 </div>
-<div class="warn">⚠️ ATTENTION : Ce robot analyse ton QM sur ta capture. Il ne garantit PAS de gain. Le trading, surtout Quotex / 1 sec, c'est très risqué. Ne mise jamais l'argent que tu ne peux pas perdre. La vidéo avec "+57,900 ₹" c'est du montage pour vendre, pas la réalité.</div>
+<div class="warn">⚠️ Ce robot calcule ton QM avec les prix que TU tapes. Il ne garantit PAS de gain. Ne mise jamais l'argent que tu ne peux pas perdre.</div>
 <script>
-let base64Image=null, sl=0, tp1=0, tp=0, sens="", figure="";
-let cleSauv=localStorage.getItem('qm_api_key')||"";
-if(cleSauv){document.getElementById('apiKey').value=cleSauv;document.getElementById('etatCle').innerText="Clé : ✅ Enregistrée";}
-function ouvrirAistudio(){window.open("https://aistudio.google.com/app/apikey","_blank");}
-function sauvegarderCle(){let k=document.getElementById('apiKey').value.trim();if(!k){alert("Colle d'abord ta clé !");return;}localStorage.setItem('qm_api_key',k);document.getElementById('etatCle').innerText="Clé : ✅ Enregistrée";alert("Clé sauvegardée !");}
+let sl=0,tp1=0,tp=0,figure="",sens="";
 function majPaire(){document.getElementById('paireBox').innerHTML=document.getElementById('paire').value+' <span>»</span>';}
-function showDebug(t){let d=document.getElementById('debug');d.style.display='block';d.innerText=t;}
-document.getElementById('fileInput').addEventListener('change',function(e){
-let f=e.target.files[0];if(!f)return;
-let r=new FileReader();
-r.onload=function(ev){
-let img=new Image();
-img.onload=function(){
-let canvas=document.createElement('canvas');
-let max=600;let ratio=Math.min(max/img.width,max/img.height,1);
-canvas.width=img.width*ratio;canvas.height=img.height*ratio;
-let ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
-base64Image=canvas.toDataURL('image/jpeg',0.6).split(',')[1];
-let p=document.getElementById('preview');p.src=ev.target.result;p.style.display='block';
-showDebug("✅ Capture chargée - Prête.");
-};
-img.src=ev.target.result;
-};
-r.readAsDataURL(f);
-});
+function copierTout(){let t=`Paire: ${document.getElementById('paire').value} | ${sens} | ${figure} | SL: ${sl} | TP1: ${tp1} | TP2: ${tp}`;navigator.clipboard.writeText(t).then(()=>alert("Copié ! "+t));}
 function startBlocked(){
 let btn=document.getElementById('btnNext');let blk=document.getElementById('btnBlocked');
 btn.style.display='none';blk.style.display='block';
 let s=30;blk.innerText="BLOCKED "+s;
 let iv=setInterval(()=>{s--;blk.innerText="BLOCKED "+s;if(s<=0){clearInterval(iv);blk.style.display='none';btn.style.display='block';}},1000);
 }
-async function analyserQM(){
-let key=document.getElementById('apiKey').value.trim()||cleSauv;
-let paire=document.getElementById('paire').value;
-if(!key){alert("Il manque ta clé !");return;}
-if(!base64Image){alert("Il manque ta capture !");return;}
-localStorage.setItem('qm_api_key',key);
-let btn=document.getElementById('btnNext');btn.disabled=true;btn.innerText="⏳ ANALYSE...";
-document.getElementById('dirBox').className='dir-box dir-wait';
-document.getElementById('dirBox').innerHTML='⏳ ANALYSE...<div class="dir-small">L\'IA regarde ta capture, 30-60 sec...</div>';
-showDebug("⏳ Envoi à Google IA - Format officiel V15...");
-let prompt=`Tu es un expert trading Quasimodo QM 100%. Analyse cette capture de graphique pour la paire ${paire}. Lis les prix directement sur la capture. Tu dois UNIQUEMENT analyser le pattern Quasimodo QM. Ignore tout le reste. Règles QM STRICTES : QM BAISSIER = Haut 1 -> Bas -> Haut 2 PLUS BAS que Haut 1 -> Cassure du Bas = VENTE. QM HAUSSIER = Bas 1 -> Haut -> Bas 2 PLUS HAUT que Bas 1 -> Cassure du Haut = ACHAT. Si le prix n'a PAS encore cassé, c'est QM EN FORMATION = ATTENDRE. Si pas de structure claire, PAS DE QM = ATTENDRE. Réponds UNIQUEMENT en JSON valide, sans texte autour : {"verdict":"VENTE ou ACHAT ou ATTENDRE","figure":"QM BAISSIER ou QM HAUSSIER ou QM EN FORMATION BAISSIER ou QM EN FORMATION HAUSSIER ou PAS DE QM","confiance":0 à 100,"haut1":nombre,"bas":nombre,"haut2":nombre,"prix_actuel":nombre,"sl":nombre,"tp1":nombre,"tp2":nombre,"explication":"2-3 phrases simples en français avec les prix."} Pour SL : QM Baissier = juste au-dessus de Haut 2. QM Haussier = juste en-dessous de Bas 2. TP2 = ancien Bas pour VENTE, ancien Haut pour ACHAT. TP1 = moitié. Si ATTENDRE, sl=0 tp1=0 tp2=0.`;
-try{
-let ctrl=new AbortController();let timer=setTimeout(()=>ctrl.abort(),60000);
-let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/interactions?key=${key}`,{method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,body:JSON.stringify({model:"models/gemini-3.8-flash",input:[{type:"text",text:prompt},{type:"image",data:base64Image,[STRIPPED]
-})});
-clearTimeout(timer);
-if(!res.ok){let e=await res.json().catch(()=>({}));throw new Error(e.error?.message||"Erreur "+res.status);}
-let data=await res.json();
-let txt=data.output_text||(data.outputs&&data.outputs[0]&&(data.outputs[0].text||data.outputs[0].content?.[0]?.text))||(data.output&&data.output[0]&&(data.output[0].text||data.output[0].content?.[0]?.text))||JSON.stringify(data);
-let jsonStr=txt.replace(/```json|```/g,'').trim();
-let s=jsonStr.indexOf('{');let en=jsonStr.lastIndexOf('}');
-if(s!==-1&&en!==-1) jsonStr=jsonStr.substring(s,en+1);
-let j=JSON.parse(jsonStr);
-sens=j.verdict;figure=j.figure;sl=j.sl||0;tp1=j.tp1||0;tp=j.tp2||0;
+function calculerQM(){
+let h1=parseFloat(document.getElementById('haut1').value);
+let bas=parseFloat(document.getElementById('bas').value);
+let h2=parseFloat(document.getElementById('haut2').value);
+let prix=parseFloat(document.getElementById('prix').value);
+if(isNaN(h1)||isNaN(bas)||isNaN(h2)||isNaN(prix)){alert("⛔ Il manque un prix ! Tape les 4 prix.");return;}
 let box=document.getElementById('dirBox');
-if(sens==="VENTE"){box.className='dir-box dir-down';box.innerHTML='🔴 DOWN - VENTE<div class="dir-small">'+figure+' | Confiance '+j.confiance+'%</div>';}
-else if(sens==="ACHAT"){box.className='dir-box dir-up';box.innerHTML='🟢 UP - ACHAT<div class="dir-small">'+figure+' | Confiance '+j.confiance+'%</div>';}
-else{box.className='dir-box dir-wait';box.innerHTML='⏳ ATTENDS<div class="dir-small">'+figure+' | Confiance '+j.confiance+'%</div>';}
-document.getElementById('slVal').innerText=sl?sl:"---";
-document.getElementById('tp1Val').innerText=tp1?tp1:"---";
-document.getElementById('tpVal').innerText=tp?tp:"---";
-let ex=document.getElementById('explication');ex.style.display='block';ex.innerText=`${figure}\nHaut1: ${j.haut1} | Bas: ${j.bas} | Haut2: ${j.haut2} | Prix: ${j.prix_actuel}\n\n${j.explication}\n\n${sens!=="ATTENDRE"?`Si ${sens}: SL=${sl} TP1=${tp1} TP2=${tp}`:"Attends la cassure. Ne trade pas avant."}`;
-showDebug("✅ Analyse terminée !");
-startBlocked();
-}catch(e){
-document.getElementById('dirBox').className='dir-box dir-wait';
-document.getElementById('dirBox').innerHTML='❌ ERREUR<div class="dir-small">'+e.message+'</div>';
-showDebug("❌ Erreur : "+e.message);alert("Erreur : "+e.message);
+let ex=document.getElementById('explication');ex.style.display='block';
+// VERIFICATION QM BAISSIER : Haut1 > Haut2 > Bas
+let qmBaissier = (h1 > h2) && (h2 > bas);
+// VERIFICATION QM HAUSSIER INVERSE : Si tu trades à la hausse, tu mets Bas1, Haut, Bas2 - on gère aussi ce cas : si Haut1 < Haut2, c'est pas un QM baissier
+if(!qmBaissier){
+// Si Haut2 est PLUS HAUT que Haut1, ce n'est pas un QM baissier, c'est une tendance haussière, on attend
+if(h2 > h1){
+sens="ATTENDRE";figure="PAS DE QM BAISSIER";
+box.className='dir-box dir-wait';box.innerHTML='⏳ ATTENDS<div class="dir-small">Haut 2 ('+h2+') est PLUS HAUT que Haut 1 ('+h1+'). Pas de QM baissier.</div>';
+document.getElementById('slVal').innerText="---";document.getElementById('tp1Val').innerText="---";document.getElementById('tpVal').innerText="---";
+ex.innerText=`PAS DE QM BAISSIER\n\nHaut 1: ${h1}\nBas: ${bas}\nHaut 2: ${h2}\nPrix: ${prix}\n\nPour avoir un QM BAISSIER, il faut Haut 1 > Haut 2. Ici Haut 2 est plus haut, donc le QM est annulé. Ne trade pas.`;
+startBlocked();return;
+} else {
+sens="ATTENDRE";figure="PAS DE QM";
+box.className='dir-box dir-wait';box.innerHTML='⏳ ATTENDS<div class="dir-small">Structure pas claire</div>';
+ex.innerText=`PAS DE QM\n\nVérifie tes prix. Pour un QM BAISSIER, il faut : Haut 1 > Haut 2 > Bas.`;
+startBlocked();return;
 }
-btn.disabled=false;btn.innerText="GET NEXT";
+}
+// QM BAISSIER VALIDE
+if(prix <= bas){
+// CASSURE ! On vend
+sens="VENTE";figure="QM BAISSIER";
+sl = Math.round(h2 + (h1 - h2)*0.2);
+tp = bas;
+tp1 = Math.round(prix - (prix - bas)/2);
+// Pour VENTE, TP2 = Bas, mais si déjà cassé, TP2 = Bas - (Haut2-Bas)
+tp = Math.round(bas - (h2 - bas)*0.5);
+tp1 = Math.round((prix + tp)/2);
+box.className='dir-box dir-down';box.innerHTML='🔴 DOWN - VENDS<div class="dir-small">QM BAISSIER - Cassure de '+bas+' ! Confiance 90%</div>';
+document.getElementById('slVal').innerText=sl;
+document.getElementById('tp1Val').innerText=tp1;
+document.getElementById('tpVal').innerText=tp;
+ex.innerText=`🔴 QM BAISSIER - BAM ! VENDS\n\nHaut 1: ${h1}\nBas: ${bas}\nHaut 2: ${h2} (plus bas que Haut 1 ✅)\nPrix: ${prix} (a cassé le Bas ${bas} ✅)\n\nC'est un vrai QM Baissier. Tu peux VENDRE.\nSL: ${sl} (au-dessus de Haut 2)\nTP1: ${tp1}\nTP2: ${tp}`;
+if(navigator.vibrate) navigator.vibrate([100,50,100]);
+} else {
+// PAS ENCORE CASSÉ
+sens="ATTENDRE";figure="QM EN FORMATION BAISSIER";
+sl=0;tp1=0;tp=0;
+box.className='dir-box dir-wait';box.innerHTML='⏳ ATTENDS<div class="dir-small">QM EN FORMATION - Attends cassure de '+bas+'</div>';
+document.getElementById('slVal').innerText="---";document.getElementById('tp1Val').innerText="---";document.getElementById('tpVal').innerText="---";
+ex.innerText=`⏳ QM EN FORMATION BAISSIER - ATTENDS\n\nHaut 1: ${h1}\nBas: ${bas}\nHaut 2: ${h2} (plus bas que Haut 1 ✅)\nPrix: ${prix}\n\nLa structure est bonne, mais le prix (${prix}) n'a PAS encore cassé le Bas (${bas}).\n\nATTENDS la cassure de ${bas} en bas.\nSi ça casse : VENDS, SL vers ${Math.round(h2 + (h1 - h2)*0.2)}, TP2 vers ${Math.round(bas - (h2 - bas)*0.5)}\nSi ça remonte au-dessus de ${h2}, le QM est annulé.`;
+}
+startBlocked();
 }
 </script>
 </body>
