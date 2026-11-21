@@ -2,152 +2,142 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SCALPING V6.2 - CORRIGE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>ROBOT V16 QUOTEX STYLE - QM</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#0a0a1a;color:#fff;font-family:Arial;padding:8px;padding-bottom:130px}
-.top{background:linear-gradient(135deg,#ffcc00,#00ff88);padding:14px;border-radius:16px;color:#000;text-align:center}
-.card{background:#1a1a2e;padding:12px;border-radius:16px;margin:10px 0}
-select,input{width:100%;padding:15px;border-radius:12px;background:#000;color:#fff;border:2px solid #444;margin:6px 0;font-size:17px}
-label{font-size:13px;color:#ffcc00;font-weight:900}
-.prix{font-size:30px;font-weight:900;text-align:center}
-.signal{font-size:20px;font-weight:900;padding:16px;border-radius:14px;text-align:center}
-.buy{background:#00ff88;color:#000}.sell{background:#ff4444}.wait{background:#333}
-.flex{display:flex;gap:8px}.flex>div{flex:1;background:#000;padding:10px;border-radius:12px;text-align:center}
-.big{font-size:16px;font-weight:900}.green{color:#00ff88}.red{color:#ff4444}.yellow{color:#ffcc00}
-canvas{width:100%;background:#000;border-radius:12px;border:1px solid #333}.small{font-size:12px;color:#aaa;text-align:center}
-.barre{position:fixed;bottom:0;left:0;right:0;background:#111;padding:10px;display:flex;gap:10px;border-top:2px solid #333;z-index:99}
-.btn-buy{flex:1;background:#00ff88;color:#000;padding:20px 5px;font-size:24px;font-weight:900;border-radius:14px;border:0}
-.btn-sell{flex:1;background:#ff4444;color:#fff;padding:20px 5px;font-size:24px;font-weight:900;border-radius:14px;border:0}
+*{box-sizing:border-box}
+body{margin:0;background:#000;color:#fff;font-family:Arial;padding:0;padding-bottom:20px}
+.top{padding:14px;text-align:center;background:linear-gradient(180deg,#1a0a00,#000)}
+.top h1{font-size:28px;margin:0;letter-spacing:2px;color:#ff6a00;text-shadow:0 0 20px #ff6a00}
+.top p{color:#ffcc00;font-size:12px;margin:4px 0 0}
+.card{margin:14px;background:linear-gradient(180deg,#2a1000,#0a0a0a);border:2px solid #ff6a00;border-radius:20px;padding:16px;box-shadow:0 0 30px rgba(255,106,0,.4)}
+label{font-size:13px;color:#ffcc00;font-weight:900;display:block;margin:12px 0 6px}
+input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #444;background:#111;color:#fff;font-size:15px}
+.paire-box{background:#111;border:1px solid #ff6a00;border-radius:14px;padding:12px;text-align:center;font-size:22px;font-weight:900;letter-spacing:1px}
+.paire-box span{color:#ff6a00;font-size:14px}
+.dir-box{margin:14px 0;padding:20px;border-radius:16px;text-align:center;font-size:26px;font-weight:900;min-height:80px;display:flex;flex-direction:column;justify-content:center}
+.dir-up{background:#00c853;color:#fff;box-shadow:0 0 25px #00c853}
+.dir-down{background:#ff1744;color:#fff;box-shadow:0 0 25px #ff1744}
+.dir-wait{background:#333;color:#fff}
+.dir-small{font-size:12px;font-weight:400;margin-top:6px;opacity:.9}
+.btn-next{width:100%;background:linear-gradient(180deg,#ff8c00,#ff6a00);color:#fff;padding:18px;border:0;border-radius:14px;font-weight:900;font-size:20px;letter-spacing:2px;cursor:pointer;box-shadow:0 0 20px #ff6a00}
+.btn-next:disabled{opacity:.5}
+.btn-blocked{width:100%;background:#222;color:#ffcc00;padding:18px;border:0;border-radius:14px;font-weight:900;font-size:20px;display:none}
+.preview{width:100%;border-radius:12px;margin-top:10px;display:none;border:1px solid #333}
+.detail{background:#000;padding:12px;border-radius:12px;font-size:13px;line-height:1.6;white-space:pre-wrap;margin-top:12px}
+.grid{display:flex;gap:8px;margin-top:10px}.grid>div{flex:1;background:#111;padding:10px;border-radius:12px;text-align:center}
+.sl{color:#ff1744;font-weight:900;font-size:18px}.tp{color:#00c853;font-weight:900;font-size:18px}.tp1{color:#ffcc00;font-weight:900;font-size:18px}
+.small{font-size:11px;color:#aaa;text-align:center;margin-top:8px;line-height:1.5}
+.btn-key{width:100%;background:#333;color:#fff;padding:12px;border:0;border-radius:10px;font-weight:900;margin-top:8px}
+.debug{background:#000;color:#ffcc00;padding:10px;border-radius:10px;font-size:12px;margin-top:10px;white-space:pre-wrap;word-break:break-word;display:none}
+.warn{background:#220000;border:1px solid #ff1744;padding:10px;border-radius:12px;font-size:11px;line-height:1.5;color:#ffaaaa;margin:14px}
 </style>
 </head>
 <body>
-<div class="top"><h1>⚡ SCALPING V6.2 - CORRIGÉ</h1><p>Choix devise avec menu - Ça ne bloque plus</p></div>
-
-<!-- C'EST ICI QUE TU CHOISIS TA DEVISE - AVEC UN MENU, PAS DES BOUTONS -->
-<div class="card" style="border:2px solid #ffcc00">
-<label>💱 1. CHOISIS TA DEVISE ICI - CLIQUE SUR LA FLÈCHE 👇</label>
-<select id="paire" onchange="changerDevise()">
-<option value="EURUSDT|EUR / USD">EUR / USD - Calme, pour débutant</option>
-<option value="GBPUSDT|GBP / USD">GBP / USD - Très volatile, scalping puissant</option>
-<option value="AUDUSDT|AUD / USD">AUD / USD - Dollar Australien</option>
-<option value="PAXGUSDT|OR - XAU / USD">🥇 OR - XAU / USD - Préféré à Mada</option>
-<option value="BTCUSDT|BTC / USD">₿ BTC / USD - Crypto 24h/24</option>
-<option value="ETHUSDT|ETH / USD">ETH / USD - Ethereum</option>
-<option value="SOLUSDT|SOL / USD">SOL / USD - Solana</option>
+<div class="top">
+<h1>TRADE PREDICTIONS</h1>
+<p>QM 100% - PAS DE PROMESSE, QUE L'ANALYSE</p>
+</div>
+<div class="card">
+<label>TA CLÉ GOOGLE</label>
+<input id="apiKey" type="password" placeholder="Colle ta clé AIza...">
+<button class="btn-key" onclick="ouvrirAistudio()">🔑 OBTENIR MA CLÉ</button>
+<button class="btn-key" onclick="sauvegarderCle()">💾 SAUVEGARDER</button>
+<p class="small" id="etatCle">Clé : Non enregistrée</p>
+<label>PAIRE</label>
+<select id="paire" onchange="majPaire()">
+<option>Volatility 50 (1s)</option><option>Volatility 10 Index</option><option>Volatility 25 Index</option><option>Volatility 75 Index</option><option>Volatility 100 Index</option><option>Volatility 100 (1s) Index</option><option>Volatility 150 (1s) Index</option><option>Volatility 250 (1s) Index</option><option>NZD/USD</option><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>EUR/JPY</option><option>GBP/JPY</option><option>AUD/USD</option><option>USD/CAD</option><option>XAU/USD - GOLD</option><option>BTC/USDT</option>
 </select>
-<p style="text-align:center">Tu as choisi : <b id="deviseChoisie" style="color:#ffcc00">EUR / USD</b></p>
-
-<!-- C'EST ICI LA CASE CAPTURE / CAPITAL QUE TU DEMANDAIS -->
-<label>💰 2. METS TON CAPITAL DE DÉPART ICI (C'est la case CAPTURE)</label>
-<input id="capital" type="number" value="100000" placeholder="Ex: 100000">
-<button style="width:100%;background:#ffcc00;color:#000;padding:12px;border:0;border-radius:12px;font-weight:900" onclick="appliquerCapital()">✅ APPLIQUER MON CAPITAL</button>
-<p class="small">Exemple : Si tu as 50000 Ar, mets 50000 et clique APPLIQUER. Ton solde va changer.</p>
-
-<label>🎯 3. METS TA MISE PAR TRADE</label>
-<input id="mise" type="number" value="2000">
+<div class="paire-box" id="paireBox">Volatility 50 (1s) <span>»</span></div>
+<label>CAPTURE DU GRAPHIQUE</label>
+<input type="file" id="fileInput" accept="image/*">
+<img id="preview" class="preview">
+<label>DIRECTION</label>
+<div class="dir-box dir-wait" id="dirBox">⏳ EN ATTENTE<div class="dir-small" id="dirSmall">Mets ta capture et clique GET NEXT</div></div>
+<button class="btn-next" id="btnNext" onclick="analyserQM()">GET NEXT</button>
+<button class="btn-blocked" id="btnBlocked">BLOCKED 30</button>
+<div class="grid">
+<div><div class="small">🛑 SL</div><div class="sl" id="slVal">---</div></div>
+<div><div class="small">🎯 TP1</div><div class="tp1" id="tp1Val">---</div></div>
+<div><div class="small">🎯 TP2</div><div class="tp" id="tpVal">---</div></div>
 </div>
-
-<div class="card">
-<div class="flex"><div><div class="small">SOLDE DÉMO</div><div class="big yellow" id="solde">100000 Ar</div></div><div><div class="small">RÉUSSITE</div><div class="big" id="winrate">0%</div></div><div><div class="small">PERTES</div><div class="big red" id="pertes">0 / 3</div></div></div>
-<div class="flex"><select id="tf"><option value="1m" selected>1 MIN - SCALPING</option><option value="5m">5 MIN - Plus sûr</option></select></div>
-<button style="width:100%;background:#00ff88;padding:15px;font-size:18px;font-weight:900;border:0;border-radius:14px" onclick="demarrer()">▶️ DÉMARRER LE ROBOT</button>
+<div class="detail" id="explication" style="display:none"></div>
+<div class="debug" id="debug"></div>
 </div>
-
-<div class="card">
-<div style="text-align:center"><span class="big yellow" id="nomDevise">EUR / USD</span></div>
-<div class="prix" id="prixLive">--- Clique DÉMARRER ---</div>
-<canvas id="chart" width="350" height="170"></canvas>
-<div id="signal" class="signal wait">ROBOT ARRÊTÉ</div>
-<p id="detail" style="text-align:center">Choisis ta devise en haut, puis clique DÉMARRER.</p>
-<div class="flex"><div><div class="small">TENDANCE</div><div class="big" id="emaInfo">---</div></div><div><div class="small">FIGURE</div><div class="big" id="figInfo">---</div></div><div><div class="small">RSI</div><div class="big" id="rsiInfo">---</div></div></div>
-<div class="flex" style="margin-top:8px"><div><div class="small">🛑 SL</div><div class="big red" id="slVal">---</div></div><div><div class="small">🎯 TP</div><div class="big green" id="tpVal">---</div></div><div><div class="small">FORCE</div><div class="big" id="force">---</div></div></div>
-</div>
-
-<div class="card"><p style="text-align:center" id="posInfo">Aucune position</p><button style="width:100%;background:#ff4444;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:900" onclick="fermerPosition('Manuel')">❌ FERMER POSITION</button></div>
-
-<div class="barre"><button class="btn-buy" onclick="ouvrirPosition('ACHAT')">🟢 BUY</button><button class="btn-sell" onclick="ouvrirPosition('VENTE')">🔴 SELL</button></div>
-
+<div class="warn">⚠️ ATTENTION : Ce robot analyse ton QM sur ta capture. Il ne garantit PAS de gain. Le trading, surtout Quotex / 1 sec, c'est très risqué. Ne mise jamais l'argent que tu ne peux pas perdre. La vidéo avec "+57,900 ₹" c'est du montage pour vendre, pas la réalité.</div>
 <script>
-let deviseBinance="EURUSDT", deviseNom="EUR / USD";
-let timer=null, solde=100000, nb=0, wins=0, pertesJour=0, bloque=false;
-let derniere={}, sl=0, tp=0, sens="", bougies=[], pos=null;
-function fmt(n){return Math.round(n).toLocaleString('fr-FR')+" Ar";}
-function maj(){document.getElementById('solde').innerText=fmt(solde);document.getElementById('winrate').innerText=nb?Math.round(wins/nb*100)+"%":"0%";document.getElementById('pertes').innerText=pertesJour+" / 3";}
-function changerDevise(){
-let v=document.getElementById('paire').value.split('|');
-deviseBinance=v[0]; deviseNom=v[1];
-document.getElementById('deviseChoisie').innerText=deviseNom;
-document.getElementById('nomDevise').innerText=deviseNom;
-if(timer) analyser();
+let base64Image=null, sl=0, tp1=0, tp=0, sens="", figure="";
+let cleSauv=localStorage.getItem('qm_api_key')||"";
+if(cleSauv){document.getElementById('apiKey').value=cleSauv;document.getElementById('etatCle').innerText="Clé : ✅ Enregistrée";}
+function ouvrirAistudio(){window.open("https://aistudio.google.com/app/apikey","_blank");}
+function sauvegarderCle(){let k=document.getElementById('apiKey').value.trim();if(!k){alert("Colle d'abord ta clé !");return;}localStorage.setItem('qm_api_key',k);document.getElementById('etatCle').innerText="Clé : ✅ Enregistrée";alert("Clé sauvegardée !");}
+function majPaire(){document.getElementById('paireBox').innerHTML=document.getElementById('paire').value+' <span>»</span>';}
+function showDebug(t){let d=document.getElementById('debug');d.style.display='block';d.innerText=t;}
+document.getElementById('fileInput').addEventListener('change',function(e){
+let f=e.target.files[0];if(!f)return;
+let r=new FileReader();
+r.onload=function(ev){
+let img=new Image();
+img.onload=function(){
+let canvas=document.createElement('canvas');
+let max=600;let ratio=Math.min(max/img.width,max/img.height,1);
+canvas.width=img.width*ratio;canvas.height=img.height*ratio;
+let ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
+base64Image=canvas.toDataURL('image/jpeg',0.6).split(',')[1];
+let p=document.getElementById('preview');p.src=ev.target.result;p.style.display='block';
+showDebug("✅ Capture chargée - Prête.");
+};
+img.src=ev.target.result;
+};
+r.readAsDataURL(f);
+});
+function startBlocked(){
+let btn=document.getElementById('btnNext');let blk=document.getElementById('btnBlocked');
+btn.style.display='none';blk.style.display='block';
+let s=30;blk.innerText="BLOCKED "+s;
+let iv=setInterval(()=>{s--;blk.innerText="BLOCKED "+s;if(s<=0){clearInterval(iv);blk.style.display='none';btn.style.display='block';}},1000);
 }
-function appliquerCapital(){
-let c=parseFloat(document.getElementById('capital').value);
-if(!c || c<=0){alert("Mets un capital, ex: 100000");return;}
-solde=c; nb=0; wins=0; pertesJour=0; bloque=false; pos=null;
-maj(); alert("Capital appliqué : "+fmt(c)+" ✅\nTon solde est maintenant "+fmt(c));
-}
-function calcEMA(data,per){let k=2/(per+1),ema=data[0].c;for(let i=1;i<data.length;i++) ema=data[i].c*k+ema*(1-k);return ema;}
-function calcRSI(data){let g=0,p=0;for(let i=1;i<data.length;i++){let d=data[i].c-data[i-1].c;if(d>0)g+=d;else p+=-d;}let rs=g/(p||1);return 100-(100/(1+rs));}
-function dessiner(){let cv=document.getElementById('chart'),ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);if(bougies.length<2){ctx.fillStyle='#fff';ctx.font='14px Arial';ctx.fillText('Clique DEMARRER pour voir les bougies',20,90);return;}let hi=Math.max(...bougies.map(b=>b.h)),lo=Math.min(...bougies.map(b=>b.l)),rg=hi-lo||1,w=cv.width/bougies.length;bougies.forEach((b,i)=>{let x=i*w+w/2,yH=cv.height-((b.h-lo)/rg)*(cv.height-20)-10,yL=cv.height-((b.l-lo)/rg)*(cv.height-20)-10,yO=cv.height-((b.o-lo)/rg)*(cv.height-20)-10,yC=cv.height-((b.c-lo)/rg)*(cv.height-20)-10;ctx.strokeStyle=b.c>=b.o?'#00ff88':'#ff4444';ctx.beginPath();ctx.moveTo(x,yH);ctx.lineTo(x,yL);ctx.stroke();ctx.fillStyle=b.c>=b.o?'#00ff88':'#ff4444';ctx.fillRect(x-w*0.3,Math.min(yO,yC),w*0.6,Math.max(2,Math.abs(yC-yO)));});}
-async function analyser(){
-if(bloque) return;
-let tf=document.getElementById('tf').value;
+async function analyserQM(){
+let key=document.getElementById('apiKey').value.trim()||cleSauv;
+let paire=document.getElementById('paire').value;
+if(!key){alert("Il manque ta clé !");return;}
+if(!base64Image){alert("Il manque ta capture !");return;}
+localStorage.setItem('qm_api_key',key);
+let btn=document.getElementById('btnNext');btn.disabled=true;btn.innerText="⏳ ANALYSE...";
+document.getElementById('dirBox').className='dir-box dir-wait';
+document.getElementById('dirBox').innerHTML='⏳ ANALYSE...<div class="dir-small">L\'IA regarde ta capture, 30-60 sec...</div>';
+showDebug("⏳ Envoi à Google IA - Format officiel V15...");
+let prompt=`Tu es un expert trading Quasimodo QM 100%. Analyse cette capture de graphique pour la paire ${paire}. Lis les prix directement sur la capture. Tu dois UNIQUEMENT analyser le pattern Quasimodo QM. Ignore tout le reste. Règles QM STRICTES : QM BAISSIER = Haut 1 -> Bas -> Haut 2 PLUS BAS que Haut 1 -> Cassure du Bas = VENTE. QM HAUSSIER = Bas 1 -> Haut -> Bas 2 PLUS HAUT que Bas 1 -> Cassure du Haut = ACHAT. Si le prix n'a PAS encore cassé, c'est QM EN FORMATION = ATTENDRE. Si pas de structure claire, PAS DE QM = ATTENDRE. Réponds UNIQUEMENT en JSON valide, sans texte autour : {"verdict":"VENTE ou ACHAT ou ATTENDRE","figure":"QM BAISSIER ou QM HAUSSIER ou QM EN FORMATION BAISSIER ou QM EN FORMATION HAUSSIER ou PAS DE QM","confiance":0 à 100,"haut1":nombre,"bas":nombre,"haut2":nombre,"prix_actuel":nombre,"sl":nombre,"tp1":nombre,"tp2":nombre,"explication":"2-3 phrases simples en français avec les prix."} Pour SL : QM Baissier = juste au-dessus de Haut 2. QM Haussier = juste en-dessous de Bas 2. TP2 = ancien Bas pour VENTE, ancien Haut pour ACHAT. TP1 = moitié. Si ATTENDRE, sl=0 tp1=0 tp2=0.`;
 try{
-let r=await fetch(`https://api.binance.com/api/v3/klines?symbol=${deviseBinance}&interval=${tf}&limit=30`);
-let d=await r.json(); bougies=d.map(x=>({o:parseFloat(x[1]),h:parseFloat(x[2]),l:parseFloat(x[3]),c:parseFloat(x[4])}));
-let b=bougies[bougies.length-2], prev=bougies[bougies.length-3];
-derniere={...b,paire:deviseNom};
-document.getElementById('prixLive').innerText=b.c.toFixed(4)+" - "+deviseNom;
-let ema9=calcEMA(bougies,9), ema21=calcEMA(bougies,21), rsi=calcRSI(bougies.slice(-14));
-let tendance=ema9>ema21?"HAUSSE":"BAISSE";
-document.getElementById('emaInfo').innerText=tendance;document.getElementById('emaInfo').style.color=tendance==="HAUSSE"?"#00ff88":"#ff4444";
-document.getElementById('rsiInfo').innerText=Math.round(rsi);
-let corps=Math.abs(b.c-b.o), mH=b.h-Math.max(b.o,b.c), mB=Math.min(b.o,b.c)-b.l, tot=b.h-b.l;
-let fig="", s="", force=0;
-if(corps<tot*0.2) fig="DOJI";
-else if(mB>corps*2 && mH<corps*0.5) fig="MARTEAU";
-else if(mH>corps*2 && mB<corps*0.5) fig="ETOILE";
-else if(b.c>b.o && prev.c<prev.o && b.c>prev.o && b.o<prev.c) fig="AVALEMENT +";
-else if(b.c<b.o && prev.c>prev.o && b.c<prev.o && b.o>prev.c) fig="AVALEMENT -";
-else fig="AUCUNE";
-document.getElementById('figInfo').innerText=fig;
-let sig=document.getElementById('signal'), det=document.getElementById('detail');
-if(tendance==="HAUSSE" && (fig==="MARTEAU"||fig==="AVALEMENT +") && rsi<40){s="ACHAT";force=95;sig.className='signal buy';sig.innerText="🔥 TRÈS FORT - BUY "+deviseNom;det.innerText="HAUSSE + "+fig+" + RSI "+Math.round(rsi);sl=b.l;tp=b.c+(b.c-sl)*1.5;}
-else if(tendance==="BAISSE" && (fig==="ETOILE"||fig==="AVALEMENT -") && rsi>60){s="VENTE";force=95;sig.className='signal sell';sig.innerText="🔥 TRÈS FORT - SELL "+deviseNom;det.innerText="BAISSE + "+fig+" + RSI "+Math.round(rsi);sl=b.h;tp=b.c-(sl-b.c)*1.5;}
-else if(fig!=="AUCUNE" && fig!=="DOJI"){s="";force=40;sig.className='signal wait';sig.innerText="⚠️ FIGURE MAIS PAS ASSEZ FORT";det.innerText=fig+" sur "+deviseNom+", mais pas les 3 filtres.";sl=0;tp=0;}
-else{s="";force=0;sig.className='signal wait';sig.innerText="⏳ ATTENDS - "+deviseNom;det.innerText="Pas de signal. Change de devise.";sl=0;tp=0;}
-sens=s;derniere.figure=fig;
-document.getElementById('slVal').innerText=sl?sl.toFixed(4):"---";
-document.getElementById('tpVal').innerText=tp?tp.toFixed(4):"---";
-document.getElementById('force').innerText=force+"%";
-if(pos){let p=b.c;if(pos.sens==='ACHAT'){if(p<=pos.sl) fermerPosition("SL"); else if(p>=pos.tp) fermerPosition("TP");}else{if(p>=pos.sl) fermerPosition("SL"); else if(p<=pos.tp) fermerPosition("TP");}}
-if(force===95){try{new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play();}catch(e){} if(navigator.vibrate) navigator.vibrate([300,100,300]);}
-dessiner();
-}catch(e){document.getElementById('detail').innerText="Erreur connexion, le robot réessaie...";}
+let ctrl=new AbortController();let timer=setTimeout(()=>ctrl.abort(),60000);
+let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/interactions?key=${key}`,{method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,body:JSON.stringify({model:"models/gemini-3.8-flash",input:[{type:"text",text:prompt},{type:"image",data:base64Image,[STRIPPED]
+})});
+clearTimeout(timer);
+if(!res.ok){let e=await res.json().catch(()=>({}));throw new Error(e.error?.message||"Erreur "+res.status);}
+let data=await res.json();
+let txt=data.output_text||(data.outputs&&data.outputs[0]&&(data.outputs[0].text||data.outputs[0].content?.[0]?.text))||(data.output&&data.output[0]&&(data.output[0].text||data.output[0].content?.[0]?.text))||JSON.stringify(data);
+let jsonStr=txt.replace(/```json|```/g,'').trim();
+let s=jsonStr.indexOf('{');let en=jsonStr.lastIndexOf('}');
+if(s!==-1&&en!==-1) jsonStr=jsonStr.substring(s,en+1);
+let j=JSON.parse(jsonStr);
+sens=j.verdict;figure=j.figure;sl=j.sl||0;tp1=j.tp1||0;tp=j.tp2||0;
+let box=document.getElementById('dirBox');
+if(sens==="VENTE"){box.className='dir-box dir-down';box.innerHTML='🔴 DOWN - VENTE<div class="dir-small">'+figure+' | Confiance '+j.confiance+'%</div>';}
+else if(sens==="ACHAT"){box.className='dir-box dir-up';box.innerHTML='🟢 UP - ACHAT<div class="dir-small">'+figure+' | Confiance '+j.confiance+'%</div>';}
+else{box.className='dir-box dir-wait';box.innerHTML='⏳ ATTENDS<div class="dir-small">'+figure+' | Confiance '+j.confiance+'%</div>';}
+document.getElementById('slVal').innerText=sl?sl:"---";
+document.getElementById('tp1Val').innerText=tp1?tp1:"---";
+document.getElementById('tpVal').innerText=tp?tp:"---";
+let ex=document.getElementById('explication');ex.style.display='block';ex.innerText=`${figure}\nHaut1: ${j.haut1} | Bas: ${j.bas} | Haut2: ${j.haut2} | Prix: ${j.prix_actuel}\n\n${j.explication}\n\n${sens!=="ATTENDRE"?`Si ${sens}: SL=${sl} TP1=${tp1} TP2=${tp}`:"Attends la cassure. Ne trade pas avant."}`;
+showDebug("✅ Analyse terminée !");
+startBlocked();
+}catch(e){
+document.getElementById('dirBox').className='dir-box dir-wait';
+document.getElementById('dirBox').innerHTML='❌ ERREUR<div class="dir-small">'+e.message+'</div>';
+showDebug("❌ Erreur : "+e.message);alert("Erreur : "+e.message);
 }
-function ouvrirPosition(choix){
-if(bloque){alert("⛔ Bloqué - 3 pertes");return;}
-if(pos){alert("Tu as déjà une position !");return;}
-if(!sens){alert("Pas de signal TRÈS FORT sur "+deviseNom+" ! Attends ou change de devise.");return;}
-if((choix==='ACHAT' && sens==='VENTE')||(choix==='VENTE' && sens==='ACHAT')){alert("Non ! Robot dit "+sens);return;}
-let mise=parseFloat(document.getElementById('mise').value)||2000;
-pos={sens:choix,entree:derniere.c,mise:mise,figure:derniere.figure,sl:sl,tp:tp,devise:deviseNom};
-document.getElementById('posInfo').innerText=`${choix} ${deviseNom} à ${derniere.c.toFixed(4)} | SL ${sl.toFixed(4)} | TP ${tp.toFixed(4)}`;
-alert("Position ouverte sur "+deviseNom);
+btn.disabled=false;btn.innerText="GET NEXT";
 }
-function fermerPosition(motif){
-if(!pos) return;
-let gain=0;
-if(motif==="TP") gain=pos.mise*1.5;
-else if(motif==="SL"){gain=-pos.mise;pertesJour++;if(pertesJour>=3) bloque=true;}
-else {let diff=pos.sens==='ACHAT'?(derniere.c-pos.entree):(pos.entree-derniere.c);gain=Math.round(diff/pos.entree*pos.mise*20);}
-solde+=gain;nb++;if(gain>0)wins++;
-alert(`${motif} - ${gain>=0?'✅ GAGNÉ +':'❌ PERDU '}${fmt(gain)} | Solde ${fmt(solde)}`);
-pos=null;document.getElementById('posInfo').innerText="Position fermée.";maj();
-}
-function demarrer(){if(timer) clearInterval(timer); analyser(); timer=setInterval(analyser,10000); alert("Robot démarré sur "+deviseNom+" !");}
-maj(); dessiner();
 </script>
 </body>
 </html>
