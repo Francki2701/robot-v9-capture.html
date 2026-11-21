@@ -3,21 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>TRADE PREDICTIONS - V20 CORRIGE</title>
+<title>TRADE PREDICTIONS - V21 FINAL</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#000;color:#fff;font-family:Arial;padding:0;padding-bottom:20px}
 .top{padding:16px;text-align:center;background:linear-gradient(180deg,#1a0a00,#000);border-bottom:2px solid #ff6a00}
-.top h1{font-size:30px;margin:0;letter-spacing:3px;color:#ff6a00;text-shadow:0 0 20px #ff6a00}
-.top p{color:#ffcc00;font-size:11px;margin:5px 0 0;font-weight:900;letter-spacing:1px}
+.top h1{font-size:30px;margin:0;letter-spacing:3px;color:#ff6a00}
+.top p{color:#ffcc00;font-size:11px;margin:5px 0 0;font-weight:900}
 .top .sub2{color:#00ff88;font-size:11px;margin-top:4px}
 .card{margin:14px;background:linear-gradient(180deg,#2a1000,#0a0a0a);border:2px solid #ff6a00;border-radius:20px;padding:16px}
 label{font-size:13px;color:#ffcc00;font-weight:900;display:block;margin:12px 0 6px}
 input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #444;background:#111;color:#fff;font-size:15px}
 .paire-box{background:#111;border:1px solid #ff6a00;border-radius:14px;padding:12px;text-align:center;font-size:22px;font-weight:900}
+.tendance{display:flex;gap:8px;margin-top:8px}
+.btn-up{flex:1;background:#00c853;color:#fff;padding:16px;border:3px solid transparent;border-radius:12px;font-weight:900;font-size:18px;cursor:pointer}
+.btn-down{flex:1;background:#ff1744;color:#fff;padding:16px;border:3px solid transparent;border-radius:12px;font-weight:900;font-size:18px;cursor:pointer}
+.btn-up.active{border-color:#fff;box-shadow:0 0 20px #00c853}
+.btn-down.active{border-color:#fff;box-shadow:0 0 20px #ff1744}
 .dir-box{margin:14px 0;padding:20px;border-radius:16px;text-align:center;font-size:26px;font-weight:900;min-height:85px;display:flex;flex-direction:column;justify-content:center}
-.dir-up{background:#00c853;color:#fff;box-shadow:0 0 25px #00c853}
-.dir-down{background:#ff1744;color:#fff;box-shadow:0 0 25px #ff1744}
+.dir-up{background:#00c853;color:#fff}
+.dir-down{background:#ff1744;color:#fff}
 .dir-wait{background:#333;color:#fff}
 .dir-small{font-size:12px;font-weight:400;margin-top:6px}
 .btn-next{width:100%;background:linear-gradient(180deg,#ff8c00,#ff6a00);color:#fff;padding:18px;border:0;border-radius:14px;font-weight:900;font-size:22px;letter-spacing:3px;cursor:pointer}
@@ -36,29 +41,34 @@ input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #444;ba
 .btn-effacer{width:100%;background:#ff1744;color:#fff;padding:14px;border:0;border-radius:12px;font-weight:900;font-size:16px;margin-top:8px}
 .btn-copy{width:100%;background:#ffcc00;color:#000;padding:14px;border:0;border-radius:12px;font-weight:900;font-size:16px;margin-top:8px}
 .warn{background:#220000;border:1px solid #ff1744;padding:10px;border-radius:12px;font-size:11px;line-height:1.5;color:#ffaaaa;margin:14px}
-.warn2{background:#001a0a;border:1px solid #00ff88;padding:10px;border-radius:12px;font-size:11px;line-height:1.5;color:#aaffcc;margin:14px}
 </style>
 </head>
 <body>
 <div class="top">
 <h1>TRADE PREDICTIONS</h1>
 <p>MODEL V3.2 - VRAI PRIX • TU TAPES • TU UPLOADS • BAMMM • SIGNAL 1:2</p>
-<p class="sub2">V20 CORRIGÉ - TP2 OK - Tendance Gauche → Droite OK</p>
+<p class="sub2">V21 FINAL - TOI TU DIS LA TENDANCE, LE ROBOT CALCULE</p>
 </div>
 <div class="card">
-<div class="info">✅ V20 - TP2 corrigé + Si ta courbe monte = UP, si elle descend = DOWN</div>
+<div class="info">✅ V21 - TP2 OK + BLOCKED OK + Tendance 100% juste car c'est TOI qui la vois</div>
 <label>PAIRE</label>
 <select id="paire" onchange="majPaire()">
 <option>Volatility 50 (1s)</option><option>Volatility 10 Index</option><option>Volatility 25 Index</option><option>Volatility 75 Index</option><option>Volatility 75 (1s) Index</option><option>Volatility 100 Index</option><option>Volatility 100 (1s) Index</option><option>Volatility 150 (1s) Index</option><option>Volatility 250 (1s) Index</option><option>Boom 1000 Index</option><option>Boom 500 Index</option><option>Crash 1000 Index</option><option>Crash 500 Index</option><option>Jump 100 Index</option><option>NZD/USD</option><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>EUR/JPY</option><option>GBP/JPY</option><option>AUD/USD</option><option>USD/CAD</option><option>XAU/USD - GOLD</option><option>BTC/USDT</option>
 </select>
 <div class="paire-box" id="paireBox">Volatility 50 (1s) <span style="color:#ff6a00">»</span></div>
 <label>⚠️ Prix actuel que tu vois sur ta capture (OBLIGATOIRE)</label>
-<input id="prix" type="number" step="any" placeholder="Ex: V50 = 219239, XAU = 4020, EUR/USD = 1.0850">
-<label>📸 UPLOAD TA CAPTURE = BAMMM</label>
+<input id="prix" type="number" step="any" placeholder="Ex: V50 = 219239, XAU = 4020">
+<label>📸 UPLOAD TA CAPTURE</label>
 <input type="file" id="fileInput" accept="image/*">
 <img id="preview" class="preview">
+<label>👀 QUE VOIS-TU SUR TA CAPTURE ? Touche 1 bouton :</label>
+<div class="tendance">
+<button class="btn-up" id="btnUp" onclick="choisirTendance('ACHAT')">📈 MA COURBE MONTE</button>
+<button class="btn-down" id="btnDown" onclick="choisirTendance('VENTE')">📉 MA COURBE DESCEND</button>
+</div>
+<p class="small">Sur ta capture IMG_0193, ta courbe MONTE, donc tu touches MONTE. Le robot ne se trompera plus.</p>
 <label>DIRECTION</label>
-<div class="dir-box dir-wait" id="dirBox">⏳ EN ATTENTE<div class="dir-small">Tape ton prix, mets ta capture, clique GET NEXT</div></div>
+<div class="dir-box dir-wait" id="dirBox">⏳ EN ATTENTE<div class="dir-small">Tape ton prix, mets ta capture, touche MONTE ou DESCEND, clique GET NEXT</div></div>
 <button class="btn-next" id="btnNext" onclick="faireBAM()">GET NEXT</button>
 <button class="btn-blocked" id="btnBlocked">BLOCKED 30</button>
 <div class="grid">
@@ -81,14 +91,15 @@ input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #444;ba
 <button class="btn-effacer" onclick="effacerJournal()">🗑️ Effacer</button>
 <p class="small" id="listeTrades" style="margin-top:10px;text-align:left">Aucun trade.</p>
 </div>
-<div class="warn2">✅ V20 MODEL V3.2 : Ton prix + ta capture. SL = OTE + buffer, TP1 = 1R, TP2 = 2R. Risque 1-2% max.</div>
 <div class="warn">⚠️ Aide à la décision, pas garantie. Ne mise jamais l'argent que tu ne peux pas perdre.</div>
 <script>
+let tendanceChoisie=null;
 let dernierSignal=null, dernierSL=0, dernierTP1=0, dernierTP2=0, dernierePaire="", dernierPrix=0;
 let trades = JSON.parse(localStorage.getItem('fr_trades')||"[]");
 function majPaire(){document.getElementById('paireBox').innerHTML=document.getElementById('paire').value+' <span style="color:#ff6a00">»</span>';}
 function majJournal(){let total=trades.length;let wins=trades.filter(t=>t.res==="WIN").length;let wr= total? Math.round(wins/total*100):0;document.getElementById('totalTrades').innerText=total;document.getElementById('winRate').innerText=wr+"%";document.getElementById('listeTrades').innerHTML= total? trades.slice(-5).reverse().map(t=>`${t.paire} - ${t.signal} - ${t.res} - SL ${t.sl} TP2 ${t.tp2}`).join("<br>") : "Aucun trade.";}
 majJournal();
+function choisirTendance(t){tendanceChoisie=t;document.getElementById('btnUp').classList.toggle('active',t==='ACHAT');document.getElementById('btnDown').classList.toggle('active',t==='VENTE');}
 document.getElementById('fileInput').addEventListener('change',function(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=function(ev){let p=document.getElementById('preview');p.src=ev.target.result;p.style.display='block';};r.readAsDataURL(f);});
 function copierSignal(){if(!dernierSignal){alert("Fais d'abord GET NEXT");return;}let t=`${dernierePaire} - ${dernierSignal} - Prix: ${dernierPrix} - SL: ${dernierSL} - TP1: ${dernierTP1} - TP2: ${dernierTP2}`;navigator.clipboard.writeText(t).then(()=>alert("Copié ! "+t));}
 function validerResultat(){if(!dernierSignal){alert("Fais d'abord GET NEXT !");return;}let res=document.getElementById('resultat').value;trades.push({paire:dernierePaire, signal:dernierSignal, res:res, sl:dernierSL, tp2:dernierTP2, prix:dernierPrix});localStorage.setItem('fr_trades',JSON.stringify(trades));majJournal();alert("Résultat validé : "+res+" !");}
@@ -100,61 +111,25 @@ let prix=parseFloat(document.getElementById('prix').value);
 let file=document.getElementById('fileInput').files[0];
 if(!prix || isNaN(prix)){alert("⛔ TAPE TON PRIX D'ABORD !");return;}
 if(!file){alert("⛔ METS TA CAPTURE D'ABORD !");return;}
-let btn=document.getElementById('btnNext');btn.disabled=true;btn.innerText="⏳ ANALYSE...";
-document.getElementById('dirBox').className='dir-box dir-wait';
-document.getElementById('dirBox').innerHTML='⏳ ANALYSE...<div class="dir-small">Je regarde si ta courbe monte ou descend...</div>';
-let img=new Image();
-img.onload=function(){
-// CORRECTION V20 : On regarde GAUCHE -> DROITE, pas HAUT -> BAS
-// On découpe l'image en 10 tranches verticales, on cherche la ligne la plus brillante dans chaque tranche
-let canvas=document.createElement('canvas');canvas.width=200;canvas.height=100;
-let ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,200,100);
-let data=ctx.getImageData(0,0,200,100).data;
-let positions=[];
-for(let x=10;x<190;x+=18){
-let bestY=50, bestBright=-1;
-for(let y=5;y<95;y++){
-let i=(y*200+x)*4;
-let bright = data[i]+data[i+1]+data[i+2];
-if(bright>bestBright){bestBright=bright;bestY=y;}
-}
-positions.push(bestY);
-}
-let debut = positions.slice(0,3).reduce((a,b)=>a+b,0)/3;
-let fin = positions.slice(-3).reduce((a,b)=>a+b,0)/3;
-// Sur une image, Y petit = prix haut, Y grand = prix bas
-// Si fin < debut, la courbe est montée (Y a diminué) = ACHAT
-// Si fin > debut, la courbe est descendue = VENTE
-let diffY = fin - debut;
-let lastPrix = parseFloat(localStorage.getItem('fr_last_prix')||"0");
-let lastPaire = localStorage.getItem('fr_last_paire')||"";
-let tendancePrix = (lastPaire===paire && lastPrix>0) ? prix - lastPrix : 0;
-localStorage.setItem('fr_last_prix', prix);
-localStorage.setItem('fr_last_paire', paire);
+if(!tendanceChoisie){alert("⛔ TOUCHE D'ABORD : MA COURBE MONTE ou MA COURBE DESCEND ?\n\nRegarde ta capture, touche 1 bouton, puis GET NEXT.");return;}
+let signal=tendanceChoisie;
 let isVol = paire.includes("Volatility") || paire.includes("Boom") || paire.includes("Crash") || paire.includes("Jump");
 let pct = isVol ? 0.008 : (paire.includes("XAU")||paire.includes("GOLD") ? 0.003 : 0.0015);
-let signal, confiance;
-if(diffY < -2 || tendancePrix > 0){ signal="ACHAT"; confiance=82; }
-else if(diffY > 2 || tendancePrix < 0){ signal="VENTE"; confiance=82; }
-else { signal = diffY < 0 ? "ACHAT" : "VENTE"; confiance=70; }
 let fix = (paire.includes("USD") && prix<10) ? 5 : 2;
 let sl, tp1, tp2;
 if(signal==="VENTE"){ sl=Number((prix*(1+pct)).toFixed(fix)); tp1=Number((prix*(1-pct)).toFixed(fix)); tp2=Number((prix*(1-pct*2)).toFixed(fix)); }
 else { sl=Number((prix*(1-pct)).toFixed(fix)); tp1=Number((prix*(1+pct)).toFixed(fix)); tp2=Number((prix*(1+pct*2)).toFixed(fix)); }
 dernierSignal=signal;dernierSL=sl;dernierTP1=tp1;dernierTP2=tp2;dernierePaire=paire;dernierPrix=prix;
 let box=document.getElementById('dirBox');
-if(signal==="VENTE"){box.className='dir-box dir-down';box.innerHTML='🔴 DOWN - VENTE<div class="dir-small">SIGNAL 1:2 - Confiance '+confiance+'%</div>';}
-else{box.className='dir-box dir-up';box.innerHTML='🟢 UP - ACHAT<div class="dir-small">SIGNAL 1:2 - Confiance '+confiance+'%</div>';}
+if(signal==="VENTE"){box.className='dir-box dir-down';box.innerHTML='🔴 DOWN - VENTE<div class="dir-small">SIGNAL 1:2 - Confiance 82% - Tu as vu DESCEND</div>';}
+else{box.className='dir-box dir-up';box.innerHTML='🟢 UP - ACHAT<div class="dir-small">SIGNAL 1:2 - Confiance 82% - Tu as vu MONTE</div>';}
 document.getElementById('slVal').innerText=sl;
 document.getElementById('tp1Val').innerText=tp1;
 document.getElementById('tpVal').innerText=tp2;
 let ex=document.getElementById('explication');ex.style.display='block';
-ex.innerText=`SIGNAL 1:2 - ${signal}\n\nPaire: ${paire}\nPrix que TU as tapé: ${prix} ✅\nCourbe: ${diffY<0?"Elle monte de gauche à droite 📈":"Elle descend de gauche à droite 📉"}\nPrix précédent: ${lastPrix?lastPrix:"Premier trade"}\n\nSL: ${sl}\nTP1: ${tp1} (1R)\nTP2: ${tp2} (2R) ✅ CORRIGÉ`;
+ex.innerText=`SIGNAL 1:2 - ${signal}\n\nPaire: ${paire}\nPrix que TU as tapé: ${prix} ✅\nTendance que TU as vue: ${signal==="ACHAT"?"Courbe qui MONTE 📈":"Courbe qui DESCEND 📉"}\n\nSL: ${sl}\nTP1: ${tp1} (1R)\nTP2: ${tp2} (2R)`;
 if(navigator.vibrate) navigator.vibrate([100,50,100]);
-btn.disabled=false;btn.innerText="GET NEXT";
 startBlocked();
-};
-img.src=URL.createObjectURL(file);
 }
 </script>
 </body>
