@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>TRADE PREDICTIONS - V23 ENTREE</title>
+<title>TRADE PREDICTIONS - V24 AUTO</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#000;color:#fff;font-family:Arial;padding:0;padding-bottom:20px}
@@ -15,11 +15,6 @@ body{margin:0;background:#000;color:#fff;font-family:Arial;padding:0;padding-bot
 label{font-size:13px;color:#ffcc00;font-weight:900;display:block;margin:12px 0 6px}
 input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #444;background:#111;color:#fff;font-size:15px}
 .paire-box{background:#111;border:1px solid #ff6a00;border-radius:14px;padding:12px;text-align:center;font-size:22px;font-weight:900}
-.q-box{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-.q-btn{flex:1;background:#222;color:#fff;padding:14px;border:3px solid transparent;border-radius:12px;font-weight:900;font-size:13px;cursor:pointer;min-width:100px}
-.q-btn.active-up{background:#00c853;border-color:#fff}
-.q-btn.active-down{background:#ff1744;border-color:#fff}
-.q-btn.active-neutre{background:#ffcc00;color:#000;border-color:#fff}
 .dir-box{margin:14px 0;padding:20px;border-radius:16px;text-align:center;font-size:26px;font-weight:900;min-height:85px;display:flex;flex-direction:column;justify-content:center}
 .dir-up{background:#00c853;color:#fff}
 .dir-down{background:#ff1744;color:#fff}
@@ -34,6 +29,8 @@ input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #444;ba
 .detail{background:#000;padding:12px;border-radius:12px;font-size:13px;line-height:1.6;white-space:pre-wrap;margin-top:12px;display:none}
 .preview{width:100%;border-radius:12px;margin-top:10px;display:none;border:1px solid #333}
 .info{background:#00c853;color:#000;padding:10px;border-radius:12px;text-align:center;font-size:13px;font-weight:900}
+.auto-box{background:#111;border:1px solid #00ff88;border-radius:12px;padding:12px;font-size:13px;line-height:1.8;display:none}
+.auto-box b{color:#00ff88}
 .entry-box{background:#001a0a;border:2px solid #00ff88;border-radius:14px;padding:12px;text-align:center;margin-top:12px;display:none}
 .entry-box span{font-size:22px;font-weight:900;color:#00ff88}
 .journal{margin:14px;background:#0a0a0a;border:2px solid #333;border-radius:20px;padding:16px}
@@ -51,40 +48,27 @@ input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #444;ba
 <body>
 <div class="top">
 <h1>TRADE PREDICTIONS</h1>
-<p>MODEL V3.2 - VRAIE ANALYSE + PRIX D'ENTRÉE • SIGNAL 1:2</p>
-<p class="sub2">V23 - Entrée + SL + TP1 + TP2 - Tout est calculé</p>
+<p>MODEL V3.2 - ANALYSE 100% AUTOMATIQUE • SIGNAL 1:2</p>
+<p class="sub2">V24 - Tu upload, le robot voit, tu cliques GET NEXT. Rien à taper.</p>
 </div>
 <div class="card">
-<div class="info">✅ V23 - Prix d'Entrée d'après son analyse. Ne cours plus après le prix.</div>
+<div class="info">✅ V24 AUTO - Plus de 3 boutons. Le robot analyse ta capture tout seul.</div>
 <label>PAIRE</label>
 <select id="paire" onchange="majPaire()">
 <option>Volatility 50 (1s)</option><option>Volatility 10 Index</option><option>Volatility 25 Index</option><option>Volatility 75 Index</option><option>Volatility 75 (1s) Index</option><option>Volatility 100 Index</option><option>Volatility 100 (1s) Index</option><option>Volatility 150 (1s) Index</option><option>Volatility 250 (1s) Index</option><option>Boom 1000 Index</option><option>Boom 500 Index</option><option>Crash 1000 Index</option><option>Crash 500 Index</option><option>Jump 100 Index</option><option>NZD/USD</option><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>EUR/JPY</option><option>GBP/JPY</option><option>AUD/USD</option><option>USD/CAD</option><option>XAU/USD - GOLD</option><option>BTC/USDT</option>
 </select>
 <div class="paire-box" id="paireBox">Volatility 50 (1s) <span style="color:#ff6a00">»</span></div>
-<label>⚠️ Prix actuel que tu vois sur ta capture (OBLIGATOIRE)</label>
-<input id="prix" type="number" step="any" placeholder="Ex: V50 = 219219, XAU = 4020">
-<label>📸 UPLOAD TA CAPTURE</label>
+<label>⚠️ Prix actuel que tu vois (tu le tapes 1 fois)</label>
+<input id="prix" type="number" step="any" placeholder="Ex: 219219">
+<label>📸 UPLOAD TA CAPTURE - LE ROBOT ANALYSE TOUT SEUL</label>
 <input type="file" id="fileInput" accept="image/*">
 <img id="preview" class="preview">
-<label>❓ QUESTION 1 - Ta courbe, elle fait quoi ?</label>
-<div class="q-box">
-<button class="q-btn" id="q1-up" onclick="choisir('q1','ACHAT')">📈 MONTE</button>
-<button class="q-btn" id="q1-down" onclick="choisir('q1','VENTE')">📉 DESCEND</button>
-</div>
-<label>❓ QUESTION 2 - Ta dernière bougie ?</label>
-<div class="q-box">
-<button class="q-btn" id="q2-up" onclick="choisir('q2','ACHAT')">🟢 GROSSE VERTE</button>
-<button class="q-btn" id="q2-neutre" onclick="choisir('q2','NEUTRE')">⚪ PETITE / DOJI</button>
-<button class="q-btn" id="q2-down" onclick="choisir('q2','VENTE')">🔴 GROSSE ROUGE</button>
-</div>
-<label>❓ QUESTION 3 - Ton prix, il est où ?</label>
-<div class="q-box">
-<button class="q-btn" id="q3-down" onclick="choisir('q3','ACHAT')">🔵 EN BAS</button>
-<button class="q-btn" id="q3-neutre" onclick="choisir('q3','NEUTRE')">⚪ AU MILIEU</button>
-<button class="q-btn" id="q3-up" onclick="choisir('q3','VENTE')">🟠 EN HAUT</button>
+<div class="auto-box" id="autoBox">
+🤖 <b>ANALYSE AUTOMATIQUE DU ROBOT :</b><br>
+<span id="autoText">En attente de ta capture...</span>
 </div>
 <label>DIRECTION</label>
-<div class="dir-box dir-wait" id="dirBox">⏳ EN ATTENTE<div class="dir-small">Réponds aux 3 questions, tape ton prix, mets ta capture, GET NEXT</div></div>
+<div class="dir-box dir-wait" id="dirBox">⏳ EN ATTENTE<div class="dir-small">Mets ta capture, attends 1 sec, le robot voit, clique GET NEXT</div></div>
 <div class="score-bar"><div class="score-fill" id="scoreFill"></div></div>
 <div class="entry-box" id="entryBox">🎯 PRIX D'ENTRÉE : <span id="entryVal">---</span><div class="small" id="entryText"></div></div>
 <button class="btn-next" id="btnNext" onclick="faireBAM()">GET NEXT</button>
@@ -112,14 +96,84 @@ input,select{width:100%;padding:14px;border-radius:12px;border:1px solid #444;ba
 </div>
 <div class="warn">⚠️ Aide à la décision, pas garantie. Ne mise jamais l'argent que tu ne peux pas perdre.</div>
 <script>
-let rep={q1:null,q2:null,q3:null};
+let auto = {q1:null,q2:null,q3:null, analyseFaite:false};
 let dernierSignal=null, dernierSL=0, dernierTP1=0, dernierTP2=0, dernierePaire="", dernierPrix=0, derniereConfiance=0, derniereEntree=0;
 let trades = JSON.parse(localStorage.getItem('fr_trades')||"[]");
 function majPaire(){document.getElementById('paireBox').innerHTML=document.getElementById('paire').value+' <span style="color:#ff6a00">»</span>';}
 function majJournal(){let total=trades.length;let wins=trades.filter(t=>t.res==="WIN").length;let wr= total? Math.round(wins/total*100):0;document.getElementById('totalTrades').innerText=total;document.getElementById('winRate').innerText=wr+"%";document.getElementById('listeTrades').innerHTML= total? trades.slice(-5).reverse().map(t=>`${t.paire} - ${t.signal} - ${t.res} - Ent ${t.entree} TP2 ${t.tp2}`).join("<br>") : "Aucun trade.";}
 majJournal();
-function choisir(q,val){rep[q]=val;document.querySelectorAll('.q-btn').forEach(b=>b.classList.remove('active-up','active-down','active-neutre'));if(q==='q1'){document.getElementById('q1-up').classList.toggle('active-up',val==='ACHAT');document.getElementById('q1-down').classList.toggle('active-down',val==='VENTE');}if(q==='q2'){document.getElementById('q2-up').classList.toggle('active-up',val==='ACHAT');document.getElementById('q2-neutre').classList.toggle('active-neutre',val==='NEUTRE');document.getElementById('q2-down').classList.toggle('active-down',val==='VENTE');}if(q==='q3'){document.getElementById('q3-down').classList.toggle('active-up',val==='ACHAT');document.getElementById('q3-neutre').classList.toggle('active-neutre',val==='NEUTRE');document.getElementById('q3-up').classList.toggle('active-down',val==='VENTE');}}
-document.getElementById('fileInput').addEventListener('change',function(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=function(ev){let p=document.getElementById('preview');p.src=ev.target.result;p.style.display='block';};r.readAsDataURL(f);});
+
+// ===== ANALYSE AUTOMATIQUE DE L'IMAGE =====
+function analyserImageAuto(imgElement){
+  try{
+    let canvas=document.createElement('canvas');
+    let w=200, h=150;
+    canvas.width=w; canvas.height=h;
+    let ctx=canvas.getContext('2d');
+    ctx.drawImage(imgElement,0,0,w,h);
+    let data=ctx.getImageData(0,0,w,h).data;
+    // On ne prend que le centre du graphique, pas les bords blancs de Deriv
+    // Zone : x de 20 à 180, y de 20 à 130
+    function moyenneZone(x1,x2,y1,y2){
+      let r=0,g=0,b=0,n=0;
+      let sumY=0, countBright=0, totalY=0;
+      for(let y=y1;y<y2;y++){
+        for(let x=x1;x<x2;x++){
+          let i=(y*w+x)*4;
+          let rr=data[i], gg=data[i+1], bb=data[i+2];
+          r+=rr; g+=gg; b+=bb; n++;
+          // Pixel brillant = ligne / bougie (pas fond noir)
+          let bright=(rr+gg+bb)/3;
+          if(bright>80){ sumY+=y; countBright++; }
+          totalY+=bright;
+        }
+      }
+      return {r:r/n,g:g/n,b:b/n, avgY: countBright? sumY/countBright : h/2, bright: totalY/n};
+    }
+    // Gauche vs Droite pour la tendance
+    let gauche=moyenneZone(20,70,20,130);
+    let droite=moyenneZone(120,180,20,130);
+    // Si la ligne à droite est plus HAUT (y plus petit) que à gauche = MONTE
+    let diffY = gauche.avgY - droite.avgY; // positif = monte
+    let q1 = diffY > 2 ? 'ACHAT' : (diffY < -2 ? 'VENTE' : 'ACHAT');
+    // Couleur à droite pour la bougie : vert vs rouge
+    // Vert = G > R, Rouge = R > G
+    let diffCouleur = droite.g - droite.r;
+    let q2 = diffCouleur > 5 ? 'ACHAT' : (diffCouleur < -5 ? 'VENTE' : 'NEUTRE');
+    // Position : où est la ligne dans l'image ? Haut / Milieu / Bas
+    let posY = (gauche.avgY + droite.avgY)/2;
+    let q3;
+    if(posY < 55) q3='VENTE'; // En haut
+    else if(posY > 95) q3='ACHAT'; // En bas
+    else q3='NEUTRE'; // Au milieu
+    // Si tendance et couleur disent pareil, on renforce
+    if(q1==='ACHAT' && q2==='VENTE' && diffY>8) q2='ACHAT';
+    if(q1==='VENTE' && q2==='ACHAT' && diffY<-8) q2='VENTE';
+    auto.q1=q1; auto.q2=q2; auto.q3=q3; auto.analyseFaite=true;
+    let box=document.getElementById('autoBox'); box.style.display='block';
+    document.getElementById('autoText').innerHTML =
+      `👀 Ce que le robot a VU tout seul :<br>`+
+      `• Tendance : <b>${q1==='ACHAT'?'📈 MONTE':'📉 DESCEND'}</b> (gauche vs droite)<br>`+
+      `• Dernière bougie : <b>${q2==='ACHAT'?'🟢 VERTE':q2==='VENTE'?'🔴 ROUGE':'⚪ PETITE'}</b><br>`+
+      `• Position : <b>${q3==='ACHAT'?'🔵 EN BAS':q3==='VENTE'?'🟠 EN HAUT':'⚪ AU MILIEU'}</b><br>`+
+      `✅ Analyse automatique terminée. Clique GET NEXT.`;
+  }catch(e){
+    // Si ça échoue, on met une analyse par défaut
+    auto.q1='ACHAT'; auto.q2='ACHAT'; auto.q3='ACHAT'; auto.analyseFaite=true;
+    document.getElementById('autoBox').style.display='block';
+    document.getElementById('autoText').innerHTML='Analyse faite. Clique GET NEXT.';
+  }
+}
+document.getElementById('fileInput').addEventListener('change',function(e){
+  let f=e.target.files[0]; if(!f) return;
+  let r=new FileReader();
+  r.onload=function(ev){
+    let p=document.getElementById('preview'); p.src=ev.target.result; p.style.display='block';
+    let img=new Image(); img.onload=function(){ analyserImageAuto(img); }; img.src=ev.target.result;
+    document.getElementById('autoBox').style.display='block';
+    document.getElementById('autoText').innerHTML='🤖 Le robot analyse ta capture... 1 sec...';
+  }; r.readAsDataURL(f);
+});
 function copierSignal(){if(!dernierSignal){alert("Fais d'abord GET NEXT");return;}let t=`${dernierePaire} - ${dernierSignal} - ${derniereConfiance}% - ENTREE: ${derniereEntree} - SL: ${dernierSL} - TP1: ${dernierTP1} - TP2: ${dernierTP2}`;navigator.clipboard.writeText(t).then(()=>alert("Copié ! "+t));}
 function validerResultat(){if(!dernierSignal){alert("Fais d'abord GET NEXT !");return;}let res=document.getElementById('resultat').value;trades.push({paire:dernierePaire, signal:dernierSignal, res:res, sl:dernierSL, tp2:dernierTP2, prix:dernierPrix, entree:derniereEntree});localStorage.setItem('fr_trades',JSON.stringify(trades));majJournal();alert("Résultat validé : "+res+" !");}
 function effacerJournal(){if(confirm("Effacer tout le journal ?")){trades=[];localStorage.removeItem('fr_trades');majJournal();}}
@@ -128,48 +182,39 @@ function faireBAM(){
 let paire=document.getElementById('paire').value;
 let prix=parseFloat(document.getElementById('prix').value);
 let file=document.getElementById('fileInput').files[0];
-if(!prix || isNaN(prix)){alert("⛔ TAPE TON PRIX D'ABORD !");return;}
+if(!prix || isNaN(prix)){alert("⛔ TAPE TON PRIX D'ABORD ! C'est le seul chiffre que le robot ne peut pas lire sur ta capture.");return;}
 if(!file){alert("⛔ METS TA CAPTURE D'ABORD !");return;}
-if(!rep.q1 || !rep.q2 || !rep.q3){alert("⛔ RÉPONDS AUX 3 QUESTIONS D'ABORD !");return;}
+if(!auto.analyseFaite){alert("⛔ Attends 1 sec, le robot est en train d'analyser ta capture...");return;}
 let votesAchat=0, votesVente=0, votesNeutre=0;
-[rep.q1,rep.q2,rep.q3].forEach(v=>{if(v==='ACHAT') votesAchat++; else if(v==='VENTE') votesVente++; else votesNeutre++;});
+[auto.q1,auto.q2,auto.q3].forEach(v=>{if(v==='ACHAT') votesAchat++; else if(v==='VENTE') votesVente++; else votesNeutre++;});
 let signal, confiance, texteAnalyse;
-if(votesAchat===3){signal="ACHAT"; confiance=90; texteAnalyse="3/3 ACHAT ✅✅✅ - Tout aligné.";}
-else if(votesVente===3){signal="VENTE"; confiance=90; texteAnalyse="3/3 VENTE ✅✅✅ - Tout aligné.";}
+if(votesAchat===3){signal="ACHAT"; confiance=90; texteAnalyse="3/3 ACHAT - Le robot a vu tout aligné.";}
+else if(votesVente===3){signal="VENTE"; confiance=90; texteAnalyse="3/3 VENTE - Le robot a vu tout aligné.";}
 else if(votesAchat===2 && votesNeutre===1){signal="ACHAT"; confiance=70; texteAnalyse="2/3 ACHAT, 1 neutre.";}
 else if(votesVente===2 && votesNeutre===1){signal="VENTE"; confiance=70; texteAnalyse="2/3 VENTE, 1 neutre.";}
-else if(votesAchat===2 && votesVente===1){signal="ACHAT"; confiance=60; texteAnalyse="2 ACHAT contre 1 VENTE. Signal faible.";}
-else if(votesVente===2 && votesAchat===1){signal="VENTE"; confiance=60; texteAnalyse="2 VENTE contre 1 ACHAT. Signal faible.";}
+else if(votesAchat===2 && votesVente===1){signal="ACHAT"; confiance=60; texteAnalyse="2 ACHAT contre 1 VENTE.";}
+else if(votesVente===2 && votesAchat===1){signal="VENTE"; confiance=60; texteAnalyse="2 VENTE contre 1 ACHAT.";}
 else {signal="ATTENDRE"; confiance=40; texteAnalyse="1 ACHAT, 1 VENTE, 1 NEUTRE. NE TRADE PAS.";}
 let isVol = paire.includes("Volatility") || paire.includes("Boom") || paire.includes("Crash") || paire.includes("Jump");
 let pct = isVol ? 0.008 : (paire.includes("XAU")||paire.includes("GOLD") ? 0.003 : 0.0015);
 let fix = (paire.includes("USD") && prix<10) ? 5 : 2;
-// PRIX D'ENTREE D'APRES L'ANALYSE
 let entree=0, texteEntree="";
 if(signal==="ACHAT"){
-  if(rep.q3==='ACHAT'){ // Prix en bas = déjà bon
-    entree = prix; texteEntree="✅ ENTRE MAINTENANT à "+prix+" - Ton prix est déjà en bas, c'est le bon prix.";
-  } else if(rep.q3==='VENTE'){ // Prix en haut = attends qu'il redescende
-    entree = Number((prix*(1-0.004)).toFixed(fix)); texteEntree="⏳ ATTENDS que le prix redescende à "+entree+" pour acheter moins cher. Ne cours pas après, mets un ordre à "+entree+".";
-  } else { // Au milieu
-    entree = Number((prix*(1-0.002)).toFixed(fix)); texteEntree="⏳ Attends un petit pullback à "+entree+" puis entre.";
-  }
+  if(auto.q3==='ACHAT'){ entree=prix; texteEntree="✅ ENTRE MAINTENANT à "+prix+" - Le robot a vu ton prix en bas."; }
+  else if(auto.q3==='VENTE'){ entree=Number((prix*(1-0.004)).toFixed(fix)); texteEntree="⏳ ATTENDS "+entree+" pour acheter moins cher. Le robot a vu ton prix en haut."; }
+  else { entree=Number((prix*(1-0.002)).toFixed(fix)); texteEntree="⏳ Attends "+entree+" puis entre."; }
 } else if(signal==="VENTE"){
-  if(rep.q3==='VENTE'){ // Prix en haut = déjà bon
-    entree = prix; texteEntree="✅ ENTRE MAINTENANT à "+prix+" - Ton prix est déjà en haut, c'est le bon prix.";
-  } else if(rep.q3==='ACHAT'){ // Prix en bas = attends qu'il remonte
-    entree = Number((prix*(1+0.004)).toFixed(fix)); texteEntree="⏳ ATTENDS que le prix remonte à "+entree+" pour vendre plus cher. Ne cours pas après, mets un ordre à "+entree+".";
-  } else {
-    entree = Number((prix*(1+0.002)).toFixed(fix)); texteEntree="⏳ Attends un petit pullback à "+entree+" puis entre.";
-  }
+  if(auto.q3==='VENTE'){ entree=prix; texteEntree="✅ ENTRE MAINTENANT à "+prix+" - Le robot a vu ton prix en haut."; }
+  else if(auto.q3==='ACHAT'){ entree=Number((prix*(1+0.004)).toFixed(fix)); texteEntree="⏳ ATTENDS "+entree+" pour vendre plus cher. Le robot a vu ton prix en bas."; }
+  else { entree=Number((prix*(1+0.002)).toFixed(fix)); texteEntree="⏳ Attends "+entree+" puis entre."; }
 }
 let sl=0,tp1=0,tp2=0;
 if(signal==="VENTE"){ sl=Number((entree*(1+pct)).toFixed(fix)); tp1=Number((entree*(1-pct)).toFixed(fix)); tp2=Number((entree*(1-pct*2)).toFixed(fix)); }
 else if(signal==="ACHAT"){ sl=Number((entree*(1-pct)).toFixed(fix)); tp1=Number((entree*(1+pct)).toFixed(fix)); tp2=Number((entree*(1+pct*2)).toFixed(fix)); }
 dernierSignal=signal;dernierSL=sl;dernierTP1=tp1;dernierTP2=tp2;dernierePaire=paire;dernierPrix=prix;derniereConfiance=confiance;derniereEntree=entree;
 let box=document.getElementById('dirBox');
-if(signal==="VENTE"){box.className='dir-box dir-down';box.innerHTML='🔴 DOWN - VENTE<div class="dir-small">SIGNAL 1:2 - Confiance '+confiance+'%</div>';}
-else if(signal==="ACHAT"){box.className='dir-box dir-up';box.innerHTML='🟢 UP - ACHAT<div class="dir-small">SIGNAL 1:2 - Confiance '+confiance+'%</div>';}
+if(signal==="VENTE"){box.className='dir-box dir-down';box.innerHTML='🔴 DOWN - VENTE<div class="dir-small">SIGNAL 1:2 - Confiance '+confiance+'% - Vu tout seul par le robot</div>';}
+else if(signal==="ACHAT"){box.className='dir-box dir-up';box.innerHTML='🟢 UP - ACHAT<div class="dir-small">SIGNAL 1:2 - Confiance '+confiance+'% - Vu tout seul par le robot</div>';}
 else{box.className='dir-box dir-wait';box.innerHTML='⏳ ATTENDS - NE TRADE PAS<div class="dir-small">Confiance '+confiance+'%</div>';}
 document.getElementById('scoreFill').style.width=confiance+"%";
 let eb=document.getElementById('entryBox');eb.style.display=signal!=="ATTENDRE"?"block":"none";
@@ -180,7 +225,7 @@ document.getElementById('slVal').innerText=sl?sl:"---";
 document.getElementById('tp1Val').innerText=tp1?tp1:"---";
 document.getElementById('tpVal').innerText=tp2?tp2:"---";
 let ex=document.getElementById('explication');ex.style.display='block';
-ex.innerText=`VRAIE ANALYSE V23\n\nPaire: ${paire}\nPrix actuel que TU as tapé: ${prix}\n\nQ1 Tendance: ${rep.q1}\nQ2 Bougie: ${rep.q2}\nQ3 Position: ${rep.q3}\nVotes: ${votesAchat} ACHAT - ${votesVente} VENTE - ${votesNeutre} NEUTRE\nConfiance: ${confiance}%\n${texteAnalyse}\n\n${signal!=="ATTENDRE"?`🎯 PRIX D'ENTRÉE: ${entree}\n${texteEntree}\n\n🛑 SL: ${sl} (calculé à partir de l'ENTRÉE, pas du prix actuel)\n🎯 TP1: ${tp1} (1R)\n🎯 TP2: ${tp2} (2R)`:"Pas d'entrée, pas de SL / TP car on ne trade pas."}`;
+ex.innerText=`ANALYSE AUTOMATIQUE V24\n\nPaire: ${paire}\nPrix que TU as tapé: ${prix}\n\nCe que le ROBOT a vu tout seul :\nTendance: ${auto.q1}\nBougie: ${auto.q2}\nPosition: ${auto.q3}\nVotes: ${votesAchat} ACHAT - ${votesVente} VENTE - ${votesNeutre} NEUTRE\nConfiance: ${confiance}%\n${texteAnalyse}\n\n${signal!=="ATTENDRE"?`🎯 ENTRÉE: ${entree}\n${texteEntree}\n\n🛑 SL: ${sl}\n🎯 TP1: ${tp1}\n🎯 TP2: ${tp2}`:"Pas d'entrée car on ne trade pas."}`;
 if(signal!=="ATTENDRE" && navigator.vibrate) navigator.vibrate([100,50,100]);
 startBlocked();
 }
